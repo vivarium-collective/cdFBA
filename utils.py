@@ -1,0 +1,162 @@
+"""This module contains some methods to obtain the reaction map, initial conditions, and kinetic parameters needed
+for dFBA simulations from the minimal medium requirements of the wild-type species.
+
+CAUTION: The initial conditions, and kinetics dataframes provide default parameter values and need to be changed as needed
+"""
+from cobra.medium import minimal_medium
+import re
+
+class DFBAconfig:
+ 
+    def __init__(self, model, medium_type='default'):
+        """Creates a medium object.ß
+
+        Parameters
+        ----------
+        model : cobra model representing the wild-type cell
+        medium_type : string, 
+            'default' uses the default cobra model medium
+            'minimal' uses the minimal medium for the model
+            'exchange' uses all exchange fluxes for the model 
+
+        Note
+        ----
+        Instances of this class provides the reaction mapping, initial conditions
+        and kinetic parameters for a COBRA model based on both the minimal and default
+        medium of the model. The class methods generate these data within the __init__
+        method.
+        """
+        self.model = model
+
+        if medium_type=='default':
+            self.medium = self.model.medium
+        if medium_type=='minimal':
+            self.medium = minimal_medium(self.model, self.model.slim_optimize()).to_dict()
+        if medium_type=='exchange':
+            medium = {reaction.id:reaction.upper_bound for reaction in model.exchanges}
+            medium.update(model.medium)
+            self.medium = medium
+        
+        self.substrates = self.get_substrates()
+        self.reaction_map = self.get_reaction_map()
+        self.kinetics = self.get_kinetics()
+        self.biomass_indentifier = get_objective_reaciton()
+        
+    def get_substrates(self):
+        """Returns a list of substrates from the model.
+    
+        Parameters
+        ----------
+        medium : DFBAconfig.medium or DFBAconfig.min_medium
+        
+        Returns
+        -------
+        substrates : list, list of names of substrates required by the model organism
+        """
+    
+        #obtain substrate names
+        substrates = [item.replace(' exchange', '') for item in [getattr(self.model.reactions, i).name for i in self.medium.keys()]]
+        return substrates
+        
+    def get_reaction_map(self):
+        """Returns a reaction_name_map dictionary from a medium dictionary as obtained
+        from model.medium or cobra.medium.minimum_medium()
+        
+        Parameters
+        ----------
+        medium : DFBAconfig.medium or DFBAconfig.min_medium
+        substrates : list, list of names of substrates required by the model organism
+        
+        Returns
+        -------
+        reaction_name_map : dict, maps substrate names to reactions
+        """    
+    
+        reaction_name_map = {self.substrates[i]: list(self.medium.keys())[i] for i in range(len(self.substrates))}
+    
+        return reaction_name_map
+    
+    def get_kinetics(self):
+        """Returns default kinetic parameters dictionary
+        Values are tuples of the form (km, vmax)
+        
+        Parameters
+        ----------
+        substrates    : list, list of names of substrates required by the model organism
+        """  
+        kinetics = {key: (0.5, 2.0) for key in self.substrates}
+        
+        return kinetics
+        
+    def get_objective_reaciton(model):
+        """get a string with the name of the objective function of a cobra model
+
+        Parameters:
+        -----------
+        model: cobrapy model
+
+        Returns:
+        --------
+        objective_reaction: string, name of the objective reaction (biomass reaction by default)
+        """
+
+        expression = f"{model.objective.expression}"
+        match = re.search(r'1\.0\*([^\s]+)', expression)
+
+        if match:
+            objective_reaction = match.group(1)
+
+        return objective_reaction
+    
+def initial_conditions_default(num_species, medium,  substrates, def_concentration, def_biomass, minimal_medium=True):
+    """Returns a default initial conditions dictionary
+    
+    Parameters
+    ----------
+    num_species   : int, number of species
+    medium : DFBAconfig.medium or DFBAconfig.min_medium
+    substrates : list, list of names of substrates required by the model organism
+    def_concentration : float, default substrate concentration
+    def_biomass : float, default initial biomass for all species
+    
+    Returns
+    -------
+    conditions : dict, initial conditions dictionary 
+    """
+    conditions = {}
+    
+    for species in range(1, num_species+1):
+        conditions.update({f'biomass_species{species}': def_biomass})
+        
+    conditions.update({key: def_concentration for key in substrates})
+    
+    return conditions
+    
+
+def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', default_concentration = None):
+    """Returns an initial condition dict based on medium
+    
+    Parameters
+    ----------
+    num_species : int, number of species
+    medium : DFBAconfig.medium
+    substrates : list, list of names of substrates required by the model organism
+    biomass : float, initial biomass for all species
+    factor : float, factor to multiply minimum medium concentrations
+    
+    Returns
+    -------
+    conditions : dict, initial conditions dictionary
+    """ 
+    conditions = {}
+    conditions.update({get_objective_reaciton(model): biomass})
+    medium = DFBAconfig(model=model, medium_type=medium_type)
+    substrates = medium.substrates
+
+    substrate_values = dict(zip(substrates, list(medium.medium.values())))
+    for key in substrate_values:
+        substrate_values[key] *= factor
+    
+    conditions.update(substrate_values)
+    
+    return conditions

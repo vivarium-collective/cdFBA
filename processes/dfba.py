@@ -5,7 +5,7 @@ from process_bigraph import Process, ProcessTypes, Composite
 model = load_model("iAF1260")
 
 
-class dFBA(Process):
+class DFBA(Process):
     """Performs single time-step of dynamic FBA
     
     Parameters:
@@ -16,7 +16,7 @@ class dFBA(Process):
         'model_file': 'string',
         'kinetics': 'map[tuple[float, float]]',
         'reaction_map': 'map[string]',
-        'biomass_identifier': 'list',
+        'biomass_identifier': 'string',
     }
     
     def __init__(self, config, core):
@@ -63,5 +63,4 @@ class dFBA(Process):
             state_update[substrate_id] = flux * current_biomass * interval
 
         return {'dfba_update': state_update}
-    
     
