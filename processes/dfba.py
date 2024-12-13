@@ -1,3 +1,4 @@
+import cobra
 from cobra.io import load_model
 from cobra.medium import minimal_medium
 from process_bigraph import Process, ProcessTypes, Composite
@@ -10,7 +11,7 @@ class DFBA(Process):
     
     Parameters:
     -----------
-    model: 
+    model_file: string, math to cobra model file  
     """
     config_schema = {
         'model_file': 'string',
@@ -21,6 +22,16 @@ class DFBA(Process):
     
     def __init__(self, config, core):
         super().__init__(config, core)
+        
+        if not "xml" in self.config["model_file"]:
+            # use the textbook model if no model file is provided
+            # TODO: Also handle JSON or .mat model files
+            self.model = load_model(self.config["model_file"])
+        elif isinstance(self.config["model_file"], str):
+            self.model = cobra.io.read_sbml_model(self.config["model_file"])
+        else:
+            # error handling
+            raise ValueError("Invalid model file")
         
     def inputs(self):
         return {
@@ -45,10 +56,10 @@ class DFBA(Process):
             flux = Vmax * substrate_concentration / (Km + substrate_concentration)
     
             # use the flux to constrain fba
-            model.reactions.get_by_id(reaction_id).lower_bound = -flux
+            self.model.reactions.get_by_id(reaction_id).lower_bound = -flux
     
         # solve fba under these constraints
-        solution = model.optimize()
+        solution = self.model.optimize()
     
         # gather the results
         ## update biomass
@@ -64,3 +75,5 @@ class DFBA(Process):
 
         return {'dfba_update': state_update}
     
+#TODO write config and composite spec generator functions
+#TODO write update_environment Step

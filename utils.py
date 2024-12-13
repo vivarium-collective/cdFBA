@@ -40,7 +40,7 @@ class DFBAconfig:
         self.substrates = self.get_substrates()
         self.reaction_map = self.get_reaction_map()
         self.kinetics = self.get_kinetics()
-        self.biomass_indentifier = get_objective_reaciton()
+        self.biomass_indentifier = self.get_objective_reaction(self.model) 
         
     def get_substrates(self):
         """Returns a list of substrates from the model.
@@ -87,8 +87,9 @@ class DFBAconfig:
         kinetics = {key: (0.5, 2.0) for key in self.substrates}
         
         return kinetics
-        
-    def get_objective_reaciton(model):
+
+    @staticmethod    
+    def get_objective_reaction(model):
         """get a string with the name of the objective function of a cobra model
 
         Parameters:
@@ -107,39 +108,13 @@ class DFBAconfig:
             objective_reaction = match.group(1)
 
         return objective_reaction
-    
-def initial_conditions_default(num_species, medium,  substrates, def_concentration, def_biomass, minimal_medium=True):
-    """Returns a default initial conditions dictionary
-    
-    Parameters
-    ----------
-    num_species   : int, number of species
-    medium : DFBAconfig.medium or DFBAconfig.min_medium
-    substrates : list, list of names of substrates required by the model organism
-    def_concentration : float, default substrate concentration
-    def_biomass : float, default initial biomass for all species
-    
-    Returns
-    -------
-    conditions : dict, initial conditions dictionary 
-    """
-    conditions = {}
-    
-    for species in range(1, num_species+1):
-        conditions.update({f'biomass_species{species}': def_biomass})
-        
-    conditions.update({key: def_concentration for key in substrates})
-    
-    return conditions
-    
 
 def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', default_concentration = None):
     """Returns an initial condition dict based on medium
     
     Parameters
     ----------
-    num_species : int, number of species
-    medium : DFBAconfig.medium
+    model: string, cobrapy model name
     substrates : list, list of names of substrates required by the model organism
     biomass : float, initial biomass for all species
     factor : float, factor to multiply minimum medium concentrations
@@ -148,12 +123,18 @@ def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', de
     -------
     conditions : dict, initial conditions dictionary
     """ 
-    conditions = {}
-    conditions.update({get_objective_reaciton(model): biomass})
     medium = DFBAconfig(model=model, medium_type=medium_type)
+    conditions = {}
+    conditions.update({DFBAconfig.get_objective_reaciton(model): biomass})
+    
     substrates = medium.substrates
 
-    substrate_values = dict(zip(substrates, list(medium.medium.values())))
+    if default_concentration is not None:
+        substrate_values = dict(zip(substrates, list(medium.medium.values())))
+    else:
+        substrate_values = dict(zip(substrates, list(medium.medium.values())))
+
+
     for key in substrate_values:
         substrate_values[key] *= factor
     
