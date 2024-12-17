@@ -2,6 +2,9 @@ import sys
 import os 
 import cobra
 import random
+import re
+
+from build.lib.process_bigraph.composite import ProcessTypes
 from cobra.io import load_model
 from cobra.medium import minimal_medium
 from process_bigraph import Process, Step, Composite
@@ -19,7 +22,7 @@ class DFBA(Process):
     model_file: string, math to cobra model file  
     """
     config_schema = {
-        "model_file": "any",
+        "model": "any",
         "kinetics": "any",
         "reaction_map": "any",
         "biomass_identifier": "any",
@@ -29,6 +32,8 @@ class DFBA(Process):
     def __init__(self, config, core):
         super().__init__(config, core)
 
+        # TODO -- load model here rather than passing it in
+        self.model = self.config['model']
 
 
         if self.config["bounds"] is not None:
@@ -37,6 +42,12 @@ class DFBA(Process):
                     self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
                 if bounds["upper"] is not None:
                     self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
+
+    def initial_state(self):
+        # TODO -- get the initial state from the load model, self.model
+        return {
+            "shared_environment": {}
+        }
 
     def inputs(self):
         return {
@@ -47,7 +58,8 @@ class DFBA(Process):
         return {
              "dfba_update": "any"
         }
-        
+
+
     def update(self, inputs, interval):
             
         current_state = inputs["shared_environment"].copy()
@@ -70,7 +82,7 @@ class DFBA(Process):
         ## update biomass
         biomass_growth_rate = solution.fluxes[self.config["biomass_identifier"]]
         current_biomass = current_state[self.config["biomass_identifier"]]
-        state_update[self.config["model"]] = biomass_growth_rate * current_biomass * interval
+        state_update[self.config['biomass_identifier']] = biomass_growth_rate * current_biomass * interval
     
         ## update substrates
         for substrate_id, reaction_id in self.config["reaction_map"].items():
@@ -84,7 +96,7 @@ def dfba_config(
         model=load_model("textbook"),
         kinetics=None,
         reaction_map=None,
-        biomass_identifier="biomass",
+        biomass_identifier=None,
         bounds=None
 ):
     if reaction_map is None:
@@ -97,6 +109,10 @@ def dfba_config(
         kinetics = {
             "glucose": (0.5, 1),
             "acetate": (0.5, 2)}
+    if biomass_identifier is None:
+        expression = f"{model.objective.expression}"
+        match = re.search(r'1\.0\*([^\s]+)', expression)
+        biomass_identifier = match.group(1)
     return {
         "model": model,
         "kinetics": kinetics,
@@ -219,5 +235,78 @@ def community_dfba_spec(species_list = [], from_model=False, medium_type='defaul
                 
             )
 
+
+def test_dfba_alone(core):
+
+    model = load_model("textbook")
+    config = dfba_config(model=model)
+    dfba = DFBA(config, core=core)
+
+    initial_state = dfba.initial_state()
+    inputs = {"shared_environment": initial_state}
+
+    results = dfba.update(inputs, 1)
+
+    print(results)
+
+
+
+def test_dfba(core):
+
+    # define a single dFBA model
+    spec = {
+        "dfba": get_single_dfba_spec()
+    }
+
+    # TODO -- more automatic way to get initial environment
+    spec['shared environment'] = {
+        "glucose": 10,
+        "acetate": 0,
+        spec['dfba']['config']['biomass_identifier']: 0.1
+        # "biomass": 0.1,
+    }
+
+    # put it in a composite
+    sim = Composite({
+        "state": spec,
+        "emitter": {'mode': 'all'}},
+        core=core
+    )
+
+    # run the simulation
+    sim.run(10)
+
+    # get the results
+    results = sim.gather_results()[('emitter',)]
+
+    # print the results
+    for timepoint in results:
+        time = timepoint.pop('global_time')
+        dfba_spec = timepoint.pop('dfba')
+        print(f'TIME: {time}')
+        print(f'STATE: {timepoint}')
+
+    # assert that the results are as expected
+    # TODO
+
+
+
+def test_environment():
+    """This tests that the environment runs"""
+    pass
+
+
+def test_composite():
+    pass
+
+
 if __name__ == "__main__":
-    print(get_single_dfba_spec())
+    # create a core
+    core = ProcessTypes()
+    core.register_process('DFBA', DFBA)
+
+    # print(get_single_dfba_spec())
+    # test_dfba_alone(core)
+    test_dfba(core)
+    # test_environment(core)
+    # test_composite()
