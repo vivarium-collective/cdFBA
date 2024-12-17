@@ -1,5 +1,5 @@
 from process_bigraph import ProcessTypes
-from processes import register_processes
+from cdFBA.processes import register_processes
 
 def apply_non_negative(schema, current, update, core):
     new_value = current + update

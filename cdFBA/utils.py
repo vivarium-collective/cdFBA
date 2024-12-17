@@ -3,6 +3,8 @@ for dFBA simulations from the minimal medium requirements of the wild-type speci
 
 CAUTION: The initial conditions, and kinetics dataframes provide default parameter values and need to be changed as needed
 """
+import cobra
+from cobra.io import load_model, read_sbml_model
 from cobra.medium import minimal_medium
 import re
 
@@ -33,8 +35,8 @@ class DFBAconfig:
         if medium_type=='minimal':
             self.medium = minimal_medium(self.model, self.model.slim_optimize()).to_dict()
         if medium_type=='exchange':
-            medium = {reaction.id:reaction.upper_bound for reaction in model.exchanges}
-            medium.update(model.medium)
+            medium = {reaction.id:reaction.upper_bound for reaction in self.model.exchanges}
+            medium.update(self.model.medium)
             self.medium = medium
         
         self.substrates = self.get_substrates()
@@ -141,3 +143,29 @@ def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', de
     conditions.update(substrate_values)
     
     return conditions
+
+def model_from_file(model_file='textbook'):
+    if not "xml" in model_file:
+            # use the textbook model if no model file is provided
+            # TODO: Also handle JSON or .mat model files
+            model = load_model(model_file)
+    elif isinstance(model_file, str):
+        model = cobra.io.read_sbml_model(model_file)
+    else:
+        # error handling
+        raise ValueError("Invalid model file")
+    return model
+
+def model_list(model_files=[]):
+    """generates list of cobra models from files/model ids.
+
+    Parameters:
+    -----------
+    model_files: list, list of strings with the model file paths or model ids
+
+    Returns:
+    --------
+    model_list: list, list of cobra models
+    """
+
+    return [model_from_file(model_file) for model_file in model_files]
