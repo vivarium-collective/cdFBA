@@ -1,17 +1,11 @@
-import sys
-import os 
-import cobra
 import random
-import re
 
-from build.lib.process_bigraph.composite import ProcessTypes
+from process_bigraph.composite import ProcessTypes
 from cobra.io import load_model
 from cobra.medium import minimal_medium
 from process_bigraph import Process, Step, Composite
 
-sys.path.append('/Users/tasnifrahman/Research/cdFBA')
-
-from cdFBA.utils import DFBAconfig
+from cdFBA.utils import DFBAconfig, model_from_file
 
 
 class DFBA(Process):
@@ -19,10 +13,11 @@ class DFBA(Process):
     
     Parameters:
     -----------
-    model_file: string, math to cobra model file  
+    model_file: string, math to cobra model file
     """
     config_schema = {
-        "model": "any",
+        "model_file": "any",
+        "name": "any",
         "kinetics": "any",
         "reaction_map": "any",
         "biomass_identifier": "any",
@@ -33,7 +28,7 @@ class DFBA(Process):
         super().__init__(config, core)
 
         # TODO -- load model here rather than passing it in
-        self.model = self.config['model']
+        self.model = model_from_file(self.config['model_file'])
 
 
         if self.config["bounds"] is not None:
@@ -93,12 +88,16 @@ class DFBA(Process):
         return {"dfba_update": state_update}
     
 def dfba_config(
-        model=load_model("textbook"),
+        model_file="textbook",
+        name=None,
         kinetics=None,
         reaction_map=None,
         biomass_identifier=None,
         bounds=None
 ):
+    model = model_from_file(model_file)
+    if name is None:
+        name = model.id
     if reaction_map is None:
         reaction_map = {
             "glucose": "EX_glc__D_e",
@@ -110,11 +109,11 @@ def dfba_config(
             "glucose": (0.5, 1),
             "acetate": (0.5, 2)}
     if biomass_identifier is None:
-        expression = f"{model.objective.expression}"
-        match = re.search(r'1\.0\*([^\s]+)', expression)
-        biomass_identifier = match.group(1)
+        biomass_identifier = DFBAconfig.get_objective_reaction(model=model)
+        
     return {
-        "model": model,
+        "model_file": model_file,
+        "name": name,
         "kinetics": kinetics,
         "reaction_map": reaction_map,
         "biomass_identifier": biomass_identifier,
@@ -122,10 +121,14 @@ def dfba_config(
     }
 
 def dfba_config_from_model(
-        model=load_model("textbook"),
+        model_file="textbook",
         medium_type ="default",
+        name=None,
         bounds={}
 ):
+    model = model_from_file(model_file=model_file)
+    if name is None:
+        name = model.id         
     dfbaconfig = DFBAconfig(model, medium_type=medium_type)
     kinetics = dfbaconfig.kinetics
     reaction_map = dfbaconfig.reaction_map
@@ -133,6 +136,7 @@ def dfba_config_from_model(
 
     return {
         "model": model,
+        "name": name,
         "kinetics": kinetics,
         "reaction_map": reaction_map,
         "biomass_identifier": biomass_identifier,
@@ -140,7 +144,7 @@ def dfba_config_from_model(
     }
     
 def get_single_dfba_spec(
-        model=load_model("textbook"),
+        model_file="textbook",
         name="species",
         config=None
 ):
@@ -157,12 +161,13 @@ def get_single_dfba_spec(
     config: dict, config for DFBA Process. If none provided, uses default generated using `dfba_config()`
 
     Returns:
+    --------
     dict: A dictionary containing the process type, address, configuration, and paths for inputs
         and outputs based on the specified molecule IDs and indices.
     """
 
     if config is None:
-        config = dfba_config(model=model)
+        config = dfba_config(model_file=model_file)
 
     return {
         "_type": "process",
@@ -221,7 +226,11 @@ def environment_spec():
         }
     }
 
-def community_dfba_spec(species_list = [], from_model=False, medium_type='default'):
+def community_dfba_spec(
+        species_list = [], 
+        from_model=False, 
+        medium_type='default'
+):
     stores = {
         'shared environment': 'any',
         'dFBA Results': 'any',
@@ -238,8 +247,8 @@ def community_dfba_spec(species_list = [], from_model=False, medium_type='defaul
 
 def test_dfba_alone(core):
 
-    model = load_model("textbook")
-    config = dfba_config(model=model)
+    model_file = "textbook"
+    config = dfba_config(model_file=model_file)
     dfba = DFBA(config, core=core)
 
     initial_state = dfba.initial_state()

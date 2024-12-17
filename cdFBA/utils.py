@@ -3,9 +3,8 @@ for dFBA simulations from the minimal medium requirements of the wild-type speci
 
 CAUTION: The initial conditions, and kinetics dataframes provide default parameter values and need to be changed as needed
 """
-import cobra
 from cobra.io import load_model, read_sbml_model
-from cobra.medium import minimal_medium
+from cobra.medium import minimal_medium 
 import re
 
 class DFBAconfig:
@@ -150,7 +149,7 @@ def model_from_file(model_file='textbook'):
             # TODO: Also handle JSON or .mat model files
             model = load_model(model_file)
     elif isinstance(model_file, str):
-        model = cobra.io.read_sbml_model(model_file)
+        model = read_sbml_model(model_file)
     else:
         # error handling
         raise ValueError("Invalid model file")
