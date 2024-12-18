@@ -214,7 +214,7 @@ class UpdateEnvironment(Step):
     
 def environment_spec():
     return {
-        "_type": "step",
+        "_type": "process",
         "address": "local:UpdateEnvironment",
         "config": {},
         "inputs": {
