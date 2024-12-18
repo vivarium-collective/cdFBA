@@ -41,7 +41,7 @@ class DFBA(Process):
     def initial_state(self):
         # TODO -- get the initial state from the load model, self.model
         return {
-            "shared_environment": {}
+            "shared environment": {}
         }
 
     def inputs(self):
@@ -174,7 +174,7 @@ def get_single_dfba_spec(
         "address": "local:DFBA",
         "config": config,
         "inputs": {
-            "shared_environment": "shared environment"
+            "shared_environment": ["shared environment"]
         },
         "outputs": {
             "dfba_update": ["dFBA Results", f"{name}"]
@@ -209,7 +209,7 @@ class UpdateEnvironment(Step):
         for species in species_list:
             update = {key:update[key] + species_updates[species][key] for key in update}
 
-        update = {}
+        # update = {}
         return {"shared_environment": update}
     
 def environment_spec():
@@ -218,11 +218,11 @@ def environment_spec():
         "address": "local:UpdateEnvironment",
         "config": {},
         "inputs": {
-            "species_updates": "dFBA Results",
-            "shared_environment": "shared environment"
+            "species_updates": ["dFBA Results"],
+            "shared_environment": ["shared environment"]
         },
         "outputs": {
-            "shared_environment": "shared environment"
+            "shared_environment": ["shared environment"]
         }
     }
 
@@ -281,7 +281,7 @@ def test_dfba(core):
         "emitter": {'mode': 'all'}},
         core=core
     )
-
+    print(spec)
     # run the simulation
     sim.run(10)
 
@@ -300,8 +300,53 @@ def test_dfba(core):
 
 
 
-def test_environment():
+def test_environment(core):
     """This tests that the environment runs"""
+    # define a single dFBA model
+    spec = {
+        "dfba": get_single_dfba_spec()
+    }
+
+    # TODO -- more automatic way to get initial environment
+    spec['shared environment'] = {
+        "glucose": 10,
+        "acetate": 0,
+        spec['dfba']['config']['biomass_identifier']: 0.1
+        # "biomass": 0.1,
+    }
+    
+    spec['update environment'] = environment_spec()
+    # put it in a composite
+    sim = Composite({
+        "state": spec,
+        "emitter": {'mode': 'all'}},
+        core=core
+    )
+    print(spec)
+    
+    # run the simulation
+    sim.run(100)
+    # sim.update({
+    #     "shared environment": {
+    #         "glucose": 10,
+    #         "acetate": 0,
+    #         spec['dfba']['config']['biomass_identifier']: 0.1
+    #         # "biomass": 0.1,
+    #     }}
+    #            )
+
+    # get the results
+    results = sim.gather_results()[('emitter',)]
+
+    # print the results
+    for timepoint in results:
+        time = timepoint.pop('global_time')
+        dfba_spec = timepoint.pop('dfba')
+        print(f'TIME: {time}')
+        print(f'STATE: {timepoint}')
+
+    # assert that the results are as expected
+    # TODO
     pass
 
 
@@ -313,9 +358,10 @@ if __name__ == "__main__":
     # create a core
     core = ProcessTypes()
     core.register_process('DFBA', DFBA)
+    core.register_process('UpdateEnvironment', UpdateEnvironment)
 
     # print(get_single_dfba_spec())
     # test_dfba_alone(core)
-    test_dfba(core)
-    # test_environment(core)
+    # test_dfba(core)
+    test_environment(core)
     # test_composite()
