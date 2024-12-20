@@ -1,4 +1,5 @@
 import random
+import pprint
 
 from process_bigraph.composite import ProcessTypes
 from cobra.io import load_model
@@ -41,22 +42,23 @@ class DFBA(Process):
     def initial_state(self):
         # TODO -- get the initial state from the load model, self.model
         return {
-            "shared environment": {}
-        }
+            "dfba_update": {
+                'Biomass_Ecoli_core': 0,
+                'acetate': 0,
+                'glucose': 0}}
 
     def inputs(self):
         return {
-             "shared_environment": "any" #initial conditions for time-step
+             "shared_environment": "map[float]" #initial conditions for time-step
         }
         
     def outputs(self):
         return {
-             "dfba_update": "any"
+             "dfba_update": "map[float]"
         }
 
 
     def update(self, inputs, interval):
-            
         current_state = inputs["shared_environment"].copy()
         state_update = inputs["shared_environment"].copy()
     
@@ -189,21 +191,22 @@ class UpdateEnvironment(Step):
         
     def inputs(self):
         return {
-             "shared_environment": "any",
-             "species_updates": "any"
+             "shared_environment": "map[float]",
+             "species_updates": "map[map[float]]"
         }
         
     def outputs(self):
         return {
-             "shared_environment": "any"
+             "shared_environment": "map[float]"
         }
 
     def update(self, inputs):
-
         species_updates = inputs["species_updates"]
         shared_environment = inputs["shared_environment"]
 
-        species_list = random.shuffle([species for species in species_updates])
+        species_list = [species for species in species_updates]
+        random.shuffle(species_list)
+
         update = shared_environment.copy()
 
         for species in species_list:
@@ -322,7 +325,7 @@ def test_environment(core):
         "emitter": {'mode': 'all'}},
         core=core
     )
-    print(spec)
+    pprint.pprint(spec)
     
     # run the simulation
     sim.run(100)
