@@ -6,11 +6,20 @@ def apply_non_negative(schema, current, update, core):
     return max(0, new_value)
 
 
+def set_update(schema, current, update, core):
+    return update
+
+
 positive_float = {
     '_type': 'positive_float',
     '_inherit': 'float',
     '_apply': apply_non_negative}
 
+set_float = {
+    '_type': 'set_float',
+    '_inherit': 'float',
+    '_apply': set_update
+}
 
 bounds_type = {
     'lower': 'maybe[float]',
@@ -27,6 +36,7 @@ particle_type = {
 
 def register_types(core):
     core.register('positive_float', positive_float)
+    core.register('set_float', set_float)
     core.register('bounds', bounds_type)
     core.register('particle', particle_type)
     
