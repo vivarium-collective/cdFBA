@@ -2,8 +2,6 @@ import random
 import pprint
 
 from process_bigraph.composite import ProcessTypes
-from cobra.io import load_model
-from cobra.medium import minimal_medium
 from process_bigraph import Process, Step, Composite
 
 from cdFBA.utils import DFBAconfig, model_from_file
@@ -22,7 +20,7 @@ class DFBA(Process):
         "kinetics": "any",
         "reaction_map": "any",
         "biomass_identifier": "any",
-        "bounds": "any",
+        "bounds": "maybe[map[bounds]]",
     }
 
     def __init__(self, config, core):
@@ -105,7 +103,11 @@ def dfba_config(
             "glucose": "EX_glc__D_e",
             "acetate": "EX_ac_e"}
     if bounds is None:
-        bounds = {}
+        bounds = {
+            "EX_o2_e": {"lower": -2, "upper": None},
+            "ATPM": {"lower": 1, "upper": 1}
+        }
+
     if kinetics is None:
         kinetics = {
             "glucose": (0.5, 1),
@@ -119,18 +121,25 @@ def dfba_config(
         "kinetics": kinetics,
         "reaction_map": reaction_map,
         "biomass_identifier": biomass_identifier,
-        "bounds": bounds
+         "bounds": bounds,
+        "time_step": 0.1,
     }
 
 def dfba_config_from_model(
         model_file="textbook",
         medium_type ="default",
         name=None,
-        bounds={}
+        bounds=None
 ):
     model = model_from_file(model_file=model_file)
     if name is None:
         name = model.id
+    if bounds is None:
+        bounds = {
+            "EX_o2_e": {"lower": -2, "upper": None},
+            "ATPM": {"lower": 1, "upper": 1}
+        }
+
     dfbaconfig = DFBAconfig(model, medium_type=medium_type)
     kinetics = dfbaconfig.kinetics
     reaction_map = dfbaconfig.reaction_map
@@ -252,7 +261,6 @@ def community_dfba_spec(
 
             )
 
-
 def run_dfba_alone(core):
 
     model_file = "textbook"
@@ -265,8 +273,6 @@ def run_dfba_alone(core):
     results = dfba.update(inputs, 1)
 
     print(results)
-
-
 
 def run_dfba(core):
     name = "E.coli"
@@ -312,8 +318,6 @@ def run_dfba(core):
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
 
-    # assert that the results are as expected
-    # TODO
 
 def run_environment(core):
     """This tests that the environment runs"""
@@ -323,7 +327,6 @@ def run_environment(core):
         "dfba": get_single_dfba_spec(model_file= "iAF1260", name=name)
     }
 
-    # TODO -- more automatic way to get initial environment
     spec['shared environment'] = {
         "glucose": 100,
         "acetate": 5,
@@ -349,7 +352,7 @@ def run_environment(core):
     pprint.pprint(spec)
 
     # run the simulation
-    sim.run(100)
+    sim.run(10)
     # sim.update({
     #     "shared environment": {
     #         "glucose": 10,
@@ -368,9 +371,6 @@ def run_environment(core):
         dfba_spec = timepoint.pop('dfba')
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
-
-    # assert that the results are as expected
-    # TODO
     pass
 
 
