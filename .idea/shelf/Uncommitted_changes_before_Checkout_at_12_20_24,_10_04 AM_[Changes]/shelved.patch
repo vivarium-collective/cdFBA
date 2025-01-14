@@ -1,0 +1,197 @@
+Index: cdFBA/processes/dfba.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import random\n\nfrom process_bigraph.composite import ProcessTypes\nfrom cobra.io import load_model\nfrom cobra.medium import minimal_medium\nfrom process_bigraph import Process, Step, Composite\n\nfrom cdFBA.utils import DFBAconfig, model_from_file\n\n\nclass DFBA(Process):\n    \"\"\"Performs single time-step of dynamic FBA\n    \n    Parameters:\n    -----------\n    model_file: string, math to cobra model file\n    \"\"\"\n    config_schema = {\n        \"model_file\": \"any\",\n        \"name\": \"any\",\n        \"kinetics\": \"any\",\n        \"reaction_map\": \"any\",\n        \"biomass_identifier\": \"any\",\n        \"bounds\": \"any\",\n    }\n    \n    def __init__(self, config, core):\n        super().__init__(config, core)\n\n        # TODO -- load model here rather than passing it in\n        self.model = model_from_file(self.config['model_file'])\n\n\n        if self.config[\"bounds\"] is not None:\n            for reaction_id, bounds in self.config[\"bounds\"].items():\n                if bounds[\"lower\"] is not None:\n                    self.model.reactions.get_by_id(reaction_id).lower_bound = bounds[\"lower\"]\n                if bounds[\"upper\"] is not None:\n                    self.model.reactions.get_by_id(reaction_id).upper_bound = bounds[\"upper\"]\n\n    def initial_state(self):\n        # TODO -- get the initial state from the load model, self.model\n        return {\n            \"shared environment\": {}\n        }\n\n    def inputs(self):\n        return {\n             \"shared_environment\": \"any\" #initial conditions for time-step\n        }\n        \n    def outputs(self):\n        return {\n             \"dfba_update\": \"any\"\n        }\n\n\n    def update(self, inputs, interval):\n            \n        current_state = inputs[\"shared_environment\"].copy()\n        state_update = inputs[\"shared_environment\"].copy()\n    \n        for substrate_id, reaction_id in self.config[\"reaction_map\"].items():\n            Km, Vmax = self.config[\"kinetics\"][substrate_id]\n            substrate_concentration = current_state[substrate_id]\n            \n            # calculate michaelis-menten flux\n            flux = Vmax * substrate_concentration / (Km + substrate_concentration)\n    \n            # use the flux to constrain fba\n            self.model.reactions.get_by_id(reaction_id).lower_bound = -flux\n    \n        # solve fba under these constraints\n        solution = self.model.optimize()\n    \n        # gather the results\n        ## update biomass\n        biomass_growth_rate = solution.fluxes[self.config[\"biomass_identifier\"]]\n        current_biomass = current_state[self.config[\"biomass_identifier\"]]\n        state_update[self.config['biomass_identifier']] = biomass_growth_rate * current_biomass * interval\n    \n        ## update substrates\n        for substrate_id, reaction_id in self.config[\"reaction_map\"].items():\n            flux = solution.fluxes[reaction_id]\n            current_substrate_conc = current_state[substrate_id]\n            state_update[substrate_id] = flux * current_biomass * interval\n\n        return {\"dfba_update\": state_update}\n    \ndef dfba_config(\n        model_file=\"textbook\",\n        name=None,\n        kinetics=None,\n        reaction_map=None,\n        biomass_identifier=None,\n        bounds=None\n):\n    model = model_from_file(model_file)\n    if name is None:\n        name = model.id\n    if reaction_map is None:\n        reaction_map = {\n            \"glucose\": \"EX_glc__D_e\",\n            \"acetate\": \"EX_ac_e\"}\n    if bounds is None:\n        bounds = {}\n    if kinetics is None:\n        kinetics = {\n            \"glucose\": (0.5, 1),\n            \"acetate\": (0.5, 2)}\n    if biomass_identifier is None:\n        biomass_identifier = DFBAconfig.get_objective_reaction(model=model)\n        \n    return {\n        \"model_file\": model_file,\n        \"name\": name,\n        \"kinetics\": kinetics,\n        \"reaction_map\": reaction_map,\n        \"biomass_identifier\": biomass_identifier,\n        \"bounds\": bounds\n    }\n\ndef dfba_config_from_model(\n        model_file=\"textbook\",\n        medium_type =\"default\",\n        name=None,\n        bounds={}\n):\n    model = model_from_file(model_file=model_file)\n    if name is None:\n        name = model.id         \n    dfbaconfig = DFBAconfig(model, medium_type=medium_type)\n    kinetics = dfbaconfig.kinetics\n    reaction_map = dfbaconfig.reaction_map\n    biomass_identifier = dfbaconfig.get_objective_reaction(model)\n\n    return {\n        \"model\": model,\n        \"name\": name,\n        \"kinetics\": kinetics,\n        \"reaction_map\": reaction_map,\n        \"biomass_identifier\": biomass_identifier,\n        \"bounds\": bounds\n    }\n    \ndef get_single_dfba_spec(\n        model_file=\"textbook\",\n        name=\"species\",\n        config=None\n):\n    \"\"\"\n    Constructs a configuration dictionary for a dynamic FBA process with optional path indices.\n\n    This function builds a process specification for use with a dynamic FBA system. It allows\n    specification of substrate molecule IDs and optionally appends indices to the paths for those substrates.\n\n    Parameters:\n    -----------\n    model : str, cobra model identifier or path to xml cobra model file\n    name: str, identifier for the model, usually species/strain name\n    config: dict, config for DFBA Process. If none provided, uses default generated using `dfba_config()`\n\n    Returns:\n    --------\n    dict: A dictionary containing the process type, address, configuration, and paths for inputs\n        and outputs based on the specified molecule IDs and indices.\n    \"\"\"\n\n    if config is None:\n        config = dfba_config(model_file=model_file)\n\n    return {\n        \"_type\": \"process\",\n        \"address\": \"local:DFBA\",\n        \"config\": config,\n        \"inputs\": {\n            \"shared_environment\": [\"shared environment\"]\n        },\n        \"outputs\": {\n            \"dfba_update\": [\"dFBA Results\", f\"{name}\"]\n        }\n    }\n\nclass UpdateEnvironment(Step):\n    config_schema = {}\n\n    def __init__(self, config, core):\n        super().__init__(config, core)\n        \n    def inputs(self):\n        return {\n             \"shared_environment\": \"any\",\n             \"species_updates\": \"any\"\n        }\n        \n    def outputs(self):\n        return {\n             \"shared_environment\": \"any\"\n        }\n\n    def update(self, inputs):\n\n        species_updates = inputs[\"species_updates\"]\n        shared_environment = inputs[\"shared_environment\"]\n\n        species_list = random.shuffle([species for species in species_updates])\n        update = shared_environment.copy()\n\n        for species in species_list:\n            update = {key:update[key] + species_updates[species][key] for key in update}\n\n        # update = {}\n        return {\"shared_environment\": update}\n    \ndef environment_spec():\n    return {\n        \"_type\": \"process\",\n        \"address\": \"local:UpdateEnvironment\",\n        \"config\": {},\n        \"inputs\": {\n            \"species_updates\": [\"dFBA Results\"],\n            \"shared_environment\": [\"shared environment\"]\n        },\n        \"outputs\": {\n            \"shared_environment\": [\"shared environment\"]\n        }\n    }\n\ndef community_dfba_spec(\n        species_list = [], \n        from_model=False, \n        medium_type='default'\n):\n    stores = {\n        'shared environment': 'any',\n        'dFBA Results': 'any',\n    }\n\n    dfba_processes = {}\n    \n    if from_model:\n        for model in species_list:\n            dfba_processes.update(\n                \n            )\n\n\ndef test_dfba_alone(core):\n\n    model_file = \"textbook\"\n    config = dfba_config(model_file=model_file)\n    dfba = DFBA(config, core=core)\n\n    initial_state = dfba.initial_state()\n    inputs = {\"shared_environment\": initial_state}\n\n    results = dfba.update(inputs, 1)\n\n    print(results)\n\n\n\ndef test_dfba(core):\n\n    # define a single dFBA model\n    spec = {\n        \"dfba\": get_single_dfba_spec()\n    }\n\n    # TODO -- more automatic way to get initial environment\n    spec['shared environment'] = {\n        \"glucose\": 10,\n        \"acetate\": 0,\n        spec['dfba']['config']['biomass_identifier']: 0.1\n        # \"biomass\": 0.1,\n    }\n\n    # put it in a composite\n    sim = Composite({\n        \"state\": spec,\n        \"emitter\": {'mode': 'all'}},\n        core=core\n    )\n    print(spec)\n    # run the simulation\n    sim.run(10)\n\n    # get the results\n    results = sim.gather_results()[('emitter',)]\n\n    # print the results\n    for timepoint in results:\n        time = timepoint.pop('global_time')\n        dfba_spec = timepoint.pop('dfba')\n        print(f'TIME: {time}')\n        print(f'STATE: {timepoint}')\n\n    # assert that the results are as expected\n    # TODO\n\n\n\ndef test_environment(core):\n    \"\"\"This tests that the environment runs\"\"\"\n    # define a single dFBA model\n    spec = {\n        \"dfba\": get_single_dfba_spec()\n    }\n\n    # TODO -- more automatic way to get initial environment\n    spec['shared environment'] = {\n        \"glucose\": 10,\n        \"acetate\": 0,\n        spec['dfba']['config']['biomass_identifier']: 0.1\n        # \"biomass\": 0.1,\n    }\n    \n    spec['update environment'] = environment_spec()\n    # put it in a composite\n    sim = Composite({\n        \"state\": spec,\n        \"emitter\": {'mode': 'all'}},\n        core=core\n    )\n    print(spec)\n    \n    # run the simulation\n    sim.run(100)\n    # sim.update({\n    #     \"shared environment\": {\n    #         \"glucose\": 10,\n    #         \"acetate\": 0,\n    #         spec['dfba']['config']['biomass_identifier']: 0.1\n    #         # \"biomass\": 0.1,\n    #     }}\n    #            )\n\n    # get the results\n    results = sim.gather_results()[('emitter',)]\n\n    # print the results\n    for timepoint in results:\n        time = timepoint.pop('global_time')\n        dfba_spec = timepoint.pop('dfba')\n        print(f'TIME: {time}')\n        print(f'STATE: {timepoint}')\n\n    # assert that the results are as expected\n    # TODO\n    pass\n\n\ndef test_composite():\n    pass\n\n\nif __name__ == \"__main__\":\n    # create a core\n    core = ProcessTypes()\n    core.register_process('DFBA', DFBA)\n    core.register_process('UpdateEnvironment', UpdateEnvironment)\n\n    # print(get_single_dfba_spec())\n    # test_dfba_alone(core)\n    # test_dfba(core)\n    test_environment(core)\n    # test_composite()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/cdFBA/processes/dfba.py b/cdFBA/processes/dfba.py
+--- a/cdFBA/processes/dfba.py	(revision e383902699f2511452a611049a96c0789b853931)
++++ b/cdFBA/processes/dfba.py	(date 1734628220234)
+@@ -1,12 +1,19 @@
+ import random
++import pytest
+ 
+ from process_bigraph.composite import ProcessTypes
+-from cobra.io import load_model
+-from cobra.medium import minimal_medium
+-from process_bigraph import Process, Step, Composite
+-
++from process_bigraph import Process, Step, Composite, register_types
+ from cdFBA.utils import DFBAconfig, model_from_file
+ 
++# @pytest.fixture
++# def core():
++#     core = ProcessTypes()
++#     return register_types(core)
++
++def get_core():
++    core = ProcessTypes()
++    return register_types(core)
++
+ 
+ class DFBA(Process):
+     """Performs single time-step of dynamic FBA
+@@ -203,13 +210,13 @@
+         species_updates = inputs["species_updates"]
+         shared_environment = inputs["shared_environment"]
+ 
+-        species_list = random.shuffle([species for species in species_updates])
++        species_list = [species for species in species_updates]
++        random.shuffle(species_list)
+         update = shared_environment.copy()
+ 
+         for species in species_list:
+             update = {key:update[key] + species_updates[species][key] for key in update}
+ 
+-        # update = {}
+         return {"shared_environment": update}
+     
+ def environment_spec():
+@@ -227,10 +234,12 @@
+     }
+ 
+ def community_dfba_spec(
+-        species_list = [], 
++        species_list=None,
+         from_model=False, 
+         medium_type='default'
+ ):
++    if species_list is None:
++        species_list = []
+     stores = {
+         'shared environment': 'any',
+         'dFBA Results': 'any',
+@@ -245,7 +254,9 @@
+             )
+ 
+ 
+-def test_dfba_alone(core):
++def test_dfba_alone(core=None):
++    if not core:
++        core = get_core()
+ 
+     model_file = "textbook"
+     config = dfba_config(model_file=model_file)
+@@ -260,7 +271,9 @@
+ 
+ 
+ 
+-def test_dfba(core):
++def test_dfba(core=None):
++    if not core:
++        core = get_core()
+ 
+     # define a single dFBA model
+     spec = {
+@@ -300,12 +313,12 @@
+ 
+ 
+ 
+-def test_environment(core):
++def test_environment(core=None):
++    if not core:
++        core = get_core()
+     """This tests that the environment runs"""
+     # define a single dFBA model
+-    spec = {
+-        "dfba": get_single_dfba_spec()
+-    }
++    spec = {"dfba": get_single_dfba_spec()}
+ 
+     # TODO -- more automatic way to get initial environment
+     spec['shared environment'] = {
+Index: .idea/vcs.xml
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1734624549300)
++++ b/.idea/vcs.xml	(date 1734624549300)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+new file mode 100644
+--- /dev/null	(date 1734624469458)
++++ b/.idea/.gitignore	(date 1734624469458)
+@@ -0,0 +1,8 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+Index: .idea/inspectionProfiles/profiles_settings.xml
+===================================================================
+diff --git a/.idea/inspectionProfiles/profiles_settings.xml b/.idea/inspectionProfiles/profiles_settings.xml
+new file mode 100644
+--- /dev/null	(date 1734624549301)
++++ b/.idea/inspectionProfiles/profiles_settings.xml	(date 1734624549301)
+@@ -0,0 +1,6 @@
++<component name="InspectionProjectProfileManager">
++  <settings>
++    <option name="USE_PROJECT_PROFILE" value="false" />
++    <version value="1.0" />
++  </settings>
++</component>
+\ No newline at end of file
+Index: .idea/cdFBA.iml
+===================================================================
+diff --git a/.idea/cdFBA.iml b/.idea/cdFBA.iml
+new file mode 100644
+--- /dev/null	(date 1734625158259)
++++ b/.idea/cdFBA.iml	(date 1734625158259)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="PYTHON_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$" />
++    <orderEntry type="jdk" jdkName="fbapractice" jdkType="Python SDK" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++  <component name="PyDocumentationSettings">
++    <option name="format" value="GOOGLE" />
++    <option name="myDocStringFormat" value="Google" />
++  </component>
++</module>
+\ No newline at end of file
+Index: .idea/modules.xml
+===================================================================
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+new file mode 100644
+--- /dev/null	(date 1734624549298)
++++ b/.idea/modules.xml	(date 1734624549298)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/cdFBA.iml" filepath="$PROJECT_DIR$/.idea/cdFBA.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+new file mode 100644
+--- /dev/null	(date 1734625158262)
++++ b/.idea/misc.xml	(date 1734625158262)
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Black">
++    <option name="sdkName" value="fbapractice" />
++  </component>
++  <component name="ProjectRootManager" version="2" project-jdk-name="fbapractice" project-jdk-type="Python SDK" />
++</project>
+\ No newline at end of file

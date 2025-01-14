@@ -7,6 +7,9 @@ from process_bigraph import Process, Step, Composite
 from cdFBA.utils import DFBAconfig, model_from_file
 
 
+from matplotlib import pyplot as plt
+
+
 class DFBA(Process):
     """Performs single time-step of dynamic FBA
 
@@ -58,8 +61,9 @@ class DFBA(Process):
 
 
     def update(self, inputs, interval):
-        current_state = inputs["shared_environment"].copy()
-        state_update = inputs["shared_environment"].copy()
+        current_state = {key:inputs["shared_environment"][key] for key, value in self.config["reaction_map"].items()}
+        current_state[self.config["name"]] = inputs["shared_environment"][self.config["name"]]
+        state_update = current_state.copy()
 
         for substrate_id, reaction_id in self.config["reaction_map"].items():
             Km, Vmax = self.config["kinetics"][substrate_id]
@@ -77,8 +81,8 @@ class DFBA(Process):
         # gather the results
         ## update biomass
         biomass_growth_rate = solution.fluxes[self.config["biomass_identifier"]]
-        current_biomass = current_state[self.config["biomass_identifier"]]
-        state_update[self.config['biomass_identifier']] = biomass_growth_rate * current_biomass * interval
+        current_biomass = current_state[self.config["name"]]
+        state_update[self.config['name']] = biomass_growth_rate * current_biomass * interval
 
         ## update substrates
         for substrate_id, reaction_id in self.config["reaction_map"].items():
@@ -101,17 +105,17 @@ def dfba_config(
     if reaction_map is None:
         reaction_map = {
             "glucose": "EX_glc__D_e",
-            "acetate": "EX_ac_e"}
+            "acetate": "EX_ac_e"
+        }
     if bounds is None:
         bounds = {
             "EX_o2_e": {"lower": -2, "upper": None},
             "ATPM": {"lower": 1, "upper": 1}
         }
-
     if kinetics is None:
         kinetics = {
-            "glucose": (0.5, 1),
-            "acetate": (0.5, 2)}
+            "glucose": (0.02, 15),
+            "acetate": (0.5, 7)}
     if biomass_identifier is None:
         biomass_identifier = DFBAconfig.get_objective_reaction(model=model)
 
@@ -244,7 +248,7 @@ def environment_spec():
     }
 
 def community_dfba_spec(
-        species_list = [],
+        species_list = None,
         from_model=False,
         medium_type='default'
 ):
@@ -285,7 +289,7 @@ def run_dfba(core):
     spec['shared environment'] = {
         "glucose": 10,
         "acetate": 0,
-        spec['dfba']['config']['biomass_identifier']: 0.1
+        spec['dfba']['config']['name']: 0.1
         # "biomass": 0.1,
     }
 
@@ -294,7 +298,7 @@ def run_dfba(core):
         {
             "glucose": 0,
             "acetate": 0,
-            spec['dfba']['config']['biomass_identifier']: 0
+            spec['dfba']['config']['name']: 0
         }
     }
 
@@ -327,18 +331,27 @@ def run_environment(core):
         "dfba": get_single_dfba_spec(model_file= "iAF1260", name=name)
     }
 
+    spec["dfba2"] = get_single_dfba_spec(model_file = "iMM904", name="S.cerevisiae")
+
     spec['shared environment'] = {
-        "glucose": 100,
+        "glucose": 30,
         "acetate": 5,
-        spec['dfba']['config']['biomass_identifier']: 0.5
+        spec['dfba']['config']['name']: 0.5,
+        spec['dfba2']['config']['name']: 0.5
         # "biomass": 0.1,
     }
 
     spec['dFBA Results'] = {name:
         {
-        "glucose": 0,
-        "acetate": 0,
-        spec['dfba']['config']['biomass_identifier']: 0
+            "glucose": 0,
+            "acetate": 0,
+            spec['dfba']['config']['name']: 0,
+        },
+        "S.cerevisiae":
+        {
+            "glucose": 0,
+            "acetate": 0,
+            spec['dfba2']['config']['name']: 0,
         }
     }
 
@@ -352,7 +365,7 @@ def run_environment(core):
     pprint.pprint(spec)
 
     # run the simulation
-    sim.run(10)
+    sim.run(40)
     # sim.update({
     #     "shared environment": {
     #         "glucose": 10,
@@ -365,13 +378,34 @@ def run_environment(core):
     # get the results
     results = sim.gather_results()[('emitter',)]
 
+
     # print the results
+    timepoints = []
     for timepoint in results:
         time = timepoint.pop('global_time')
+        timepoints.append(time)
         dfba_spec = timepoint.pop('dfba')
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
-    pass
+
+    env = [timepoint['shared environment'] for timepoint in results]
+    env_combined = {}
+    for d in env:
+        for key, value in d.items():
+            if key not in env_combined:
+                env_combined[key] = []
+            env_combined[key].append(value)
+
+
+    fig, ax = plt.subplots()
+    for key, value in env_combined.items():
+        ax.plot(timepoints, env_combined[key], label=key)
+    plt.xlabel('Time')
+    plt.ylabel('Substrate Count')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
 
 
 def run_composite():
