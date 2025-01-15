@@ -50,7 +50,7 @@ class DFBA(Process):
 
     def inputs(self):
         return {
-            "shared_environment": "map[float]", #initial conditions for time-step
+            "shared_environment": "map[map[float]]", #initial conditions for time-step
             "current_update": "map[map[set_float]]",
         }
 
@@ -61,13 +61,13 @@ class DFBA(Process):
 
 
     def update(self, inputs, interval):
-        current_state = {key:inputs["shared_environment"][key] for key, value in self.config["reaction_map"].items()}
-        current_state[self.config["name"]] = inputs["shared_environment"][self.config["name"]]
+        current_state = {key:inputs["shared_environment"]["counts"][key] for key, value in self.config["reaction_map"].items()}
+        current_state[self.config["name"]] = inputs["shared_environment"]["counts"][self.config["name"]]
         state_update = current_state.copy()
 
         for substrate_id, reaction_id in self.config["reaction_map"].items():
             Km, Vmax = self.config["kinetics"][substrate_id]
-            substrate_concentration = current_state[substrate_id]
+            substrate_concentration = inputs["shared_environment"]["concentrations"][substrate_id]
 
             # calculate michaelis-menten flux
             flux = Vmax * substrate_concentration / (Km + substrate_concentration)
@@ -125,7 +125,7 @@ def dfba_config(
         "kinetics": kinetics,
         "reaction_map": reaction_map,
         "biomass_identifier": biomass_identifier,
-         "bounds": bounds,
+        "bounds": bounds,
         "time_step": 0.1,
     }
 
@@ -205,18 +205,20 @@ class UpdateEnvironment(Step):
 
     def inputs(self):
         return {
-             "shared_environment": "map[float]",
+             "shared_environment": "map[map[float]]",
              "species_updates": "map[map[set_float]]"
         }
 
     def outputs(self):
         return {
-             "shared_environment": "map[float]"
+            "shared_environment": "map[float]",
+            "shared_concentration": "map[float]",
         }
 
     def update(self, inputs):
         species_updates = inputs["species_updates"]
-        shared_environment = inputs["shared_environment"]
+        shared_environment = inputs["shared_environment"]["counts"]
+        env_volume = inputs["shared_environment"]["volume"]
 
         species_list = [species for species in species_updates]
         random.shuffle(species_list)
@@ -230,8 +232,14 @@ class UpdateEnvironment(Step):
                 else:
                     update[substrate_id] = -shared_environment[substrate_id]
 
+        update_concentration = {key:(count/env_volume) for key, count in update.items()}
+
+
         # update = {}
-        return {"shared_environment": update}
+        return {
+            "shared_environment": update,
+            "shared_concentration": update_concentration,
+        }
 
 def environment_spec():
     return {
@@ -243,7 +251,8 @@ def environment_spec():
             "shared_environment": ["shared environment"]
         },
         "outputs": {
-            "shared_environment": ["shared environment"]
+            "shared_environment": ["shared environment", "counts"],
+            "shared_concentration": ["shared environment", "concentrations"]
         }
     }
 
@@ -264,6 +273,35 @@ def community_dfba_spec(
             dfba_processes.update(
 
             )
+    #TODO: Finish this function
+
+def initial_environment(volume=1, initial_counts=None, species_list=None):
+    """
+    Parameters:
+        volume : float, volume of the environment
+        initial_counts : dict, initial counts of each substrate and species biomass in the environment
+        species_list : list of strings, list of dfba species names (DFBA.config["name"])
+
+    Returns:
+        initial shared environment store spec
+    """
+    if initial_counts is None:
+        if species_list is None:
+            raise ValueError("Error: Please provide initial_counts or species_list")
+        initial_counts = {
+            "glucose": 40,
+            "acetate": 0,
+        }
+        for species in species_list:
+            initial_counts[species] = 0.5
+
+    initial_concentration = {key:(count/volume) for key, count in initial_counts.items()}
+
+    return {
+        "volume": volume,
+        "counts": initial_counts,
+        "concentrations": initial_concentration
+    }
 
 def run_dfba_alone(core):
 
@@ -325,29 +363,24 @@ def run_dfba(core):
 
 def run_environment(core):
     """This tests that the environment runs"""
-    name = "E.coli"
+    name1 = "E.coli"
+    name2 = "S.flexneri"
     # define a single dFBA model
     spec = {
-        "dfba": get_single_dfba_spec(model_file= "iAF1260", name=name)
+        "dfba": get_single_dfba_spec(model_file= "iAF1260", name=name1)
     }
 
-    spec["dfba2"] = get_single_dfba_spec(model_file = "iMM904", name="S.cerevisiae")
+    spec["dfba2"] = get_single_dfba_spec(model_file = "iSFxv_1172", name=name2)
 
-    spec['shared environment'] = {
-        "glucose": 30,
-        "acetate": 5,
-        spec['dfba']['config']['name']: 0.5,
-        spec['dfba2']['config']['name']: 0.5
-        # "biomass": 0.1,
-    }
+    spec['shared environment'] = initial_environment(volume=1, species_list=[name1, name2])
 
-    spec['dFBA Results'] = {name:
+    spec['dFBA Results'] = {name1:
         {
             "glucose": 0,
             "acetate": 0,
             spec['dfba']['config']['name']: 0,
         },
-        "S.cerevisiae":
+        name2:
         {
             "glucose": 0,
             "acetate": 0,
@@ -388,7 +421,7 @@ def run_environment(core):
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
 
-    env = [timepoint['shared environment'] for timepoint in results]
+    env = [timepoint['shared environment']['concentration'] for timepoint in results]
     env_combined = {}
     for d in env:
         for key, value in d.items():
@@ -397,7 +430,7 @@ def run_environment(core):
             env_combined[key].append(value)
 
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(dpi=300)
     for key, value in env_combined.items():
         ax.plot(timepoints, env_combined[key], label=key)
     plt.xlabel('Time')
