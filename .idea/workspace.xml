@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="introduced volume and concentration calculaion for `shared environment`">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -98,7 +99,7 @@
       <updated>1734624463363</updated>
       <workItem from="1734624464742" duration="8005000" />
       <workItem from="1734707223113" duration="35832000" />
-      <workItem from="1735934005838" duration="75968000" />
+      <workItem from="1735934005838" duration="86340000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
       <option name="closed" value="true" />
@@ -140,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736876260591</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="introduced volume and concentration calculaion for `shared environment`">
+      <option name="closed" value="true" />
+      <created>1736971539479</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1736971539479</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,7 +170,8 @@
     <MESSAGE value="Fixed dfba process and added setfloat type" />
     <MESSAGE value="added bounds and fixed type for bounds to allow acetate production" />
     <MESSAGE value="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment" />
+    <MESSAGE value="introduced volume and concentration calculaion for `shared environment`" />
+    <option name="LAST_COMMIT_MESSAGE" value="introduced volume and concentration calculaion for `shared environment`" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -198,13 +208,58 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>415</line>
+          <line>414</line>
           <option name="timeStamp" value="57" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
+          <line>392</line>
+          <option name="timeStamp" value="63" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
-          <line>835</line>
-          <option name="timeStamp" value="62" />
+          <line>994</line>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
+          <line>1008</line>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_system.py</url>
+          <line>1254</line>
+          <option name="timeStamp" value="67" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_system.py</url>
+          <line>2020</line>
+          <option name="timeStamp" value="68" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_system.py</url>
+          <line>2006</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_functions.py</url>
+          <line>1883</line>
+          <option name="timeStamp" value="70" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_functions.py</url>
+          <line>1952</line>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
+          <line>836</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/utilities.py</url>
+          <line>104</line>
+          <option name="timeStamp" value="74" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -217,7 +272,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1736970692730" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1737059943347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1734709845989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
   </component>
 </project>

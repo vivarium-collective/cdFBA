@@ -50,7 +50,7 @@ class DFBA(Process):
 
     def inputs(self):
         return {
-            "shared_environment": "map[map[float]]", #initial conditions for time-step
+            "shared_environment": "volumetric", #initial conditions for time-step
             "current_update": "map[map[set_float]]",
         }
 
@@ -205,14 +205,13 @@ class UpdateEnvironment(Step):
 
     def inputs(self):
         return {
-             "shared_environment": "map[map[float]]",
-             "species_updates": "map[map[set_float]]"
+             "shared_environment": "volumetric",
+             "species_updates": "map[map[set_float]]" #TODO add a species_update type
         }
 
     def outputs(self):
         return {
             "shared_environment": "map[float]",
-            "shared_concentration": "map[float]",
         }
 
     def update(self, inputs):
@@ -237,8 +236,7 @@ class UpdateEnvironment(Step):
 
         # update = {}
         return {
-            "shared_environment": update,
-            "shared_concentration": update_concentration,
+            "shared_environment": {'counts': update, 'concentration': update_concentration}
         }
 
 def environment_spec():
@@ -251,8 +249,7 @@ def environment_spec():
             "shared_environment": ["shared environment"]
         },
         "outputs": {
-            "shared_environment": ["shared environment", "counts"],
-            "shared_concentration": ["shared environment", "concentrations"]
+            "shared_environment": ["shared environment"],
         }
     }
 
@@ -389,13 +386,15 @@ def run_environment(core):
     }
 
     spec['update environment'] = environment_spec()
+
+    pprint.pprint(spec)
+
     # put it in a composite
     sim = Composite({
         "state": spec,
         "emitter": {'mode': 'all'}},
         core=core
     )
-    pprint.pprint(spec)
 
     # run the simulation
     sim.run(40)
@@ -421,7 +420,7 @@ def run_environment(core):
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
 
-    env = [timepoint['shared environment']['concentration'] for timepoint in results]
+    env = [timepoint['shared environment']['concentrations'] for timepoint in results]
     env_combined = {}
     for d in env:
         for key, value in d.items():
