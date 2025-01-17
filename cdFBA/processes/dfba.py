@@ -231,12 +231,8 @@ class UpdateEnvironment(Step):
                 else:
                     update[substrate_id] = -shared_environment[substrate_id]
 
-        update_concentration = {key:(count/env_volume) for key, count in update.items()}
-
-
-        # update = {}
         return {
-            "shared_environment": {'counts': update, 'concentration': update_concentration}
+            "shared_environment": {'counts': update}
         }
 
 def environment_spec():
