@@ -161,7 +161,7 @@ def dfba_config_from_model(
 def get_single_dfba_spec(
         model_file="textbook",
         name="species",
-        config=None
+        config=None #TODO: add kwargs
 ):
     """
     Constructs a configuration dictionary for a dynamic FBA process with optional path indices.
@@ -365,7 +365,7 @@ def run_environment(core):
 
     spec["dfba2"] = get_single_dfba_spec(model_file = "iSFxv_1172", name=name2)
 
-    spec['shared environment'] = initial_environment(volume=1, species_list=[name1, name2])
+    spec['shared environment'] = initial_environment(volume=2, species_list=[name1, name2])
 
     spec['dFBA Results'] = {name1:
         {
@@ -429,7 +429,7 @@ def run_environment(core):
     for key, value in env_combined.items():
         ax.plot(timepoints, env_combined[key], label=key)
     plt.xlabel('Time')
-    plt.ylabel('Substrate Count')
+    plt.ylabel('Substrate Concentration')
     plt.legend()
     plt.tight_layout()
     plt.show()

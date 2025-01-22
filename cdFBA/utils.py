@@ -3,9 +3,16 @@ for dFBA simulations from the minimal medium requirements of the wild-type speci
 
 CAUTION: The initial conditions, and kinetics dataframes provide default parameter values and need to be changed as needed
 """
+
+#TODO: make notebook demo for functions and make them pure functions
+
 from cobra.io import load_model, read_sbml_model
 from cobra.medium import minimal_medium 
 import re
+
+
+def make_cdfba_composite(model_dict, kinetic_params=None):
+    pass
 
 class DFBAconfig:
  
@@ -56,7 +63,11 @@ class DFBAconfig:
         """
     
         #obtain substrate names
-        substrates = [item.replace(' exchange', '') for item in [getattr(self.model.reactions, i).name for i in self.medium.keys()]]
+        substrates = []
+        for item in [getattr(self.model.reactions, i).name for i in self.medium.keys()]:
+            match = re.match(r"(.*) exchange|exchange reaction for (.*)", item)
+            if match:
+                substrates.append(match.group(1) or match.group(2))
         return substrates
         
     def get_reaction_map(self):
