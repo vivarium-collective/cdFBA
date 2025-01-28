@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="added volumetric type to handle new shared environment structure">
-      <change afterPath="$PROJECT_DIR$/Notebooks/Demo.ipynb" afterDir="false" />
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="fixed util function to get substrate names">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/Demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Demo.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -78,6 +77,7 @@
     &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;Python tests.Python tests in dfba.py.executor&quot;: &quot;Debug&quot;,
     &quot;Python.dfba.executor&quot;: &quot;Run&quot;,
+    &quot;Python.utils.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;volumeupdates&quot;,
@@ -109,7 +109,9 @@
       <workItem from="1734707223113" duration="35832000" />
       <workItem from="1735934005838" duration="96831000" />
       <workItem from="1737478772422" duration="594000" />
-      <workItem from="1737480133345" duration="9853000" />
+      <workItem from="1737480133345" duration="40536000" />
+      <workItem from="1737995734905" duration="1534000" />
+      <workItem from="1738002372464" duration="5880000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
       <option name="closed" value="true" />
@@ -175,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737143823698</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="fixed util function to get substrate names">
+      <option name="closed" value="true" />
+      <created>1737572690819</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1737572690819</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,7 +208,8 @@
     <MESSAGE value="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment" />
     <MESSAGE value="introduced volume and concentration calculaion for `shared environment`" />
     <MESSAGE value="added volumetric type to handle new shared environment structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="added volumetric type to handle new shared environment structure" />
+    <MESSAGE value="fixed util function to get substrate names" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed util function to get substrate names" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -288,6 +299,11 @@
           <line>104</line>
           <option name="timeStamp" value="74" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/utils.py</url>
+          <line>194</line>
+          <option name="timeStamp" value="77" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -299,6 +315,7 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1737996791132" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
     <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1737473454028" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1734709845989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
   </component>

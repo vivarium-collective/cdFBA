@@ -3,12 +3,15 @@ for dFBA simulations from the minimal medium requirements of the wild-type speci
 
 CAUTION: The initial conditions, and kinetics dataframes provide default parameter values and need to be changed as needed
 """
+from copy import deepcopy
 
 #TODO: make notebook demo for functions and make them pure functions
 
 from cobra.io import load_model, read_sbml_model
-from cobra.medium import minimal_medium 
+from cobra.medium import minimal_medium
+import pprint
 import re
+import copy
 
 
 def make_cdfba_composite(model_dict, kinetic_params=None):
@@ -48,7 +51,7 @@ class DFBAconfig:
         self.substrates = self.get_substrates()
         self.reaction_map = self.get_reaction_map()
         self.kinetics = self.get_kinetics()
-        self.biomass_indentifier = self.get_objective_reaction(self.model) 
+        self.biomass_indentifier = get_objective_reaction(self.model)
         
     def get_substrates(self):
         """Returns a list of substrates from the model.
@@ -65,9 +68,11 @@ class DFBAconfig:
         #obtain substrate names
         substrates = []
         for item in [getattr(self.model.reactions, i).name for i in self.medium.keys()]:
-            match = re.match(r"(.*) exchange|exchange reaction for (.*)", item)
+            match = re.match(r"(.*) exchange|exchange reaction for (.*)|Exchange of (.*)", item, re.IGNORECASE)
             if match:
-                substrates.append(match.group(1) or match.group(2))
+                substrates.append(match.group(1) or match.group(2) or match.group(3))
+            else:
+                substrates.append(item)
         return substrates
         
     def get_reaction_map(self):
@@ -83,9 +88,11 @@ class DFBAconfig:
         -------
         reaction_name_map : dict, maps substrate names to reactions
         """    
-    
-        reaction_name_map = {self.substrates[i]: list(self.medium.keys())[i] for i in range(len(self.substrates))}
-    
+        substrates = copy.deepcopy(self.substrates)
+        ids = copy.deepcopy(list(self.medium.keys()))
+        reaction_name_map = {}
+        for i in range(len(substrates)):
+            reaction_name_map[substrates[i]] = ids[i]
         return reaction_name_map
     
     def get_kinetics(self):
@@ -100,26 +107,26 @@ class DFBAconfig:
         
         return kinetics
 
-    @staticmethod    
-    def get_objective_reaction(model):
-        """get a string with the name of the objective function of a cobra model
 
-        Parameters:
-        -----------
-        model: cobrapy model
+def get_objective_reaction(model):
+    """get a string with the name of the objective function of a cobra model
 
-        Returns:
-        --------
-        objective_reaction: string, name of the objective reaction (biomass reaction by default)
-        """
+    Parameters:
+    -----------
+    model: cobrapy model
 
-        expression = f"{model.objective.expression}"
-        match = re.search(r'1\.0\*([^\s]+)', expression)
+    Returns:
+    --------
+    objective_reaction: string, name of the objective reaction (biomass reaction by default)
+    """
 
-        if match:
-            objective_reaction = match.group(1)
+    expression = f"{model.objective.expression}"
+    match = re.search(r'1\.0\*([^\s]+)', expression)
 
-        return objective_reaction
+    if match:
+        objective_reaction = match.group(1)
+
+    return objective_reaction
 
 def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', default_concentration = None):
     """Returns an initial condition dict based on medium
@@ -179,3 +186,13 @@ def model_list(model_files=[]):
     """
 
     return [model_from_file(model_file) for model_file in model_files]
+
+def run_config(medium_type='default'):
+    # model = model_from_file('/Users/tasnifrahman/Research/ecolicommunity/agora2/Eubacterium_rectale_ERR1203958.xml')
+    model = load_model('iAF1260')
+    config = DFBAconfig(model, medium_type=medium_type)
+    # pprint.pprint(config.substrates)
+    pprint.pprint(config.reaction_map)
+
+if __name__ == '__main__':
+    run_config(medium_type='exchange')
