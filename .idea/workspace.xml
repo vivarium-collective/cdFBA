@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="fixed util function to get substrate names">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -111,7 +110,7 @@
       <workItem from="1737478772422" duration="594000" />
       <workItem from="1737480133345" duration="40536000" />
       <workItem from="1737995734905" duration="1534000" />
-      <workItem from="1738002372464" duration="34614000" />
+      <workItem from="1738002372464" duration="35802000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
       <option name="closed" value="true" />
@@ -193,7 +192,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738077177341</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fixed util function to get substrate names">
+      <option name="closed" value="true" />
+      <created>1738339664395</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1738339664395</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

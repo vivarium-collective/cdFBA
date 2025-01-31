@@ -449,7 +449,7 @@ def run_environment(core):
         }
     }
 
-    # spec['environment dynamics'] = get_env_dyn_spec(config=env_dynamics_config)
+    spec['environment dynamics'] = get_env_dyn_spec(config=env_dynamics_config)
 
     pprint.pprint(spec)
 
