@@ -4,7 +4,7 @@ import pprint
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import DFBAconfig, model_from_file
+from cdFBA.utils import DFBAconfig, model_from_file, get_objective_reaction
 
 
 from matplotlib import pyplot as plt
@@ -117,7 +117,7 @@ def dfba_config(
             "glucose": (0.02, 15),
             "acetate": (0.5, 7)}
     if biomass_identifier is None:
-        biomass_identifier = DFBAconfig.get_objective_reaction(model=model)
+        biomass_identifier = get_objective_reaction(model=model)
 
     return {
         "model_file": model_file,
@@ -194,7 +194,8 @@ def get_single_dfba_spec(
         },
         "outputs": {
             "dfba_update": ["dFBA Results", name]
-        }
+        },
+        "interval": 1.0
     }
 
 class UpdateEnvironment(Step):
@@ -296,6 +297,63 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
         "concentrations": initial_concentration
     }
 
+class EnvironmentDynamics(Process):
+
+    config_schema = {}
+    # config_schema = {
+    #     'substrate': {
+    #         "type": "string",
+    #         "params": "map[float]", #dictionary containing relevant parameters for the spcific type
+    #     }
+    # }
+
+    # chemostat_params_schema = {
+    #     "concentration": "float",
+    # }
+
+    def __init__(self, config, core):
+        super().__init__(config, core)
+
+    def inputs(self):
+        return {
+            "shared_environment": "volumetric",
+        }
+
+    def outputs(self):
+        return {
+            "shared_environment": "map[float]"
+        }
+
+    def update(self, inputs):
+        shared_environment = inputs["shared_environment"]["counts"]
+
+        update = {}
+
+        for substrate, values in self.config.items():
+            if values["type"] == "chemostat":
+                update[substrate] = (values["params"]["concentration"] * inputs["shared_environment"]["volume"]) - shared_environment[substrate]
+
+        test_ = {}
+
+        return {
+            "shared_environment": {'counts': update}
+        }
+
+def get_env_dyn_spec(config=None):
+    if config is None:
+        raise ValueError("Error: Please provide config")
+    return {
+        "_type": "process",
+        "address": "local:EnvironmentDynamics",
+        "config": config,
+        "inputs": {
+            "shared_environment": ["shared environment"],
+        },
+        "outputs": {
+            "shared_environment": ["shared environment"],
+        },
+    }
+
 def run_dfba_alone(core):
 
     model_file = "textbook"
@@ -353,7 +411,6 @@ def run_dfba(core):
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
 
-
 def run_environment(core):
     """This tests that the environment runs"""
     name1 = "E.coli"
@@ -382,6 +439,17 @@ def run_environment(core):
     }
 
     spec['update environment'] = environment_spec()
+
+    env_dynamics_config = {
+        "glucose": {
+            "type": "chemostat",
+            "params": {
+                "concentration": 40,
+            }
+        }
+    }
+
+    # spec['environment dynamics'] = get_env_dyn_spec(config=env_dynamics_config)
 
     pprint.pprint(spec)
 
@@ -434,8 +502,6 @@ def run_environment(core):
     plt.tight_layout()
     plt.show()
 
-
-
 def run_composite():
     pass
 
@@ -449,6 +515,7 @@ if __name__ == "__main__":
 
     core.register_process('DFBA', DFBA)
     core.register_process('UpdateEnvironment', UpdateEnvironment)
+    core.register_process('EnvironmentDynamics', EnvironmentDynamics)
 
     # print(get_single_dfba_spec())
     # test_dfba_alone(core)
