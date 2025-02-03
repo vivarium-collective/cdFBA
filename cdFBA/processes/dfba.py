@@ -198,7 +198,7 @@ def get_single_dfba_spec(
         "interval": 1.0
     }
 
-class UpdateEnvironment(Step):
+class UpdateEnvironment(Step): #TODO =:
     config_schema = {}
 
     def __init__(self, config, core):
@@ -297,19 +297,11 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
         "concentrations": initial_concentration
     }
 
-class EnvironmentDynamics(Process):
+class Chemostat(Process):
 
-    config_schema = {}
-    # config_schema = {
-    #     'substrate': {
-    #         "type": "string",
-    #         "params": "map[float]", #dictionary containing relevant parameters for the spcific type
-    #     }
-    # }
-
-    # chemostat_params_schema = {
-    #     "concentration": "float",
-    # }
+    config_schema = {
+        "substrate_concentrations" : "map[float]",
+    }
 
     def __init__(self, config, core):
         super().__init__(config, core)
@@ -324,14 +316,13 @@ class EnvironmentDynamics(Process):
             "shared_environment": "map[float]"
         }
 
-    def update(self, inputs):
+    def update(self, inputs, interval):
         shared_environment = inputs["shared_environment"]["counts"]
 
         update = {}
 
-        for substrate, values in self.config.items():
-            if values["type"] == "chemostat":
-                update[substrate] = (values["params"]["concentration"] * inputs["shared_environment"]["volume"]) - shared_environment[substrate]
+        for substrate, values in self.config["substrate_concentrations"].items():
+            update[substrate] = (values * inputs["shared_environment"]["volume"]) - shared_environment[substrate]
 
         test_ = {}
 
@@ -339,12 +330,50 @@ class EnvironmentDynamics(Process):
             "shared_environment": {'counts': update}
         }
 
-def get_env_dyn_spec(config=None):
+class WaveFunction(Process):
+
+    config_schema = {
+        "substrate_concentrations" : "map[float]",
+    }
+
+    def __init__(self, config, core):
+        super().__init__(config, core)
+
+    def inputs(self):
+        return {
+            "shared_environment": "volumetric",
+        }
+
+    def outputs(self):
+        return {
+            "shared_environment": "map[float]"
+        }
+
+class Injector(Process):
+
+    config_schema = {
+        "substrate_concentrations" : "map[float]",
+    }
+
+    def __init__(self, config, core):
+        super().__init__(config, core)
+
+    def inputs(self):
+        return {
+            "shared_environment": "volumetric",
+        }
+
+    def outputs(self):
+        return {
+            "shared_environment": "map[float]"
+        }
+
+def get_chemo_spec(config=None):
     if config is None:
         raise ValueError("Error: Please provide config")
     return {
         "_type": "process",
-        "address": "local:EnvironmentDynamics",
+        "address": "local:Chemostat",
         "config": config,
         "inputs": {
             "shared_environment": ["shared environment"],
@@ -449,7 +478,7 @@ def run_environment(core):
         }
     }
 
-    spec['environment dynamics'] = get_env_dyn_spec(config=env_dynamics_config)
+    spec['environment dynamics'] = get_chemo_spec(config=env_dynamics_config)
 
     pprint.pprint(spec)
 
@@ -495,6 +524,8 @@ def run_environment(core):
 
     fig, ax = plt.subplots(dpi=300)
     for key, value in env_combined.items():
+        if key == 'acetate':
+            continue
         ax.plot(timepoints, env_combined[key], label=key)
     plt.xlabel('Time')
     plt.ylabel('Substrate Concentration')
@@ -515,7 +546,7 @@ if __name__ == "__main__":
 
     core.register_process('DFBA', DFBA)
     core.register_process('UpdateEnvironment', UpdateEnvironment)
-    core.register_process('EnvironmentDynamics', EnvironmentDynamics)
+    core.register_process('Chemostat', Chemostat)
 
     # print(get_single_dfba_spec())
     # test_dfba_alone(core)
