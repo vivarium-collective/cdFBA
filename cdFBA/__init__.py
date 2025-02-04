@@ -58,6 +58,10 @@ volumetric_type = {
     '_apply': volumetric_update
 }
 
+chemostat_type = {
+    'concentration': 'float'
+}
+
 def register_types(core):
     core.register('positive_float', positive_float)
     core.register('set_float', set_float)

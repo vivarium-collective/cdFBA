@@ -1,10 +1,11 @@
 import random
 import pprint
+import math
 
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import DFBAconfig, model_from_file
+from cdFBA.utils import DFBAconfig, model_from_file, get_objective_reaction
 
 
 from matplotlib import pyplot as plt
@@ -117,7 +118,7 @@ def dfba_config(
             "glucose": (0.02, 15),
             "acetate": (0.5, 7)}
     if biomass_identifier is None:
-        biomass_identifier = DFBAconfig.get_objective_reaction(model=model)
+        biomass_identifier = get_objective_reaction(model=model)
 
     return {
         "model_file": model_file,
@@ -194,10 +195,11 @@ def get_single_dfba_spec(
         },
         "outputs": {
             "dfba_update": ["dFBA Results", name]
-        }
+        },
+        "interval": 1.0
     }
 
-class UpdateEnvironment(Step):
+class UpdateEnvironment(Step): #TODO =:
     config_schema = {}
 
     def __init__(self, config, core):
@@ -282,7 +284,7 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
         if species_list is None:
             raise ValueError("Error: Please provide initial_counts or species_list")
         initial_counts = {
-            "glucose": 40,
+            "glucose": 80,
             "acetate": 0,
         }
         for species in species_list:
@@ -296,63 +298,170 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
         "concentrations": initial_concentration
     }
 
-def run_dfba_alone(core):
+class Chemostat(Process):
 
-    model_file = "textbook"
-    config = dfba_config(model_file=model_file)
-    dfba = DFBA(config, core=core)
-
-    initial_state = dfba.initial_state()
-    inputs = {"shared_environment": initial_state}
-
-    results = dfba.update(inputs, 1)
-
-    print(results)
-
-def run_dfba(core):
-    name = "E.coli"
-    # define a single dFBA model
-    spec = {
-        "dfba": get_single_dfba_spec(name=name)
+    config_schema = {
+        "substrate_concentrations" : "map[float]",
     }
 
-    # TODO -- more automatic way to get initial environment
-    spec['shared environment'] = {
-        "glucose": 10,
-        "acetate": 0,
-        spec['dfba']['config']['name']: 0.1
-        # "biomass": 0.1,
-    }
+    def __init__(self, config, core):
+        super().__init__(config, core)
 
-    spec['dFBA Results'] = {
-        name:
-        {
-            "glucose": 0,
-            "acetate": 0,
-            spec['dfba']['config']['name']: 0
+    def inputs(self):
+        return {
+            "shared_environment": "volumetric",
+            "global_time": "float"
         }
+
+    def outputs(self):
+        return {
+            "shared_environment": "map[float]"
+        }
+
+    def update(self, inputs, interval):
+        shared_environment = inputs["shared_environment"]["counts"]
+
+        update = {}
+
+        for substrate, values in self.config["substrate_concentrations"].items():
+            update[substrate] = (values * inputs["shared_environment"]["volume"]) - shared_environment[substrate]
+
+        return {
+            "shared_environment": {'counts': update}
+        }
+
+def get_chemo_spec(config=None):
+    if config is None:
+        raise ValueError("Error: Please provide config")
+    return {
+        "_type": "process",
+        "address": "local:Chemostat",
+        "config": config,
+        "inputs": {
+            "shared_environment": ["shared environment"],
+            "global_time": ["global_time"],
+        },
+        "outputs": {
+            "shared_environment": ["shared environment"],
+        },
     }
 
-    # put it in a composite
-    sim = Composite({
-        "state": spec,
-        "emitter": {'mode': 'all'}},
-        core=core
-    )
-    print(spec)
-    # run the simulation
-    sim.run(10)
+class WaveFunction(Process):
 
-    # get the results
-    results = sim.gather_results()[('emitter',)]
+    config_schema = {
+        "substrate_params" : "map[map[float]]",
+    }
 
-    # print the results
-    for timepoint in results:
-        time = timepoint.pop('global_time')
-        dfba_spec = timepoint.pop('dfba')
-        print(f'TIME: {time}')
-        print(f'STATE: {timepoint}')
+    # substrate_params = {
+    #     "substrate_name": {
+    #         "amplitude": "float",
+    #         "angular_frequency": "float",
+    #         "base_concentration": "float",
+    #         "phase_shift": "float"
+    #     }
+    # }
 
+    def __init__(self, config, core):
+        super().__init__(config, core)
+
+    def inputs(self):
+        return {
+            "shared_environment": "volumetric",
+            "global_time": "float"
+        }
+
+    def outputs(self):
+        return {
+            "shared_environment": "map[float]"
+        }
+
+    def update(self, inputs, interval):
+        shared_environment = inputs["shared_environment"]["counts"]
+        t = inputs["global_time"]
+        update = {}
+        for substrate in self.config["substrate_params"]:
+            A = self.config["substrate_params"][substrate]["amplitude"]
+            w = self.config["substrate_params"][substrate]["angular_frequency"]
+            B = self.config["substrate_params"][substrate]["base_concentration"]
+            phi = self.config["substrate_params"][substrate]["phase_shift"]
+
+            current_count = (A*math.sin(w*t+phi) + B) * inputs["shared_environment"]["volume"]
+
+            update[substrate] = (current_count - shared_environment[substrate])
+
+        return {
+            "shared_environment": {'counts': update}
+        }
+
+def get_wave_spec(config=None):
+    if config is None:
+        raise ValueError("Error: Please provide config")
+    return {
+        "_type": "process",
+        "address": "local:WaveFunction",
+        "config": config,
+        "inputs": {
+            "shared_environment": ["shared environment"],
+            "global_time": ["global_time"],
+        },
+        "outputs": {
+            "shared_environment": ["shared environment"],
+        },
+    }
+
+class Injector(Process):
+
+    config_schema = {
+        "injection_params" : "map[map[float]]",
+    }
+
+    # injection_params = {
+    #     "substrate_name" : {
+    #         "amount": "float",
+    #         "interval": "float",
+    #     }
+    # }
+
+    def __init__(self, config, core):
+        super().__init__(config, core)
+
+    def inputs(self):
+        return {
+            "shared_environment": "volumetric",
+            "global_time": "float"
+        }
+
+    def outputs(self):
+        return {
+            "shared_environment": "map[float]"
+        }
+
+    def update(self, inputs, interval):
+        shared_environment = inputs["shared_environment"]["counts"]
+        t = inputs["global_time"]
+        update = {}
+        for substrate in self.config["injection_params"]:
+            if ((t % self.config["injection_params"][substrate]["interval"]) == 0) & (t!=0.0):
+                update[substrate] = self.config["injection_params"][substrate]["amount"]
+        return {
+            "shared_environment": {'counts': update}
+        }
+
+def get_injector_spec(config=None):
+    if config is None:
+        raise ValueError("Error: Please provide config")
+    return {
+        "_type": "process",
+        "address": "local:Injector",
+        "config": config,
+        "inputs": {
+            "shared_environment": ["shared environment"],
+            "global_time": ["global_time"],
+        },
+        "outputs": {
+            "shared_environment": ["shared environment"],
+        },
+    }
 
 def run_environment(core):
     """This tests that the environment runs"""
@@ -382,6 +491,17 @@ def run_environment(core):
     }
 
     spec['update environment'] = environment_spec()
+
+    injector_config = {
+        "injection_params": {
+            "glucose": {
+                "amount": 80,
+                "interval": 5,
+            }
+        }
+    }
+
+    spec['environment dynamics'] = get_injector_spec(config=injector_config)
 
     pprint.pprint(spec)
 
@@ -427,14 +547,14 @@ def run_environment(core):
 
     fig, ax = plt.subplots(dpi=300)
     for key, value in env_combined.items():
+        if not key == 'glucose':
+            continue
         ax.plot(timepoints, env_combined[key], label=key)
     plt.xlabel('Time')
     plt.ylabel('Substrate Concentration')
     plt.legend()
     plt.tight_layout()
     plt.show()
-
-
 
 def run_composite():
     pass
@@ -449,6 +569,9 @@ if __name__ == "__main__":
 
     core.register_process('DFBA', DFBA)
     core.register_process('UpdateEnvironment', UpdateEnvironment)
+    core.register_process('Chemostat', Chemostat)
+    core.register_process('WaveFunction', WaveFunction)
+    core.register_process('Injector', Injector)
 
     # print(get_single_dfba_spec())
     # test_dfba_alone(core)
