@@ -5,8 +5,8 @@ import math
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import DFBAconfig, model_from_file, get_objective_reaction
-
+from cdFBA.utils import DFBAconfig, model_from_file, get_objective_reaction, get_injector_spec, get_wave_spec, get_chemo_spec
+from cdFBA.utils import dfba_config_from_model, get_single_dfba_spec, dfba_config, environment_spec, initial_environment
 
 from matplotlib import pyplot as plt
 
@@ -92,113 +92,6 @@ class DFBA(Process):
 
         return {"dfba_update": state_update}
 
-def dfba_config(
-        model_file="textbook",
-        name=None,
-        kinetics=None,
-        reaction_map=None,
-        biomass_identifier=None,
-        bounds=None
-):
-    model = model_from_file(model_file)
-    if name is None:
-        name = model.id
-    if reaction_map is None:
-        reaction_map = {
-            "glucose": "EX_glc__D_e",
-            "acetate": "EX_ac_e"
-        }
-    if bounds is None:
-        bounds = {
-            "EX_o2_e": {"lower": -2, "upper": None},
-            "ATPM": {"lower": 1, "upper": 1}
-        }
-    if kinetics is None:
-        kinetics = {
-            "glucose": (0.02, 15),
-            "acetate": (0.5, 7)}
-    if biomass_identifier is None:
-        biomass_identifier = get_objective_reaction(model=model)
-
-    return {
-        "model_file": model_file,
-        "name": name,
-        "kinetics": kinetics,
-        "reaction_map": reaction_map,
-        "biomass_identifier": biomass_identifier,
-        "bounds": bounds,
-        "time_step": 0.1,
-    }
-
-def dfba_config_from_model(
-        model_file="textbook",
-        medium_type ="default",
-        name=None,
-        bounds=None
-):
-    model = model_from_file(model_file=model_file)
-    if name is None:
-        name = model.id
-    if bounds is None:
-        bounds = {
-            "EX_o2_e": {"lower": -2, "upper": None},
-            "ATPM": {"lower": 1, "upper": 1}
-        }
-
-    dfbaconfig = DFBAconfig(model, medium_type=medium_type)
-    kinetics = dfbaconfig.kinetics
-    reaction_map = dfbaconfig.reaction_map
-    biomass_identifier = dfbaconfig.get_objective_reaction(model)
-
-    return {
-        "model": model,
-        "name": name,
-        "kinetics": kinetics,
-        "reaction_map": reaction_map,
-        "biomass_identifier": biomass_identifier,
-        "bounds": bounds
-    }
-
-def get_single_dfba_spec(
-        model_file="textbook",
-        name="species",
-        config=None #TODO: add kwargs
-):
-    """
-    Constructs a configuration dictionary for a dynamic FBA process with optional path indices.
-
-    This function builds a process specification for use with a dynamic FBA system. It allows
-    specification of substrate molecule IDs and optionally appends indices to the paths for those substrates.
-
-    Parameters:
-    -----------
-    model : str, cobra model identifier or path to xml cobra model file
-    name: str, identifier for the model, usually species/strain name
-    config: dict, config for DFBA Process. If none provided, uses default generated using `dfba_config()`
-
-    Returns:
-    --------
-    dict: A dictionary containing the process type, address, configuration, and paths for inputs
-        and outputs based on the specified molecule IDs and indices.
-    """
-
-    if config is None:
-        config = dfba_config(model_file=model_file, name=name)
-
-    return {
-        "_type": "process",
-        "address": "local:DFBA",
-        "config": config,
-        "inputs": {
-            "shared_environment": ["shared environment"],
-            "current_update": ["dFBA Results"]
-        },
-        "outputs": {
-            "dfba_update": ["dFBA Results", name]
-        },
-        "interval": 1.0
-    }
-
 class UpdateEnvironment(Step): #TODO =:
     config_schema = {}
 
@@ -237,66 +130,7 @@ class UpdateEnvironment(Step): #TODO =:
             "shared_environment": {'counts': update}
         }
 
-def environment_spec():
-    return {
-        "_type": "process",
-        "address": "local:UpdateEnvironment",
-        "config": {},
-        "inputs": {
-            "species_updates": ["dFBA Results"],
-            "shared_environment": ["shared environment"]
-        },
-        "outputs": {
-            "shared_environment": ["shared environment"],
-        }
-    }
 
-def community_dfba_spec(
-        species_list = None,
-        from_model=False,
-        medium_type='default'
-):
-    stores = {
-        'shared environment': 'any',
-        'dFBA Results': 'any',
-    }
-
-    dfba_processes = {}
-
-    if from_model:
-        for model in species_list:
-            dfba_processes.update(
-
-            )
-    #TODO: Finish this function
-
-def initial_environment(volume=1, initial_counts=None, species_list=None):
-    """
-    Parameters:
-        volume : float, volume of the environment
-        initial_counts : dict, initial counts of each substrate and species biomass in the environment
-        species_list : list of strings, list of dfba species names (DFBA.config["name"])
-
-    Returns:
-        initial shared environment store spec
-    """
-    if initial_counts is None:
-        if species_list is None:
-            raise ValueError("Error: Please provide initial_counts or species_list")
-        initial_counts = {
-            "glucose": 80,
-            "acetate": 0,
-        }
-        for species in species_list:
-            initial_counts[species] = 0.5
-
-    initial_concentration = {key:(count/volume) for key, count in initial_counts.items()}
-
-    return {
-        "volume": volume,
-        "counts": initial_counts,
-        "concentrations": initial_concentration
-    }
 
 class Chemostat(Process):
 
@@ -329,22 +163,6 @@ class Chemostat(Process):
         return {
             "shared_environment": {'counts': update}
         }
-
-def get_chemo_spec(config=None):
-    if config is None:
-        raise ValueError("Error: Please provide config")
-    return {
-        "_type": "process",
-        "address": "local:Chemostat",
-        "config": config,
-        "inputs": {
-            "shared_environment": ["shared environment"],
-            "global_time": ["global_time"],
-        },
-        "outputs": {
-            "shared_environment": ["shared environment"],
-        },
-    }
 
 class WaveFunction(Process):
 
@@ -393,22 +211,6 @@ class WaveFunction(Process):
             "shared_environment": {'counts': update}
         }
 
-def get_wave_spec(config=None):
-    if config is None:
-        raise ValueError("Error: Please provide config")
-    return {
-        "_type": "process",
-        "address": "local:WaveFunction",
-        "config": config,
-        "inputs": {
-            "shared_environment": ["shared environment"],
-            "global_time": ["global_time"],
-        },
-        "outputs": {
-            "shared_environment": ["shared environment"],
-        },
-    }
-
 class Injector(Process):
 
     config_schema = {
@@ -447,21 +249,6 @@ class Injector(Process):
             "shared_environment": {'counts': update}
         }
 
-def get_injector_spec(config=None):
-    if config is None:
-        raise ValueError("Error: Please provide config")
-    return {
-        "_type": "process",
-        "address": "local:Injector",
-        "config": config,
-        "inputs": {
-            "shared_environment": ["shared environment"],
-            "global_time": ["global_time"],
-        },
-        "outputs": {
-            "shared_environment": ["shared environment"],
-        },
-    }
 
 def run_environment(core):
     """This tests that the environment runs"""
@@ -525,7 +312,6 @@ def run_environment(core):
 
     # get the results
     results = sim.gather_results()[('emitter',)]
-
 
     # print the results
     timepoints = []
