@@ -19,8 +19,11 @@ class DFBA(Process):
     model_file: string, math to cobra model file
     """
     config_schema = {
-        "model_file": "any",
-        "name": "any",
+        "model_file": {
+            '_type': 'string',
+            '_default': 'iAF1260',
+        },
+        "name": 'string',
         "kinetics": "any",
         "reaction_map": "any",
         "biomass_identifier": "any",
@@ -129,8 +132,6 @@ class UpdateEnvironment(Step): #TODO =:
         return {
             "shared_environment": {'counts': update}
         }
-
-
 
 class Chemostat(Process):
 
@@ -249,17 +250,16 @@ class Injector(Process):
             "shared_environment": {'counts': update}
         }
 
-
 def run_environment(core):
     """This tests that the environment runs"""
     name1 = "E.coli"
     name2 = "S.flexneri"
     # define a single dFBA model
     spec = {
-        "dfba": get_single_dfba_spec(model_file= "iAF1260", name=name1)
+        name1: get_single_dfba_spec(model_file= "iAF1260", name=name1)
     }
 
-    spec["dfba2"] = get_single_dfba_spec(model_file = "iSFxv_1172", name=name2)
+    spec[name2] = get_single_dfba_spec(model_file = "iSFxv_1172", name=name2)
 
     spec['shared environment'] = initial_environment(volume=2, species_list=[name1, name2])
 
@@ -267,13 +267,13 @@ def run_environment(core):
         {
             "glucose": 0,
             "acetate": 0,
-            spec['dfba']['config']['name']: 0,
+            spec[name1]['config']['name']: 0,
         },
         name2:
         {
             "glucose": 0,
             "acetate": 0,
-            spec['dfba2']['config']['name']: 0,
+            spec[name2]['config']['name']: 0,
         }
     }
 
@@ -318,7 +318,7 @@ def run_environment(core):
     for timepoint in results:
         time = timepoint.pop('global_time')
         timepoints.append(time)
-        dfba_spec = timepoint.pop('dfba')
+        dfba_spec = timepoint.pop(name1)
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
 
@@ -333,18 +333,14 @@ def run_environment(core):
 
     fig, ax = plt.subplots(dpi=300)
     for key, value in env_combined.items():
-        if not key == 'glucose':
-            continue
+        # if not key == 'glucose':
+        #     continue
         ax.plot(timepoints, env_combined[key], label=key)
     plt.xlabel('Time')
     plt.ylabel('Substrate Concentration')
     plt.legend()
     plt.tight_layout()
     plt.show()
-
-def run_composite():
-    pass
-
 
 if __name__ == "__main__":
     from cdFBA import register_types

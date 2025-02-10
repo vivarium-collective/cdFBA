@@ -128,7 +128,7 @@ def get_objective_reaction(model):
 
     return objective_reaction
 
-def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', default_concentration = None):
+def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', name=None, default_concentration = None):
     """Returns an initial condition dict based on medium
     
     Parameters
@@ -144,7 +144,10 @@ def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', de
     """ 
     medium = DFBAconfig(model=model, medium_type=medium_type)
     conditions = {}
-    conditions.update({DFBAconfig.get_objective_reaciton(model): biomass})
+    if name is None:
+        conditions.update({get_objective_reaction(model): biomass})
+    else:
+        conditions.update({name: biomass})
     
     substrates = medium.substrates
 
@@ -222,7 +225,7 @@ def dfba_config(
         "reaction_map": reaction_map,
         "biomass_identifier": biomass_identifier,
         "bounds": bounds,
-        "time_step": 0.1,
+        "interval": 0.1,
     }
 
 def dfba_config_from_model(
