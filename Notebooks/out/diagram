@@ -1,0 +1,12 @@
+digraph bigraph {
+	dpi=70 overlap=false rankdir=TB size="16,10"
+	node [fontsize="12pt" margin=0.05 penwidth=2 shape=circle]
+	"('global_time',)" [label=<global_time>]
+	"('dFBA Results',)" [label=<dFBA Results>]
+	"('dFBA Results', 'Escherichia coli K12')" [label=<Escherichia coli K12>]
+	"('shared environment',)" [label=<shared environment>]
+	node [constraint=false fontsize="12pt" margin=0.05 penwidth=2 shape=box]
+	"('Escherichia coli K12',)" [label=<Escherichia coli K12>]
+	"('UpdateEnvironment',)" [label=<UpdateEnvironment>]
+	edge [arrowhead=none penwidth=2]
+}
