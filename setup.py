@@ -29,6 +29,7 @@ setup(
     # packages=find_packages(),
     packages=[
         'cdFBA',
+        'cdFBA.processes',
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
