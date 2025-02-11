@@ -2,17 +2,18 @@
 for dFBA simulations from the minimal medium requirements of the wild-type species.
 
 CAUTION: The initial conditions, and kinetics dataframes provide default parameter values and need to be changed as needed
+CAUTION: Substrate names are different in BiGG and AGORA databases. These functions will not work with two models form
+         different sources
 """
 from copy import deepcopy
 
 #TODO: make notebook demo for functions and make them pure functions
 
-from cobra.io import load_model, read_sbml_model
+from cobra.io import load_model, read_sbml_model, load_json_model, load_yaml_model, load_matlab_model
 from cobra.medium import minimal_medium
 import pprint
 import re
 import copy
-
 
 def make_cdfba_composite(model_dict, kinetic_params=None):
     pass
@@ -21,17 +22,13 @@ class DFBAconfig:
  
     def __init__(self, model, medium_type='default'):
         """Creates a medium object.ß
-
-        Parameters
-        ----------
+        Parameters:
         model : cobra model representing the wild-type cell
         medium_type : string, 
             'default' uses the default cobra model medium
             'minimal' uses the minimal medium for the model
-            'exchange' uses all exchange fluxes for the model 
-
-        Note
-        ----
+            'exchange' uses all exchange fluxes for the model
+        Note:
         Instances of this class provides the reaction mapping, initial conditions
         and kinetic parameters for a COBRA model based on both the minimal and default
         medium of the model. The class methods generate these data within the __init__
@@ -51,17 +48,14 @@ class DFBAconfig:
         self.substrates = self.get_substrates()
         self.reaction_map = self.get_reaction_map()
         self.kinetics = self.get_kinetics()
+        self.bounds = self.get_bounds()
         self.biomass_indentifier = get_objective_reaction(self.model)
-        
+
     def get_substrates(self):
         """Returns a list of substrates from the model.
-    
-        Parameters
-        ----------
+        Parameters:
         medium : DFBAconfig.medium or DFBAconfig.min_medium
-        
-        Returns
-        -------
+        Returns:
         substrates : list, list of names of substrates required by the model organism
         """
     
@@ -78,14 +72,10 @@ class DFBAconfig:
     def get_reaction_map(self):
         """Returns a reaction_name_map dictionary from a medium dictionary as obtained
         from model.medium or cobra.medium.minimum_medium()
-        
-        Parameters
-        ----------
+        Parameters:
         medium : DFBAconfig.medium or DFBAconfig.min_medium
         substrates : list, list of names of substrates required by the model organism
-        
-        Returns
-        -------
+        Returns:
         reaction_name_map : dict, maps substrate names to reactions
         """    
         substrates = copy.deepcopy(self.substrates)
@@ -96,27 +86,19 @@ class DFBAconfig:
         return reaction_name_map
     
     def get_kinetics(self):
-        """Returns default kinetic parameters dictionary
-        Values are tuples of the form (km, vmax)
-        
-        Parameters
-        ----------
-        substrates    : list, list of names of substrates required by the model organism
-        """  
+        """Returns default kinetic parameters dictionary. Values are tuples of the form (km, vmax)"""
         kinetics = {key: (0.5, 2.0) for key in self.substrates}
-        
         return kinetics
 
+    def get_bounds(self):
+        """Return dict of upper and lower bounds for each substrate exchange reaction"""
+        return {self.reaction_map[key]: {'lower': -1000, 'upper': 1000} for key in self.reaction_map.keys()}
 
 def get_objective_reaction(model):
     """get a string with the name of the objective function of a cobra model
-
     Parameters:
-    -----------
     model: cobrapy model
-
     Returns:
-    --------
     objective_reaction: string, name of the objective reaction (biomass reaction by default)
     """
 
@@ -130,16 +112,12 @@ def get_objective_reaction(model):
 
 def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', name=None, default_concentration = None):
     """Returns an initial condition dict based on medium
-    
-    Parameters
-    ----------
+    Parameters:
     model: string, cobrapy model name
     substrates : list, list of names of substrates required by the model organism
     biomass : float, initial biomass for all species
     factor : float, factor to multiply minimum medium concentrations
-    
-    Returns
-    -------
+    Returns:
     conditions : dict, initial conditions dictionary
     """ 
     medium = DFBAconfig(model=model, medium_type=medium_type)
@@ -165,12 +143,22 @@ def initial_conditions(model, biomass=0.1, factor=1.0, medium_type='default', na
     return conditions
 
 def model_from_file(model_file='textbook'):
-    if not "xml" in model_file:
-            # use the textbook model if no model file is provided
-            # TODO: Also handle JSON or .mat model files
-            model = load_model(model_file)
-    elif isinstance(model_file, str):
+    """Returns a cobra model from a model file path or BiGG Model ID
+    Parameters:
+    model_file: string, file path or BiGG Model ID
+    Returns:
+    model: cobra model
+    """
+    if ".xml" in model_file:
         model = read_sbml_model(model_file)
+    elif ".json" in model_file:
+        model = load_json_model(model_file)
+    elif ".yaml" in model_file:
+        model = load_yaml_model(model_file)
+    elif ".mat" in model_file:
+        model = load_matlab_model(model_file)
+    elif isinstance(model_file, str):
+        model = load_model(model_file)
     else:
         # error handling
         raise ValueError("Invalid model file")
@@ -178,16 +166,11 @@ def model_from_file(model_file='textbook'):
 
 def model_list(model_files=None):
     """generates list of cobra models from files/model ids.
-
     Parameters:
-    -----------
     model_files: list, list of strings with the model file paths or model ids
-
     Returns:
-    --------
     model_list: list, list of cobra models
     """
-
     return [model_from_file(model_file) for model_file in model_files]
 
 def dfba_config(
@@ -198,6 +181,17 @@ def dfba_config(
         biomass_identifier=None,
         bounds=None
 ):
+    """Construct a configuration dictionary for a single cobra model
+    Parameters:
+    model_file: string, file path or BiGG Model ID
+    name: string, name of the process
+    kinetics: dict, kinetic parameters for shared substrates
+    reaction_map: dict, maps substrate names to reaction ids
+    biomass_identifier: string, name of the biomass reaction
+    bounds: dict, bounds for exchange reactions
+    Returns:
+    config: dict, config dictionary for a single species dFBA
+    """
     model = model_from_file(model_file)
     if name is None:
         name = model.id
@@ -246,7 +240,7 @@ def dfba_config_from_model(
     dfbaconfig = DFBAconfig(model, medium_type=medium_type)
     kinetics = dfbaconfig.kinetics
     reaction_map = dfbaconfig.reaction_map
-    biomass_identifier = dfbaconfig.get_objective_reaction(model)
+    biomass_identifier = get_objective_reaction(model)
 
     return {
         "model": model,
@@ -260,24 +254,16 @@ def dfba_config_from_model(
 def get_single_dfba_spec(
         model_file="textbook",
         name="species",
-        config=None #TODO: add kwargs
+        config=None,
+        interval=1.0
 ):
-    """
-    Constructs a configuration dictionary for a dynamic FBA process with optional path indices.
-
-    This function builds a process specification for use with a dynamic FBA system. It allows
-    specification of substrate molecule IDs and optionally appends indices to the paths for those substrates.
-
+    """Constructs a configuration dictionary for a dynamic FBA process
     Parameters:
-    -----------
     model : str, cobra model identifier or path to xml cobra model file
     name: str, identifier for the model, usually species/strain name
     config: dict, config for DFBA Process. If none provided, uses default generated using `dfba_config()`
-
     Returns:
-    --------
-    dict: A dictionary containing the process type, address, configuration, and paths for inputs
-        and outputs based on the specified molecule IDs and indices.
+    dict: dict, specification dictionary for a single species dFBA
     """
 
     if config is None:
@@ -294,10 +280,11 @@ def get_single_dfba_spec(
         "outputs": {
             "dfba_update": ["dFBA Results", name]
         },
-        "interval": 1.0
+        "interval": interval
     }
 
 def environment_spec():
+    """Construct spec dictionary for UpdateEnvironment step"""
     return {
         "_type": "process",
         "address": "local:UpdateEnvironment",
@@ -311,34 +298,14 @@ def environment_spec():
         }
     }
 
-def community_dfba_spec(
-        species_list = None,
-        from_model=False,
-        medium_type='default'
-):
-    stores = {
-        'shared environment': 'any',
-        'dFBA Results': 'any',
-    }
-
-    dfba_processes = {}
-
-    if from_model:
-        for model in species_list:
-            dfba_processes.update(
-
-            )
-    #TODO: Finish this function
-
 def initial_environment(volume=1, initial_counts=None, species_list=None):
-    """
+    """Construct initial shared environment store
     Parameters:
-        volume : float, volume of the environment
-        initial_counts : dict, initial counts of each substrate and species biomass in the environment
-        species_list : list of strings, list of dfba species names (DFBA.config["name"])
-
+    volume : float, volume of the environment
+    initial_counts : dict, initial counts of each substrate and species biomass in the environment
+    species_list : list of strings, list of dfba species names (DFBA.config["name"])
     Returns:
-        initial shared environment store spec
+    initial shared environment store spec
     """
     if initial_counts is None:
         if species_list is None:
@@ -359,6 +326,12 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
     }
 
 def get_chemo_spec(config=None):
+    """Constructs a configuration dictionary for the Chemostat process.
+    Parameters:
+    config: dict, Chemostat configuration dictionary
+    Returns:
+    dict, spec for Chemostat process
+    """
     if config is None:
         raise ValueError("Error: Please provide config")
     return {
@@ -375,6 +348,12 @@ def get_chemo_spec(config=None):
     }
 
 def get_wave_spec(config=None):
+    """Constructs a configuration dictionary for the WaveFunction process.
+    Parameters:
+    config: dict, WaveFunction configuration dictionary
+    Returns
+    dict, spec for WaveFunction process
+    """
     if config is None:
         raise ValueError("Error: Please provide config")
     return {
@@ -391,6 +370,12 @@ def get_wave_spec(config=None):
     }
 
 def get_injector_spec(config=None):
+    """Constructs a configuration dictionary for the Injector process.
+       Parameters:
+       config: dict, Injector configuration dictionary
+       Returns:
+       dict, spec for Injector process
+       """
     if config is None:
         raise ValueError("Error: Please provide config")
     return {
