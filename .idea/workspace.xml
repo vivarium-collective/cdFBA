@@ -4,16 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="utils docstrings, new demo file">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/out/diagram" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/out/diagram" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/out/diagram.png" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/out/diagram.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/out/diagram_benchmark.png" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/out/diagram_benchmark.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/vivarium-demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/vivarium-demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="utils functions">
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +116,7 @@
       <workItem from="1738002372464" duration="86714000" />
       <workItem from="1738870355798" duration="24121000" />
       <workItem from="1739295430179" duration="24095000" />
-      <workItem from="1739463931074" duration="10057000" />
+      <workItem from="1739463931074" duration="10590000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
       <option name="closed" value="true" />
@@ -294,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739302445702</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="utils functions">
+      <option name="closed" value="true" />
+      <created>1739479856461</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1739479856461</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -320,7 +320,8 @@
     <MESSAGE value="fixed util function to get substrate names" />
     <MESSAGE value="Moved utility function out of dfba file" />
     <MESSAGE value="utils docstrings, new demo file" />
-    <option name="LAST_COMMIT_MESSAGE" value="utils docstrings, new demo file" />
+    <MESSAGE value="utils functions" />
+    <option name="LAST_COMMIT_MESSAGE" value="utils functions" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -30,6 +30,7 @@ setup(
     packages=[
         'cdFBA',
         'cdFBA.processes',
+        'cdFBA.utils'
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
