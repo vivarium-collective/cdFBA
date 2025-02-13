@@ -6,7 +6,7 @@ digraph bigraph {
 	"('dFBA Results', 'Escherichia coli K12')" [label=<Escherichia coli K12>]
 	"('shared environment',)" [label=<shared environment>]
 	node [constraint=false fontsize="12pt" margin=0.05 penwidth=2 shape=box]
-	"('Escherichia coli K12',)" [label=<Escherichia coli K12>]
 	"('UpdateEnvironment',)" [label=<UpdateEnvironment>]
+	"('Escherichia coli K12',)" [label=<Escherichia coli K12>]
 	edge [arrowhead=none penwidth=2]
 }
