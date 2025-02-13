@@ -301,16 +301,6 @@ def run_environment(core):
 
     # run the simulation
     sim.run(40)
-    # sim.update({
-    #     "shared environment": {
-    #         "glucose": 10,
-    #         "acetate": 0,
-    #         spec['dfba']['config']['biomass_identifier']: 0.1
-    #         # "biomass": 0.1,
-    #     }}
-    #            )
-
-    # get the results
     results = sim.gather_results()[('emitter',)]
 
     # print the results
