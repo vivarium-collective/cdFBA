@@ -16,7 +16,7 @@ import pprint
 import re
 import copy
 
-def make_cdfba_composite(model_dict, medium='exchange'):
+def make_cdfba_composite(model_dict, medium_type=None, exchanges=None):
     """Construct a cdfba composite spec with all exhange metabolites included.
     Parameters:
     model_dict : dict, dictionary with cdfba process names as keys and model name/path as values
@@ -30,9 +30,20 @@ def make_cdfba_composite(model_dict, medium='exchange'):
     Returns:
     spec : cdfba composite spec
     """
-    if isinstance(medium, str):
 
-        models = {model_name: model_from_file(model) for model_name, model in model_dict.items()}
+    if medium_type is None:
+        if exchanges is None:
+            raise ValueError("Must provide medium_type or exchanges list")
+
+    if isinstance(medium, str):
+        exchanges = []
+        for name, model_file in model_dict.items():
+            exchanges.append(get_exchanges(model_file=model_file, medium_type=medium))
+
+        exchanges = list(set(exchanges))
+
+    for model_name, model_file in model_dict.items():
+        substrates = get_substrates
 
     pass
 
@@ -151,7 +162,9 @@ def get_initial_counts(model_dict, biomass=0.1, initial_value=20, exchanges=None
     for model_name in model_dict.keys():
         model_file=model_dict[model_name]
         substrates = get_substrates(model_file, exchanges)
-    conditions = {substrate:initial_value for substrate in substrates}
+        all_substrates.extend(substrates)
+    all_substrates = list(set(all_substrates))
+    conditions = {substrate:initial_value for substrate in all_substrates}
     biomasses = {model:biomass for model in model_dict.keys()}
     conditions = conditions | biomasses
     return conditions
@@ -220,7 +233,7 @@ def dfba_config(
             "glucose": (0.02, 15),
             "acetate": (0.5, 7)}
     if biomass_identifier is None:
-        biomass_identifier = get_objective_reaction(model=model)
+        biomass_identifier = get_objective_reaction(model_file=model_file)
 
     return {
         "model_file": model_file,
