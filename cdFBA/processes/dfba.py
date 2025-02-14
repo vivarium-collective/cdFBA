@@ -5,8 +5,8 @@ import math
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import DFBAconfig, model_from_file, get_objective_reaction, get_injector_spec, get_wave_spec, get_chemo_spec
-from cdFBA.utils import dfba_config_from_model, get_single_dfba_spec, dfba_config, environment_spec, initial_environment
+from cdFBA.utils import model_from_file, get_objective_reaction, get_injector_spec, get_wave_spec, get_chemo_spec
+from cdFBA.utils import get_single_dfba_spec, dfba_config, environment_spec, initial_environment
 
 from matplotlib import pyplot as plt
 
