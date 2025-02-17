@@ -38,11 +38,12 @@ class DFBA(Process):
 
 
         if self.config["bounds"] is not None:
-            for reaction_id, bounds in self.config["bounds"].items():
-                if bounds["lower"] is not None:
-                    self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
-                if bounds["upper"] is not None:
-                    self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
+            if len(self.config["bounds"]) != 0:
+                for reaction_id, bounds in self.config["bounds"].items():
+                    if bounds["lower"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
+                    if bounds["upper"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
 
     # def initial_state(self):
     #     # TODO -- get the initial state from the load model, self.model
