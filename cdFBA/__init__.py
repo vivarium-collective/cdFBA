@@ -1,4 +1,3 @@
-from process_bigraph import ProcessTypes
 from cdFBA.processes import register_processes
 
 def apply_non_negative(schema, current, update, core):
