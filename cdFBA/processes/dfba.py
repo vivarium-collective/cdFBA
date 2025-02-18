@@ -38,11 +38,12 @@ class DFBA(Process):
 
 
         if self.config["bounds"] is not None:
-            for reaction_id, bounds in self.config["bounds"].items():
-                if bounds["lower"] is not None:
-                    self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
-                if bounds["upper"] is not None:
-                    self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
+            if len(self.config["bounds"]) != 0:
+                for reaction_id, bounds in self.config["bounds"].items():
+                    if bounds["lower"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
+                    if bounds["upper"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
 
     # def initial_state(self):
     #     # TODO -- get the initial state from the load model, self.model
@@ -134,7 +135,8 @@ class UpdateEnvironment(Step): #TODO =:
         }
 
 class Chemostat(Process):
-
+    """The Chemostat process maintains the concentration of given substrates at a fixed value at each time-step
+    """
     config_schema = {
         "substrate_concentrations" : "map[float]",
     }
@@ -166,19 +168,27 @@ class Chemostat(Process):
         }
 
 class WaveFunction(Process):
-
+    """The WaveFunction process maintains the concentration of given substrates based on a wave-function
+    """
     config_schema = {
         "substrate_params" : "map[map[float]]",
     }
 
-    # substrate_params = {
-    #     "substrate_name": {
-    #         "amplitude": "float",
-    #         "angular_frequency": "float",
-    #         "base_concentration": "float",
-    #         "phase_shift": "float"
-    #     }
-    # }
+    """
+    substrate_params = {
+        "substrate_name": {
+            "amplitude": "float",
+            "angular_frequency": "float",
+            "base_concentration": "float",
+            "phase_shift": "float"
+        }
+    }
+    
+    amplitude : float, amplitude of wave function
+    angular_frequency : float, angular frequency of wave function
+    base_concentration : float, base concentration substrate
+    phase_shift : float, phase shift of wave function (when wave starts)
+    """
 
     def __init__(self, config, core):
         super().__init__(config, core)
@@ -213,7 +223,8 @@ class WaveFunction(Process):
         }
 
 class Injector(Process):
-
+    """The Injector process injects a given amount of a given substrate at regular intervals into the shared environment
+    """
     config_schema = {
         "injection_params" : "map[map[float]]",
     }
