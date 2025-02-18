@@ -26,7 +26,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
-    license_file="LICENSE",
+    license_file=["LICENSE"],
     url="https://github.com/vivarium-collective/cdFBA",
     # packages=find_packages(),
     packages=[
