@@ -118,7 +118,7 @@
       <workItem from="1739295430179" duration="24095000" />
       <workItem from="1739463931074" duration="37398000" />
       <workItem from="1739896462223" duration="164000" />
-      <workItem from="1739896938801" duration="1265000" />
+      <workItem from="1739896938801" duration="1465000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
       <option name="closed" value="true" />
@@ -344,7 +344,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739903438670</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="license fix in setup.py">
+      <option name="closed" value="true" />
+      <created>1739903471370</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1739903471370</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
