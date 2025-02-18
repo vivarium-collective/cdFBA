@@ -4,17 +4,11 @@ for dFBA simulations from the minimal medium requirements of the wild-type speci
 CAUTION: The initial conditions, and kinetics dataframes provide default parameter values and must be changed as needed
 CAUTION: Substrate names are different in BiGG and AGORA databases. These functions will not work with two models form
          different sources
-TODO: add user input for substrates
 """
-from copy import deepcopy
-
-#TODO: make notebook demo for functions and make them pure functions
-
 from cobra.io import load_model, read_sbml_model, load_json_model, load_yaml_model, load_matlab_model
 from cobra.medium import minimal_medium
 import pprint
 import re
-import copy
 
 #single species functions
 def model_from_file(model_file='textbook'):
