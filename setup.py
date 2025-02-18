@@ -20,8 +20,8 @@ with open("README.md", "r") as readme:
 setup(
     name="cdFBA",
     version=VERSION,
-    author="",
-    author_email="",
+    author="Tasnif Rahman",
+    author_email="trahman@uchc.edu",
     description="",
     long_description=long_description,
     long_description_content_type="text/markdown",
