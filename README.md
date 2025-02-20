@@ -28,7 +28,7 @@ If you need to use models from different sources with different annotation syste
 ### Demo Notebooks
 
 Demo Jupyter notebooks can be found [here](https://github.com/vivarium-collective/cdFBA/tree/main/Notebooks). 
-
+The primary demo using the process-bigraph interface can be found [here](https://github.com/vivarium-collective/cdFBA/blob/main/Notebooks/demo.ipynb).
 We will be adding more notebooks to demonstrate usage reproduction of results from the literature. 
 
 
