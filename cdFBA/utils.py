@@ -10,6 +10,33 @@ from cobra.medium import minimal_medium
 import pprint
 import re
 
+#set value functions
+def set_concentration(spec, concentrations):
+    """Set concentration for given metabolites in the shared environment
+    Parameters:
+        spec : dict, cdFBA specification dictionary
+        concentrations : dict, dictionary with substrate names as keys and concentrations as values
+    """
+    for substrate, concentration in concentrations.items():
+        if substrate not in spec['shared environment']['concentrations'].keys():
+            raise ValueError(f'{substrate} is not in shared environment')
+        else:
+            spec['shared environment']['concentrations'][substrate] = concentration
+            spec['shared environment']['counts'][substrate] = spec['shared environment']['concentrations'][substrate] * spec['shared environment']['volume']
+
+def set_kinetics(species, spec, kinetics):
+    """Set bounds for given metabolites and species
+    Parameters:
+        species: str, name of species
+        spec : dict, cdFBA specification dictionary
+        kinetics : dict, substrate names as keys and kinetics parameters in tuples as values (Km, Vmax)
+    """
+    for substrate, kinetic_params in kinetics.items():
+        if substrate not in spec['shared environment']['concentrations'].keys():
+            raise ValueError(f'{substrate} is not in shared environment')
+        else:
+            spec[species]['config']['kinetics'][substrate] = kinetic_params
+
 #single species functions
 def model_from_file(model_file='textbook'):
     """Returns a cobra model from a model file path or BiGG Model ID

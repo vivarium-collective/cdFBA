@@ -302,11 +302,26 @@ def run_environment(core):
     spec['environment dynamics'] = get_injector_spec(config=injector_config)
 
     pprint.pprint(spec)
-
+    #Manually add emitter
+    spec['emitter'] = {
+        "_type": "step",
+        "address": "local:ram-emitter",
+        "config": {
+            "emit": {
+                "shared_environment": "any",
+                "global_time": "any",
+            }
+        },
+        "inputs": {
+            "shared_environment": ["shared environment"],
+            "global_time": ["global_time"]
+        }
+    }
     # put it in a composite
     sim = Composite({
         "state": spec,
-        "emitter": {'mode': 'all'}},
+        # "emitter": {'mode': 'all'}
+    },
         core=core
     )
 
@@ -319,11 +334,11 @@ def run_environment(core):
     for timepoint in results:
         time = timepoint.pop('global_time')
         timepoints.append(time)
-        dfba_spec = timepoint.pop(name1)
+        # dfba_spec = timepoint.pop(name1)
         print(f'TIME: {time}')
         print(f'STATE: {timepoint}')
 
-    env = [timepoint['shared environment']['concentrations'] for timepoint in results]
+    env = [timepoint['shared_environment']['concentrations'] for timepoint in results]
     env_combined = {}
     for d in env:
         for key, value in d.items():
