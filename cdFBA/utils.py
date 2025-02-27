@@ -11,6 +11,19 @@ import pprint
 import re
 
 #set value functions
+def set_counts(spec, counts):
+    """Set counts for given metabolites in the shared environment
+        Parameters:
+            spec : dict, cdFBA specification dictionary
+            counts : dict, dictionary with substrate names as keys and counts as values
+        """
+    for substrate, count in counts.items():
+        if substrate not in spec['shared environment']['concentrations'].keys():
+            raise ValueError(f'{substrate} is not in shared environment')
+        else:
+            spec['shared environment']['counts'][substrate] = count
+            spec['shared environment']['concentrations'][substrate] = spec['shared environment']['counts'][substrate]/spec['shared environment']['volume']
+
 def set_concentration(spec, concentrations):
     """Set concentration for given metabolites in the shared environment
     Parameters:
@@ -62,7 +75,6 @@ def model_from_file(model_file='textbook'):
 
 def get_exchanges(model_file='textbook', medium_type='exchange'):
     """
-
     Parameters:
         model_file: str, file path or BiGG Model ID
         medium_type:
@@ -82,6 +94,9 @@ def get_exchanges(model_file='textbook', medium_type='exchange'):
         medium = {reaction.id: reaction.upper_bound for reaction in model.exchanges}
         medium.update(model.medium)
         medium = medium
+    if not medium_type in ['default', 'minimal', 'exchange']:
+        raise ValueError("Invalid medium type")
+
     return list(medium.keys())
 
 def get_substrates(model_file='textbook', exchanges=None):
@@ -272,11 +287,7 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
             raise ValueError("Provide only on of medium_type or exchanges list")
 
     if exchanges is None:
-        env_exchanges = []
-        for name, model_file in model_dict.items():
-            env_exchanges.extend(get_exchanges(model_file=model_file, medium_type=medium_type))
-
-        env_exchanges = list(set(env_exchanges))
+        env_exchanges = get_combined_exchanges(model_dict, medium_type=medium_type)
     else:
         env_exchanges = exchanges
 
@@ -310,6 +321,13 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
         spec['dFBA Results'][model_name].update({model_name: 0})
     spec['update environment'] = environment_spec()
     return spec
+
+def get_combined_exchanges(model_dict, medium_type=None):
+    env_exchanges = []
+    for name, model_file in model_dict.items():
+        env_exchanges.extend(get_exchanges(model_file=model_file, medium_type=medium_type))
+    env_exchanges = list(set(env_exchanges))
+    return env_exchanges
 
 def get_initial_counts(model_dict, biomass=0.5, initial_value=20, exchanges=None):
     """Returns an initial condition dict based on medium
