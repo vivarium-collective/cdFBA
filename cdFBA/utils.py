@@ -323,6 +323,16 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
     return spec
 
 def get_combined_exchanges(model_dict, medium_type=None):
+    """Returns a list of exchange reaction ids for multiple species - containing every
+    Parameters:
+        model_dict: dict, dictionary with cdfba process names as keys and model name/path as values
+        medium_type: str/lst,pick one of:
+        'default' uses the default cobra model medium
+        'minimal' uses the minimal medium for the model
+        'exchange' uses all exchange fluxes for the model
+    Returns:
+        env_exchanges: list, list of
+    """
     env_exchanges = []
     for name, model_file in model_dict.items():
         env_exchanges.extend(get_exchanges(model_file=model_file, medium_type=medium_type))
