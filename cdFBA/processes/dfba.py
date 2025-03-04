@@ -5,7 +5,7 @@ import math
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import model_from_file, get_objective_reaction, get_injector_spec, get_wave_spec, get_chemo_spec
+from cdFBA.utils import model_from_file, get_objective_reaction, get_injector_spec, get_wave_spec, get_static_spec
 from cdFBA.utils import get_single_dfba_spec, dfba_config, environment_spec, initial_environment
 
 from matplotlib import pyplot as plt
@@ -134,8 +134,8 @@ class UpdateEnvironment(Step): #TODO =:
             "shared_environment": {'counts': update}
         }
 
-class Chemostat(Process):
-    """The Chemostat process maintains the concentration of given substrates at a fixed value at each time-step
+class StaticConcentration(Process):
+    """The StaticConcentration process maintains the concentration of given substrates at a fixed value at each time-step
     """
     config_schema = {
         "substrate_concentrations" : "map[float]",
@@ -367,7 +367,7 @@ if __name__ == "__main__":
 
     core.register_process('DFBA', DFBA)
     core.register_process('UpdateEnvironment', UpdateEnvironment)
-    core.register_process('Chemostat', Chemostat)
+    core.register_process('StaticConcentration', StaticConcentration)
     core.register_process('WaveFunction', WaveFunction)
     core.register_process('Injector', Injector)
 

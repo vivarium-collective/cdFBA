@@ -403,18 +403,18 @@ def environment_spec():
         }
     }
 
-def get_chemo_spec(config=None):
-    """Constructs a configuration dictionary for the Chemostat process.
+def get_static_spec(config=None):
+    """Constructs a configuration dictionary for the StaticConcentration process.
     Parameters:
-        config: dict, Chemostat configuration dictionary
+        config: dict, StaticConcentration configuration dictionary
     Returns:
-        dict, spec for Chemostat process
+        dict, spec for StaticConcentration process
     """
     if config is None:
         raise ValueError("Error: Please provide config")
     return {
         "_type": "process",
-        "address": "local:Chemostat",
+        "address": "local:StaticConcentration",
         "config": config,
         "inputs": {
             "shared_environment": ["shared environment"],
