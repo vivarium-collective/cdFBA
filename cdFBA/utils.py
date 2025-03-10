@@ -110,16 +110,7 @@ def get_substrates(model_file='textbook', exchanges=None):
     if exchanges is None:
         exchanges = get_exchanges(model_file)
     model = model_from_file(model_file)
-    substrates = []
-
-    for item in [getattr(model.reactions, i).name for i in exchanges if hasattr(model.reactions, i)]:
-
-        match = re.match(r"(.*) exchange|exchange reaction for (.*)|Exchange of (.*)|echange reaction for (.*)", item, re.IGNORECASE)
-
-        if match:
-            substrates.append(match.group(1) or match.group(2) or match.group(3) or match.group(4))
-        else:
-            substrates.append(item)
+    substrates = [item for item in [list(getattr(model.reactions, i).metabolites.keys())[0].name for i in exchanges if hasattr(model.reactions, i)]]
     return substrates
         
 def get_reaction_map(model_file='textbook', exchanges=None):
@@ -515,7 +506,7 @@ def run_initial_counts(model_file="textbook"):
 def run_cdfba_spec():
     model_dict = {
         'E.coli' : 'iAF1260',
-        'S. flexneri' : 'iSFxv_1172'
+        'S.flexneri' : 'iSFxv_1172'
     }
 
     pprint.pprint(make_cdfba_composite(

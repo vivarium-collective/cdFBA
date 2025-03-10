@@ -5,8 +5,8 @@ import math
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import model_from_file, get_objective_reaction, get_injector_spec, get_wave_spec, get_static_spec
-from cdFBA.utils import get_single_dfba_spec, dfba_config, environment_spec, initial_environment
+from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec
+from cdFBA.utils import get_single_dfba_spec, environment_spec, initial_environment
 
 from matplotlib import pyplot as plt
 
@@ -14,9 +14,14 @@ from matplotlib import pyplot as plt
 class DFBA(Process):
     """Performs single time-step of dynamic FBA
 
-    Parameters:
+    Config Parameters:
     -----------
-    model_file: string, math to cobra model file
+    model_file: str, big model ID or path to cobra model file
+    name: string, name of process (usually species/strain name)
+    kinetics: dict, dictionary of tuples with kinetic parameters (km, Vmax)
+    reaction_map: dict, maps substrate names to reaction IDs
+    biomass_identifier: str, biomass reaction ID
+    bounds: dict, maps reaction IDs to a bounds dictionary
     """
     config_schema = {
         "model_file": {
