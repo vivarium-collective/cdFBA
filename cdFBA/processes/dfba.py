@@ -101,7 +101,7 @@ class DFBA(Process):
 
         return {"dfba_update": state_update}
 
-class UpdateEnvironment(Step): #TODO =:
+class UpdateEnvironment(Step):
     config_schema = {}
 
     def __init__(self, config, core):

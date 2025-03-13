@@ -4,14 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="changed Chemostat to StaticConcentrations and utility functions">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="renamed Chemostat to StaticConcentration">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/pan-excretome.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +83,7 @@
     "Python.utils.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "#18 on valuefunctions",
+    "git-widget-placeholder": "valuefunctions",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -125,6 +121,7 @@
       <workItem from="1739463931074" duration="37398000" />
       <workItem from="1739896462223" duration="164000" />
       <workItem from="1739896938801" duration="1465000" />
+      <workItem from="1741703537823" duration="3682000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
       <option name="closed" value="true" />
@@ -446,7 +443,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741107064540</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="renamed Chemostat to StaticConcentration">
+      <option name="closed" value="true" />
+      <created>1741624200836</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1741624200836</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -480,7 +485,8 @@
     <MESSAGE value="added emitter spec and setting functions" />
     <MESSAGE value="added new notebooks" />
     <MESSAGE value="changed Chemostat to StaticConcentrations and utility functions" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed Chemostat to StaticConcentrations and utility functions" />
+    <MESSAGE value="renamed Chemostat to StaticConcentration" />
+    <option name="LAST_COMMIT_MESSAGE" value="renamed Chemostat to StaticConcentration" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
