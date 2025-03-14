@@ -11,6 +11,19 @@ import pprint
 import re
 
 #set value functions
+def set_counts(spec, counts):
+    """Set counts for given metabolites in the shared environment
+        Parameters:
+            spec : dict, cdFBA specification dictionary
+            counts : dict, dictionary with substrate names as keys and counts as values
+        """
+    for substrate, count in counts.items():
+        if substrate not in spec['shared environment']['concentrations'].keys():
+            raise ValueError(f'{substrate} is not in shared environment')
+        else:
+            spec['shared environment']['counts'][substrate] = count
+            spec['shared environment']['concentrations'][substrate] = spec['shared environment']['counts'][substrate]/spec['shared environment']['volume']
+
 def set_concentration(spec, concentrations):
     """Set concentration for given metabolites in the shared environment
     Parameters:
@@ -62,7 +75,6 @@ def model_from_file(model_file='textbook'):
 
 def get_exchanges(model_file='textbook', medium_type='exchange'):
     """
-
     Parameters:
         model_file: str, file path or BiGG Model ID
         medium_type:
@@ -82,6 +94,9 @@ def get_exchanges(model_file='textbook', medium_type='exchange'):
         medium = {reaction.id: reaction.upper_bound for reaction in model.exchanges}
         medium.update(model.medium)
         medium = medium
+    if not medium_type in ['default', 'minimal', 'exchange']:
+        raise ValueError("Invalid medium type")
+
     return list(medium.keys())
 
 def get_substrates(model_file='textbook', exchanges=None):
@@ -95,16 +110,7 @@ def get_substrates(model_file='textbook', exchanges=None):
     if exchanges is None:
         exchanges = get_exchanges(model_file)
     model = model_from_file(model_file)
-    substrates = []
-
-    for item in [getattr(model.reactions, i).name for i in exchanges if hasattr(model.reactions, i)]:
-
-        match = re.match(r"(.*) exchange|exchange reaction for (.*)|Exchange of (.*)|echange reaction for (.*)", item, re.IGNORECASE)
-
-        if match:
-            substrates.append(match.group(1) or match.group(2) or match.group(3) or match.group(4))
-        else:
-            substrates.append(item)
+    substrates = [item for item in [list(getattr(model.reactions, i).metabolites.keys())[0].name for i in exchanges if hasattr(model.reactions, i)]]
     return substrates
         
 def get_reaction_map(model_file='textbook', exchanges=None):
@@ -272,11 +278,7 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
             raise ValueError("Provide only on of medium_type or exchanges list")
 
     if exchanges is None:
-        env_exchanges = []
-        for name, model_file in model_dict.items():
-            env_exchanges.extend(get_exchanges(model_file=model_file, medium_type=medium_type))
-
-        env_exchanges = list(set(env_exchanges))
+        env_exchanges = get_combined_exchanges(model_dict, medium_type=medium_type)
     else:
         env_exchanges = exchanges
 
@@ -310,6 +312,23 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
         spec['dFBA Results'][model_name].update({model_name: 0})
     spec['update environment'] = environment_spec()
     return spec
+
+def get_combined_exchanges(model_dict, medium_type=None):
+    """Returns a list of exchange reaction ids for multiple species - containing every
+    Parameters:
+        model_dict: dict, dictionary with cdfba process names as keys and model name/path as values
+        medium_type: str/lst,pick one of:
+        'default' uses the default cobra model medium
+        'minimal' uses the minimal medium for the model
+        'exchange' uses all exchange fluxes for the model
+    Returns:
+        env_exchanges: list, list of
+    """
+    env_exchanges = []
+    for name, model_file in model_dict.items():
+        env_exchanges.extend(get_exchanges(model_file=model_file, medium_type=medium_type))
+    env_exchanges = list(set(env_exchanges))
+    return env_exchanges
 
 def get_initial_counts(model_dict, biomass=0.5, initial_value=20, exchanges=None):
     """Returns an initial condition dict based on medium
@@ -375,18 +394,18 @@ def environment_spec():
         }
     }
 
-def get_chemo_spec(config=None):
-    """Constructs a configuration dictionary for the Chemostat process.
+def get_static_spec(config=None):
+    """Constructs a configuration dictionary for the StaticConcentration process.
     Parameters:
-        config: dict, Chemostat configuration dictionary
+        config: dict, StaticConcentration configuration dictionary
     Returns:
-        dict, spec for Chemostat process
+        dict, spec for StaticConcentration process
     """
     if config is None:
         raise ValueError("Error: Please provide config")
     return {
         "_type": "process",
-        "address": "local:Chemostat",
+        "address": "local:StaticConcentration",
         "config": config,
         "inputs": {
             "shared_environment": ["shared environment"],
@@ -487,7 +506,7 @@ def run_initial_counts(model_file="textbook"):
 def run_cdfba_spec():
     model_dict = {
         'E.coli' : 'iAF1260',
-        'S. flexneri' : 'iSFxv_1172'
+        'S.flexneri' : 'iSFxv_1172'
     }
 
     pprint.pprint(make_cdfba_composite(

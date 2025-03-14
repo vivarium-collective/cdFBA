@@ -5,8 +5,8 @@ import math
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import model_from_file, get_objective_reaction, get_injector_spec, get_wave_spec, get_chemo_spec
-from cdFBA.utils import get_single_dfba_spec, dfba_config, environment_spec, initial_environment
+from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec
+from cdFBA.utils import get_single_dfba_spec, environment_spec, initial_environment
 
 from matplotlib import pyplot as plt
 
@@ -14,9 +14,14 @@ from matplotlib import pyplot as plt
 class DFBA(Process):
     """Performs single time-step of dynamic FBA
 
-    Parameters:
+    Config Parameters:
     -----------
-    model_file: string, math to cobra model file
+    model_file: str, big model ID or path to cobra model file
+    name: string, name of process (usually species/strain name)
+    kinetics: dict, dictionary of tuples with kinetic parameters (km, Vmax)
+    reaction_map: dict, maps substrate names to reaction IDs
+    biomass_identifier: str, biomass reaction ID
+    bounds: dict, maps reaction IDs to a bounds dictionary
     """
     config_schema = {
         "model_file": {
@@ -96,7 +101,7 @@ class DFBA(Process):
 
         return {"dfba_update": state_update}
 
-class UpdateEnvironment(Step): #TODO =:
+class UpdateEnvironment(Step):
     config_schema = {}
 
     def __init__(self, config, core):
@@ -134,8 +139,8 @@ class UpdateEnvironment(Step): #TODO =:
             "shared_environment": {'counts': update}
         }
 
-class Chemostat(Process):
-    """The Chemostat process maintains the concentration of given substrates at a fixed value at each time-step
+class StaticConcentration(Process):
+    """The StaticConcentration process maintains the concentration of given substrates at a fixed value at each time-step
     """
     config_schema = {
         "substrate_concentrations" : "map[float]",
@@ -367,7 +372,7 @@ if __name__ == "__main__":
 
     core.register_process('DFBA', DFBA)
     core.register_process('UpdateEnvironment', UpdateEnvironment)
-    core.register_process('Chemostat', Chemostat)
+    core.register_process('StaticConcentration', StaticConcentration)
     core.register_process('WaveFunction', WaveFunction)
     core.register_process('Injector', Injector)
 
