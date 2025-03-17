@@ -10,6 +10,39 @@ from cobra.medium import minimal_medium
 import pprint
 import re
 
+#basic functions
+def model_from_file(model_file='textbook'):
+    """Returns a cobra model from a model file path or BiGG Model ID
+    Parameters:
+        model_file: str, file path or BiGG Model ID
+    Returns:
+        model: cobra model
+    """
+    if ".xml" in model_file:
+        model = read_sbml_model(model_file)
+    elif ".json" in model_file:
+        model = load_json_model(model_file)
+    elif ".yaml" in model_file:
+        model = load_yaml_model(model_file)
+    elif ".mat" in model_file:
+        model = load_matlab_model(model_file)
+    elif isinstance(model_file, str):
+        model = load_model(model_file)
+    else:
+        # error handling
+        raise ValueError("Invalid model file")
+    return model
+
+def get_model_dict(model_dict):
+    """
+    Returns a dictionary of the cobra model from a dictionary of model IDs/paths
+    Args:
+        model_dict: dict, dictionary of BIGG IDs or model paths
+    Returns:
+        model_dict: dict, dictionary of cobra models
+    """
+    return {key:model_from_file(value) for key, value in model_dict.items()}
+
 #set value functions
 def set_counts(spec, counts):
     """Set counts for given metabolites in the shared environment
@@ -51,32 +84,11 @@ def set_kinetics(species, spec, kinetics):
             spec[species]['config']['kinetics'][substrate] = kinetic_params
 
 #single species functions
-def model_from_file(model_file='textbook'):
-    """Returns a cobra model from a model file path or BiGG Model ID
-    Parameters:
-        model_file: str, file path or BiGG Model ID
-    Returns:
-        model: cobra model
-    """
-    if ".xml" in model_file:
-        model = read_sbml_model(model_file)
-    elif ".json" in model_file:
-        model = load_json_model(model_file)
-    elif ".yaml" in model_file:
-        model = load_yaml_model(model_file)
-    elif ".mat" in model_file:
-        model = load_matlab_model(model_file)
-    elif isinstance(model_file, str):
-        model = load_model(model_file)
-    else:
-        # error handling
-        raise ValueError("Invalid model file")
-    return model
-
 def get_exchanges(model_file='textbook', medium_type='exchange'):
     """
     Parameters:
-        model_file: str, file path or BiGG Model ID
+        model_file: str, file path or BiGG Model ID, OR
+                    cobra model
         medium_type:
             'default' uses the default cobra model medium
             'minimal' uses the minimal medium for the model
@@ -85,7 +97,11 @@ def get_exchanges(model_file='textbook', medium_type='exchange'):
     Returns:
         exchanges: list of exchange reaction IDs
     """
-    model=model_from_file(model_file)
+    if isinstance(model_file, str):
+        model = model_from_file(model_file)
+    else:
+        model = model_file
+
     if medium_type == 'default':
         medium = model.medium
     if medium_type == 'minimal':
@@ -107,9 +123,12 @@ def get_substrates(model_file='textbook', exchanges=None):
     Returns:
     substrates : lst, list of names of substrates required by the model organism
     """
+    if isinstance(model_file, str):
+        model = model_from_file(model_file)
+    else:
+        model = model_file
     if exchanges is None:
-        exchanges = get_exchanges(model_file)
-    model = model_from_file(model_file)
+        exchanges = get_exchanges(model) #gets all exchange reactions by default
     substrates = [item for item in [list(getattr(model.reactions, i).metabolites.keys())[0].name for i in exchanges if hasattr(model.reactions, i)]]
     return substrates
         
@@ -122,10 +141,13 @@ def get_reaction_map(model_file='textbook', exchanges=None):
     Returns:
         reaction_name_map : dict, maps substrate names to reactions
     """
+    if isinstance(model_file, str):
+        model = model_from_file(model_file)
+    else:
+        model = model_file
     if exchanges is None:
-        exchanges = get_exchanges(model_file)
-    model = model_from_file(model_file)
-    substrates = get_substrates(model_file, exchanges)
+        exchanges = get_exchanges(model)
+    substrates = get_substrates(model, exchanges)
     ids = exchanges
     reaction_name_map = {}
     for i in range(len(substrates)):
@@ -138,10 +160,13 @@ def get_kinetics(model_file='textbook', exchanges=None):
         model_file : str, file path or BiGG Model ID
         exchanges : lst, list of exchange reaction ids
     """
+    if isinstance(model_file, str):
+        model = model_from_file(model_file)
+    else:
+        model = model_file
     if exchanges is None:
-        exchanges = get_exchanges(model_file)
-    model = model_from_file(model_file)
-    kinetics = {key: (0.5, 2.0) for key in get_substrates(model_file, exchanges)}
+        exchanges = get_exchanges(model)
+    kinetics = {key: (0.5, 2.0) for key in get_substrates(model, exchanges)}
     return kinetics
 
 def get_bounds(reaction_map, upper=1000, lower=-1000):
@@ -162,7 +187,10 @@ def get_objective_reaction(model_file = 'textbook'):
     Returns:
         objective_reaction: str, name of the objective reaction (biomass reaction by default)
     """
-    model = model_from_file(model_file)
+    if isinstance(model_file, str):
+        model = model_from_file(model_file)
+    else:
+        model = model_file
     expression = f"{model.objective.expression}"
     match = re.search(r'1\.0\*([^\s]+)', expression)
 
@@ -190,7 +218,10 @@ def dfba_config(
     Returns:
         config: dict, config dictionary for a single species dFBA
     """
-    model = model_from_file(model_file)
+    if isinstance(model_file, str):
+        model = model_from_file(model_file)
+    else:
+        model = model_file
     if name is None:
         name = model.id
     if reaction_map is None:
@@ -208,7 +239,7 @@ def dfba_config(
             "glucose": (0.02, 15),
             "acetate": (0.5, 7)}
     if biomass_identifier is None:
-        biomass_identifier = get_objective_reaction(model_file=model_file)
+        biomass_identifier = get_objective_reaction(model_file=model)
 
     return {
         "model_file": model_file,
@@ -234,20 +265,23 @@ def get_single_dfba_spec(
     Returns:
         dict: dict, specification dictionary for a single species dFBA
     """
-
+    if isinstance(model_file, str):
+        model = model_from_file(model_file)
+    else:
+        model = model_file
     if config is None:
-        config = dfba_config(model_file=model_file, name=name)
+        config = dfba_config(model_file=model, name=name)
 
     return {
         "_type": "process",
         "address": "local:DFBA",
         "config": config,
         "inputs": {
-            "shared_environment": ["shared environment"],
-            "current_update": ["dFBA Results"]
+            "shared_environment": ["..", "shared environment"],
+            "current_update": ["..", "dFBA Results"]
         },
         "outputs": {
-            "dfba_update": ["dFBA Results", name]
+            "dfba_update": ["..", "dFBA Results", name]
         },
         "interval": interval
     }
@@ -268,6 +302,7 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
     Returns:
         spec : dict, cdfba composite spec
     """
+    model_dict = get_model_dict(model_dict)
     spec = {'dFBA Results': {}}
     if medium_type is None:
         if exchanges is None:
@@ -285,7 +320,7 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
     initial_counts = get_initial_counts(model_dict, exchanges=env_exchanges)
     initial_env = initial_environment(volume=volume, initial_counts=initial_counts, species_list=model_dict.keys())
     spec['shared environment'] = initial_env
-
+    spec['Species'] = {}
     for model_name, model_file in model_dict.items():
         if exchanges is None:
             model_exchanges = get_exchanges(model_file=model_file, medium_type=medium_type)
@@ -306,7 +341,7 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
             bounds=bounds
         )
         model_spec = get_single_dfba_spec(model_file=model_file, name=model_name, config=config, interval=interval)
-        spec[model_name] = model_spec
+        spec['Species'][model_name] = model_spec
 
         spec['dFBA Results'][model_name] = {substrate: 0 for substrate in substrates}
         spec['dFBA Results'][model_name].update({model_name: 0})
@@ -460,6 +495,7 @@ def get_injector_spec(config=None):
         },
     }
 
+#Tests
 def run_single_dfba_spec(model_file="textbook"):
     model = model_from_file(model_file)
     exchanges = get_exchanges(model_file=model_file, medium_type='exchange')
@@ -511,7 +547,7 @@ def run_cdfba_spec():
 
     pprint.pprint(make_cdfba_composite(
         model_dict=model_dict,
-        medium_type='exchange',
+        medium_type='minimal',
         exchanges=None,
         volume=1,
         interval=1.0

@@ -25,8 +25,8 @@ class DFBA(Process):
     """
     config_schema = {
         "model_file": {
-            '_type': 'string',
-            '_default': 'iAF1260',
+            "_type": "any",
+            "_default": 'iAF1260',
         },
         "name": 'string',
         "kinetics": "any",
@@ -39,8 +39,10 @@ class DFBA(Process):
         super().__init__(config, core)
 
         # TODO -- load model here rather than passing it in
-        self.model = model_from_file(self.config['model_file'])
-
+        if isinstance(self.config['model_file'], str):
+            self.model = model_from_file(self.config['model_file'])
+        else:
+            self.model = self.config['model_file']
 
         if self.config["bounds"] is not None:
             if len(self.config["bounds"]) != 0:
@@ -68,7 +70,6 @@ class DFBA(Process):
         return {
              "dfba_update": "map[set_float]"
         }
-
 
     def update(self, inputs, interval):
         current_state = {key:inputs["shared_environment"]["counts"][key] for key, value in self.config["reaction_map"].items()}
