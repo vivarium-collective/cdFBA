@@ -5,8 +5,8 @@ import math
 from process_bigraph.composite import ProcessTypes
 from process_bigraph import Process, Step, Composite
 
-from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec
-from cdFBA.utils import get_single_dfba_spec, environment_spec, initial_environment
+from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec, set_concentration
+from cdFBA.utils import get_single_dfba_spec, environment_spec, initial_environment, make_cdfba_composite, set_kinetics
 
 from matplotlib import pyplot as plt
 
@@ -269,46 +269,44 @@ class Injector(Process):
 
 def run_environment(core):
     """This tests that the environment runs"""
-    name1 = "E.coli"
-    name2 = "S.flexneri"
+    # BiGG model ids or the path name to the associated model file
+    model_dict = {
+        'E.coli': 'iAF1260',
+        'S.flexneri': 'iSFxv_1172'
+    }
+    # list exchange reactions
+    exchanges = ['EX_glc__D_e', 'EX_ac_e']
+    # set environment volume
+    volume = 2
     # define a single dFBA model
-    spec = {
-        name1: get_single_dfba_spec(model_file= "iAF1260", name=name1)
+    spec = make_cdfba_composite(model_dict, medium_type=None, exchanges=exchanges, volume=volume, interval=1.0)
+
+    # Set reaction bounds
+    spec['Species']['E.coli']['config']['bounds'] = {
+        "EX_o2_e": {"lower": -2, "upper": None},
+        "ATPM": {"lower": 1, "upper": 1}
+    }
+    spec['Species']['S.flexneri']['config']['bounds'] = {
+        "EX_o2_e": {"lower": -2, "upper": None},
+        "ATPM": {"lower": 1, "upper": 1}
     }
 
-    spec[name2] = get_single_dfba_spec(model_file = "iSFxv_1172", name=name2)
-
-    spec['shared environment'] = initial_environment(volume=2, species_list=[name1, name2])
-
-    spec['dFBA Results'] = {name1:
-        {
-            "glucose": 0,
-            "acetate": 0,
-            spec[name1]['config']['name']: 0,
-        },
-        name2:
-        {
-            "glucose": 0,
-            "acetate": 0,
-            spec[name2]['config']['name']: 0,
-        }
+    # set external substrate concentrations
+    concentrations = {
+        "Acetate": 0,
+        "D-Glucose": 40
     }
+    set_concentration(spec, concentrations)
 
-    spec['update environment'] = environment_spec()
-
-    injector_config = {
-        "injection_params": {
-            "glucose": {
-                "amount": 80,
-                "interval": 5,
-            }
-        }
+    # set kinetics
+    kinetics = {
+        "D-Glucose": (0.02, 15),
+        "Acetate": (0.5, 7)
     }
+    for species in model_dict.keys():
+        set_kinetics(species, spec, kinetics)
 
-    spec['environment dynamics'] = get_injector_spec(config=injector_config)
-
-    pprint.pprint(spec)
-    #Manually add emitter
+    # set emitter specs
     spec['emitter'] = {
         "_type": "step",
         "address": "local:ram-emitter",
@@ -323,6 +321,9 @@ def run_environment(core):
             "global_time": ["global_time"]
         }
     }
+
+    pprint.pprint(spec)
+
     # put it in a composite
     sim = Composite({
         "state": spec,
@@ -330,7 +331,7 @@ def run_environment(core):
     },
         core=core
     )
-
+    # pprint.pprint(sim.state)
     # run the simulation
     sim.run(40)
     results = sim.gather_results()[('emitter',)]
@@ -352,7 +353,6 @@ def run_environment(core):
                 env_combined[key] = []
             env_combined[key].append(value)
 
-
     fig, ax = plt.subplots(dpi=300)
     for key, value in env_combined.items():
         # if not key == 'glucose':
@@ -367,10 +367,11 @@ def run_environment(core):
 if __name__ == "__main__":
     from cdFBA import register_types
 
-    # create a core
+    # create the core object
     core = ProcessTypes()
+    # register data types
     core = register_types(core)
-
+    # register all processes and steps
     core.register_process('DFBA', DFBA)
     core.register_process('UpdateEnvironment', UpdateEnvironment)
     core.register_process('StaticConcentration', StaticConcentration)

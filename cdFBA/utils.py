@@ -81,7 +81,7 @@ def set_kinetics(species, spec, kinetics):
         if substrate not in spec['shared environment']['concentrations'].keys():
             raise ValueError(f'{substrate} is not in shared environment')
         else:
-            spec[species]['config']['kinetics'][substrate] = kinetic_params
+            spec['Species'][species]['config']['kinetics'][substrate] = kinetic_params
 
 #single species functions
 def get_exchanges(model_file='textbook', medium_type='exchange'):
