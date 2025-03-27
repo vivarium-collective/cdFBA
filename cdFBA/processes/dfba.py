@@ -34,7 +34,8 @@ class dFBA(Process):
         "biomass_identifier": "any",
         "bounds": "maybe[map[bounds]]",
     }
-
+    #TODO -- Add 'changes' to the config that allows us to change the model
+    #TODO -- Generate biomass within init, remove from
     def __init__(self, config, core):
         super().__init__(config, core)
 

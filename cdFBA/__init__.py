@@ -1,5 +1,5 @@
 from cdFBA.processes import register_processes
-
+#TODO -- add global store name variables
 def apply_non_negative(schema, current, update, core):
     new_value = current + update
     return max(0, new_value)
@@ -76,7 +76,7 @@ threshold_type = {
     "model": "string",
     "parent": "maybe[string]",
     "name": "maybe[string]"
-}
+} #TODO: add changes here as well
 
 def register_types(core):
     core.register("positive_float", positive_float)

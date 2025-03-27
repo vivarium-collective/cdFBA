@@ -36,9 +36,12 @@ class EnvironmentMonitor(Step):
         to_add = {}
         to_remove = []
 
-        for name, threshold in inputs["thresholds"].items():
+        for threshold in inputs["thresholds"].values():
             substrate = threshold["substrate"]
-            if (threshold["upper"] is not None and inputs["shared_environment"][substrate] > threshold["upper"]) or (threshold["lower"] is not None and inputs["shared_environment"][substrate] < threshold["lower"]):
+            if ((threshold["upper"] is not None
+                and inputs["shared_environment"][substrate] > threshold["upper"])
+                    or (threshold["lower"] is not None
+                        and inputs["shared_environment"][substrate] < threshold["lower"])):
                 if threshold["type"] == "add":
                     name = threshold["name"]
                     model = threshold["model"]
@@ -57,7 +60,7 @@ class EnvironmentMonitor(Step):
                     to_remove.append(model)
 
         return {
-            "manage_dfba": {
+            "new_species": {
                 "_add": to_add,
                 "_remove": to_remove
             }
@@ -75,7 +78,7 @@ def get_env_monitor_spec(interval):
             "species": ["Species"]
         },
         "outputs": {
-            "manage_dfba": ["Species"]
+            "new_species": ["Species"]
         },
     }
 
