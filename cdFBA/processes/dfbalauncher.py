@@ -31,12 +31,12 @@ class EnvironmentMonitor(Step):
             "new_species":"map"
         }
 
-    def update(self, inputs, interval):
+    def update(self, inputs):
 
         to_add = {}
         to_remove = []
 
-        for threshold in inputs["thresholds"]:
+        for name, threshold in inputs["thresholds"].items():
             substrate = threshold["substrate"]
             if (threshold["upper"] is not None and inputs["shared_environment"][substrate] > threshold["upper"]) or (threshold["lower"] is not None and inputs["shared_environment"][substrate] < threshold["lower"]):
                 if threshold["type"] == "add":
@@ -77,7 +77,6 @@ def get_env_monitor_spec(interval):
         "outputs": {
             "manage_dfba": ["Species"]
         },
-        "interval": interval
     }
 
 def run_env_monitor(core):
@@ -94,16 +93,18 @@ def run_env_monitor(core):
     spec = make_cdfba_composite(model_dict, medium_type=None, exchanges=exchanges, volume=volume, interval=1.0)
     #create thresholds store
     spec["thresholds"] = {
-        "substrate": "Acetate",
-        "range": {
-            "upper": 20,
-            "lower": None,
-        },
-        "model": "iAF1260",
-        "parent": "E.coli",
-        "name": "E.coli 2"
+        "Acetate": {
+            "substrate": "Acetate",
+            "range": {
+                "upper": 20,
+                "lower": None,
+            },
+            "model": "iAF1260",
+            "parent": "E.coli",
+            "name": "E.coli 2"
+        }
     }
-    spec["montior"] = get_env_monitor_spec(interval=1.0)
+    spec["monitor"] = get_env_monitor_spec(interval=1.0)
 
     # Set reaction bounds
     spec["Species"]["E.coli"]["config"]["bounds"] = {
