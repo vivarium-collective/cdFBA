@@ -5,8 +5,9 @@ import math
 from process_bigraph import Process, Step, Composite, ProcessTypes
 from process_bigraph.emitter import gather_emitter_results
 
+from cdFBA.utils import SHARED_ENVIRONMENT
 from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec, set_concentration
-from cdFBA.utils import get_single_dfba_spec, environment_spec, initial_environment, make_cdfba_composite, set_kinetics
+from cdFBA.utils import  make_cdfba_composite, set_kinetics, get_objective_reaction
 
 from matplotlib import pyplot as plt
 
@@ -20,26 +21,25 @@ class dFBA(Process):
     name: string, name of process (usually species/strain name)
     kinetics: dict, dictionary of tuples with kinetic parameters (km, Vmax)
     reaction_map: dict, maps substrate names to reaction IDs
-    biomass_identifier: str, biomass reaction ID
     bounds: dict, maps reaction IDs to a bounds dictionary
     """
     config_schema = {
         "model_file": {
             "_type": "any",
-            "_default": 'iAF1260',
+            "_default": "iAF1260",
         },
-        "name": 'string',
+        "name": "string",
         "kinetics": "any",
         "reaction_map": "any",
-        "biomass_identifier": "any",
         "bounds": "maybe[map[bounds]]",
+        "changes": "maybe[dfba_changes]"
     }
-    #TODO -- Add 'changes' to the config that allows us to change the model
-    #TODO -- Generate biomass within init, remove from
+    #TODO -- Add "changes" to the config that allows us to change the model
     def __init__(self, config, core):
         super().__init__(config, core)
 
-        self.model = model_from_file(self.config['model_file'])
+        self.model = model_from_file(self.config["model_file"])
+        self.biomass_identifier = get_objective_reaction(self.model)
 
         if self.config["bounds"] is not None:
             if len(self.config["bounds"]) != 0:
@@ -49,13 +49,15 @@ class dFBA(Process):
                     if bounds["upper"] is not None:
                         self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
 
-    # def initial_state(self):
-    #     # TODO -- get the initial state from the load model, self.model
-    #     return {
-    #         "dfba_update": {
-    #             'Biomass_Ecoli_core': 0,
-    #             'acetate': 0,
-    #             'glucose': 0}}
+        if self.config["changes"] is not None:
+            if "gene_knockout" in self.config["changes"].keys():
+                if len(self.config["changes"]["gene_knockout"]) > 0:
+                    for gene in self.config["changes"]["gene_knockout"]:
+                        self.model.genes.get_by_id(gene).knock_out()
+            if "reaction_knockout" in self.config["changes"].keys():
+                if len(self.config["changes"]["reaction_knockout"]) > 0:
+                    for reaction in self.config["changes"]["reaction_knockout"]:
+                        self.model.reactions.get_by_id(reaction).knock_out()
 
     def inputs(self):
         return {
@@ -77,7 +79,7 @@ class dFBA(Process):
             Km, Vmax = self.config["kinetics"][substrate_id]
             substrate_concentration = inputs["shared_environment"]["concentrations"][substrate_id]
 
-            # calculate michaelis-menten flux
+            # calculate Michaelis-Menten flux
             flux = Vmax * substrate_concentration / (Km + substrate_concentration)
 
             # use the flux to constrain fba
@@ -88,9 +90,9 @@ class dFBA(Process):
 
         # gather the results
         ## update biomass
-        biomass_growth_rate = solution.fluxes[self.config["biomass_identifier"]]
+        biomass_growth_rate = solution.fluxes[self.biomass_identifier]
         current_biomass = current_state[self.config["name"]]
-        state_update[self.config['name']] = biomass_growth_rate * current_biomass * interval
+        state_update[self.config["name"]] = biomass_growth_rate * current_biomass * interval
 
         ## update substrates
         for substrate_id, reaction_id in self.config["reaction_map"].items():
@@ -108,7 +110,7 @@ class UpdateEnvironment(Step):
     def inputs(self):
         return {
              "shared_environment": "volumetric",
-             "species_updates": "map[map[set_float]]" #TODO add a species_update type
+             "species_updates": "map[map[set_float]]"
         }
 
     def outputs(self):
@@ -134,7 +136,7 @@ class UpdateEnvironment(Step):
                     update[substrate_id] = -shared_environment[substrate_id]
 
         return {
-            "shared_environment": {'counts': update}
+            "shared_environment": {"counts": update}
         }
 
 class StaticConcentration(Process):
@@ -167,7 +169,7 @@ class StaticConcentration(Process):
             update[substrate] = (values * inputs["shared_environment"]["volume"]) - shared_environment[substrate]
 
         return {
-            "shared_environment": {'counts': update}
+            "shared_environment": {"counts": update}
         }
 
 class WaveFunction(Process):
@@ -222,7 +224,7 @@ class WaveFunction(Process):
             update[substrate] = (current_count - shared_environment[substrate])
 
         return {
-            "shared_environment": {'counts': update}
+            "shared_environment": {"counts": update}
         }
 
 class Injector(Process):
@@ -261,29 +263,29 @@ class Injector(Process):
             if ((t % self.config["injection_params"][substrate]["interval"]) == 0) & (t!=0.0):
                 update[substrate] = self.config["injection_params"][substrate]["amount"]
         return {
-            "shared_environment": {'counts': update}
+            "shared_environment": {"counts": update}
         }
 
 def run_environment(core):
     """This tests that the environment runs"""
     # BiGG model ids or the path name to the associated model file
     model_dict = {
-        'E.coli': 'iAF1260',
-        'S.flexneri': 'iSFxv_1172'
+        "E.coli": "iAF1260",
+        "S.flexneri": "iSFxv_1172"
     }
     # list exchange reactions
-    exchanges = ['EX_glc__D_e', 'EX_ac_e']
+    exchanges = ["EX_glc__D_e", "EX_ac_e"]
     # set environment volume
     volume = 2
     # define a single dFBA model
     spec = make_cdfba_composite(model_dict, medium_type=None, exchanges=exchanges, volume=volume, interval=1.0)
 
     # Set reaction bounds
-    spec['Species']['E.coli']['config']['bounds'] = {
+    spec["Species"]["E.coli"]["config"]["bounds"] = {
         "EX_o2_e": {"lower": -2, "upper": None},
         "ATPM": {"lower": 1, "upper": 1}
     }
-    spec['Species']['S.flexneri']['config']['bounds'] = {
+    spec["Species"]["S.flexneri"]["config"]["bounds"] = {
         "EX_o2_e": {"lower": -2, "upper": None},
         "ATPM": {"lower": 1, "upper": 1}
     }
@@ -304,7 +306,7 @@ def run_environment(core):
         set_kinetics(species, spec, kinetics)
 
     # set emitter specs
-    spec['emitter'] = {
+    spec["emitter"] = {
         "_type": "step",
         "address": "local:ram-emitter",
         "config": {
@@ -314,7 +316,7 @@ def run_environment(core):
             }
         },
         "inputs": {
-            "shared_environment": ["shared environment"],
+            "shared_environment": [SHARED_ENVIRONMENT],
             "global_time": ["global_time"]
         }
     }
@@ -324,7 +326,7 @@ def run_environment(core):
     # put it in a composite
     sim = Composite({
         "state": spec,
-        # "emitter": {'mode': 'all'}
+        # "emitter": {"mode": "all"}
     },
         core=core
     )
@@ -332,18 +334,18 @@ def run_environment(core):
 
     # run the simulation
     sim.run(40)
-    results = gather_emitter_results(sim)[('emitter',)]
+    results = gather_emitter_results(sim)[("emitter",)]
 
     # print the results
     timepoints = []
     for timepoint in results:
-        time = timepoint.pop('global_time')
+        time = timepoint.pop("global_time")
         timepoints.append(time)
         # dfba_spec = timepoint.pop(name1)
-        print(f'TIME: {time}')
-        print(f'STATE: {timepoint}')
+        print(f"TIME: {time}")
+        print(f"STATE: {timepoint}")
 
-    env = [timepoint['shared_environment']['concentrations'] for timepoint in results]
+    env = [timepoint["shared_environment"]["concentrations"] for timepoint in results]
     env_combined = {}
     for d in env:
         for key, value in d.items():
@@ -353,11 +355,11 @@ def run_environment(core):
 
     fig, ax = plt.subplots(dpi=300)
     for key, value in env_combined.items():
-        # if not key == 'glucose':
+        # if not key == "glucose":
         #     continue
         ax.plot(timepoints, env_combined[key], label=key)
-    plt.xlabel('Time')
-    plt.ylabel('Substrate Concentration')
+    plt.xlabel("Time")
+    plt.ylabel("Substrate Concentration")
     plt.legend()
     plt.tight_layout()
     plt.show()
@@ -370,11 +372,11 @@ if __name__ == "__main__":
     # register data types
     core = register_types(core)
     # register all processes and steps
-    core.register_process('dFBA', dFBA)
-    core.register_process('UpdateEnvironment', UpdateEnvironment)
-    core.register_process('StaticConcentration', StaticConcentration)
-    core.register_process('WaveFunction', WaveFunction)
-    core.register_process('Injector', Injector)
+    core.register_process("dFBA", dFBA)
+    core.register_process("UpdateEnvironment", UpdateEnvironment)
+    core.register_process("StaticConcentration", StaticConcentration)
+    core.register_process("WaveFunction", WaveFunction)
+    core.register_process("Injector", Injector)
 
     # print(get_single_dfba_spec())
     # test_dfba_alone(core)

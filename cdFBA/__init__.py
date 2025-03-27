@@ -1,5 +1,6 @@
 from cdFBA.processes import register_processes
 #TODO -- add global store name variables
+
 def apply_non_negative(schema, current, update, core):
     new_value = current + update
     return max(0, new_value)
@@ -67,16 +68,21 @@ dfba_launch_type = {
     "parent": "string"
 }
 
+dfba_changes_type = {
+    "gene_knockout": "maybe[list[string]]",
+    "reaction_knockout": "maybe[list[string]]",
+}
+
 threshold_type = {
     "substrate": "string",
     "range": {
         "upper": "maybe[float]",
         "lower": "maybe[float]",
     },
-    "model": "string",
-    "parent": "maybe[string]",
-    "name": "maybe[string]"
-} #TODO: add changes here as well
+    "parent": "string",
+    "name": "string",
+    "changes": "maybe[dfba_changes]"
+}
 
 def register_types(core):
     core.register("positive_float", positive_float)
@@ -85,5 +91,6 @@ def register_types(core):
     core.register("particle", particle_type)
     core.register("volumetric", volumetric_type)
     core.register("threshold", threshold_type)
+    core.register("dfba_changes", dfba_changes_type)
     
     return register_processes(core)

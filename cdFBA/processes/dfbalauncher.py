@@ -5,6 +5,7 @@ import math
 from process_bigraph import ProcessTypes, Process, Step, Composite
 from process_bigraph.emitter import gather_emitter_results
 
+from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, THRESHOLDS
 from cdFBA.utils import model_from_file, get_single_dfba_spec, set_concentration, make_cdfba_composite, set_kinetics, get_objective_reaction
 from cdFBA.processes.dfba import dFBA, UpdateEnvironment
 
@@ -23,7 +24,7 @@ class EnvironmentMonitor(Step):
         return {
             "thresholds": "map[threshold]",
             "shared_environment": "volumetric",
-            "species": "any" #connect to "Species" store with all dFBAs
+            "species": "any" #connect to SPECIES_STORE store with all dFBAs
         }
 
     def outputs(self):
@@ -44,19 +45,14 @@ class EnvironmentMonitor(Step):
                         and inputs["shared_environment"][substrate] < threshold["lower"])):
                 if threshold["type"] == "add":
                     name = threshold["name"]
-                    model = threshold["model"]
-                    if threshold["parent"] is not None:
-                        interval = inputs["species"][threshold["parent"]]["interval"]
-                        config = inputs["species"][threshold["parent"]]["config"]
-                    else:
-                        raise ValueError("Please provide a parent species")
-                    config["biomass_indentifier"] = get_objective_reaction(model_file=model)
-                    config["model_file"] = model
+                    interval = inputs["species"][threshold["parent"]]["interval"]
+                    config = inputs["species"][threshold["parent"]]["config"]
                     config["name"] = name
-                    spec = get_single_dfba_spec(model_file = model, name=name, config=config, interval=interval)
+                    config["changes"] = threshold["changes"]
+                    spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
                     to_add[name] = spec
                 if threshold["type"] == "remove":
-                    model = threshold["model"]
+                    model = threshold["name"]
                     to_remove.append(model)
 
         return {
@@ -73,12 +69,12 @@ def get_env_monitor_spec(interval):
         "address": "local:EnvironmentMonitor",
         "config": {},
         "inputs": {
-            "thresholds": ["thresholds"],
-            "shared_environment": ["shared environment"],
-            "species": ["Species"]
+            "thresholds": [THRESHOLDS],
+            "shared_environment": [SHARED_ENVIRONMENT],
+            "species": [SPECIES_STORE]
         },
         "outputs": {
-            "new_species": ["Species"]
+            "new_species": [SPECIES_STORE]
         },
     }
 
@@ -95,7 +91,7 @@ def run_env_monitor(core):
     # define a single dFBA model
     spec = make_cdfba_composite(model_dict, medium_type=None, exchanges=exchanges, volume=volume, interval=1.0)
     #create thresholds store
-    spec["thresholds"] = {
+    spec[THRESHOLDS] = {
         "Acetate": {
             "substrate": "Acetate",
             "range": {
@@ -110,7 +106,7 @@ def run_env_monitor(core):
     spec["monitor"] = get_env_monitor_spec(interval=1.0)
 
     # Set reaction bounds
-    spec["Species"]["E.coli"]["config"]["bounds"] = {
+    spec[SPECIES_STORE]["E.coli"]["config"]["bounds"] = {
         "EX_o2_e": {"lower": -2, "upper": None},
         "ATPM": {"lower": 1, "upper": 1}
     }
@@ -140,7 +136,7 @@ def run_env_monitor(core):
             }
         },
         "inputs": {
-            "shared_environment": ["shared environment"],
+            "shared_environment": [SHARED_ENVIRONMENT],
             "global_time": ["global_time"]
         }
     }

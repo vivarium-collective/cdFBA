@@ -1,0 +1,37 @@
+Metadata-Version: 2.2
+Name: cdFBA
+Version: 0.0.1
+Home-page: https://github.com/vivarium-collective/cdFBA
+Author: Tasnif Rahman
+Author-email: trahman@uchc.edu
+License: MIT
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: vivarium-interface
+Requires-Dist: cobra
+Requires-Dist: matplotlib
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+
+# cdFBA
+Community Dynamic Flux Balance Analysis using process-bigraph. 
+
+
+#### This project is a work in progress
