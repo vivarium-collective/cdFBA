@@ -201,6 +201,7 @@ def get_objective_reaction(model_file = 'textbook'):
 
 def dfba_config(
         model_file="textbook",
+        model = None,
         name=None,
         kinetics=None,
         reaction_map=None,
@@ -210,6 +211,7 @@ def dfba_config(
     """Construct a configuration dictionary for a single cobra model
     Parameters:
         model_file: str, file path or BiGG Model ID
+        model: cobra model (optional, provide if model already loaded to avoid reloading)
         name: str, name of the process
         kinetics: dict, kinetic parameters for shared substrates
         reaction_map: dict, maps substrate names to reaction ids
@@ -218,16 +220,14 @@ def dfba_config(
     Returns:
         config: dict, config dictionary for a single species dFBA
     """
-    if isinstance(model_file, str):
+    if model is None:
         model = model_from_file(model_file)
-    else:
-        model = model_file
     if name is None:
         name = model.id
     if reaction_map is None:
         reaction_map = {
-            "glucose": "EX_glc__D_e",
-            "acetate": "EX_ac_e"
+            "D-Glucose": "EX_glc__D_e",
+            "Acetate": "EX_ac_e"
         }
     if bounds is None:
         bounds = {
@@ -260,7 +260,7 @@ def get_single_dfba_spec(
     Parameters:
         model_file: str, file path or BiGG Model ID
         name: str, identifier for the model, usually species/strain name
-        config: dict, config for DFBA Process. If none provided, uses default generated using `dfba_config()`
+        config: dict, config for dFBA Process. If none provided, uses default generated using `dfba_config()`
         interval: float, interval between consecutive dFBA calculations
     Returns:
         dict: dict, specification dictionary for a single species dFBA
@@ -274,7 +274,7 @@ def get_single_dfba_spec(
 
     return {
         "_type": "process",
-        "address": "local:DFBA",
+        "address": "local:dFBA",
         "config": config,
         "inputs": {
             "shared_environment": ["..", "shared environment"],
@@ -302,7 +302,7 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
     Returns:
         spec : dict, cdfba composite spec
     """
-    model_dict = get_model_dict(model_dict)
+    models_dict = get_model_dict(model_dict)
     spec = {'dFBA Results': {}}
     if medium_type is None:
         if exchanges is None:
@@ -313,15 +313,15 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
             raise ValueError("Provide only on of medium_type or exchanges list")
 
     if exchanges is None:
-        env_exchanges = get_combined_exchanges(model_dict, medium_type=medium_type)
+        env_exchanges = get_combined_exchanges(models_dict, medium_type=medium_type)
     else:
         env_exchanges = exchanges
 
-    initial_counts = get_initial_counts(model_dict, exchanges=env_exchanges)
-    initial_env = initial_environment(volume=volume, initial_counts=initial_counts, species_list=model_dict.keys())
+    initial_counts = get_initial_counts(models_dict, exchanges=env_exchanges)
+    initial_env = initial_environment(volume=volume, initial_counts=initial_counts, species_list=models_dict.keys())
     spec['shared environment'] = initial_env
     spec['Species'] = {}
-    for model_name, model_file in model_dict.items():
+    for model_name, model_file in models_dict.items():
         if exchanges is None:
             model_exchanges = get_exchanges(model_file=model_file, medium_type=medium_type)
         else:
@@ -333,18 +333,23 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
         bounds = {}
 
         config = dfba_config(
-            model_file=model_file,
+            model_file=model_dict[model_name],
             name=model_name,
             kinetics=kinetics,
             reaction_map=reaction_map,
             biomass_identifier=biomass_identifier,
             bounds=bounds
         )
-        model_spec = get_single_dfba_spec(model_file=model_file, name=model_name, config=config, interval=interval)
+        model_spec = get_single_dfba_spec(
+            model_file=model_file,
+            name=model_name,
+            config=config,
+            interval=interval
+        )
         spec['Species'][model_name] = model_spec
-
         spec['dFBA Results'][model_name] = {substrate: 0 for substrate in substrates}
         spec['dFBA Results'][model_name].update({model_name: 0})
+
     spec['update environment'] = environment_spec()
     return spec
 
@@ -429,7 +434,7 @@ def environment_spec():
         }
     }
 
-def get_static_spec(config=None):
+def get_static_spec(config=None, interval=1.0):
     """Constructs a configuration dictionary for the StaticConcentration process.
     Parameters:
         config: dict, StaticConcentration configuration dictionary
@@ -449,9 +454,10 @@ def get_static_spec(config=None):
         "outputs": {
             "shared_environment": ["shared environment"],
         },
+        "interval": interval,
     }
 
-def get_wave_spec(config=None):
+def get_wave_spec(config=None, interval=1.0):
     """Constructs a configuration dictionary for the WaveFunction process.
     Parameters:
         config: dict, WaveFunction configuration dictionary
@@ -471,9 +477,10 @@ def get_wave_spec(config=None):
         "outputs": {
             "shared_environment": ["shared environment"],
         },
+        "interval": interval,
     }
 
-def get_injector_spec(config=None):
+def get_injector_spec(config=None, interval=1.0):
     """Constructs a configuration dictionary for the Injector process.
     Parameters:
         config: dict, Injector configuration dictionary
@@ -493,6 +500,7 @@ def get_injector_spec(config=None):
         "outputs": {
             "shared_environment": ["shared environment"],
         },
+        interval: interval,
     }
 
 #Tests

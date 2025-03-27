@@ -2,8 +2,8 @@ import random
 import pprint
 import math
 
-from process_bigraph.composite import ProcessTypes
-from process_bigraph import Process, Step, Composite
+from process_bigraph import Process, Step, Composite, ProcessTypes
+from process_bigraph.emitter import gather_emitter_results
 
 from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec, set_concentration
 from cdFBA.utils import get_single_dfba_spec, environment_spec, initial_environment, make_cdfba_composite, set_kinetics
@@ -11,7 +11,7 @@ from cdFBA.utils import get_single_dfba_spec, environment_spec, initial_environm
 from matplotlib import pyplot as plt
 
 
-class DFBA(Process):
+class dFBA(Process):
     """Performs single time-step of dynamic FBA
 
     Config Parameters:
@@ -38,11 +38,7 @@ class DFBA(Process):
     def __init__(self, config, core):
         super().__init__(config, core)
 
-        # TODO -- load model here rather than passing it in
-        if isinstance(self.config['model_file'], str):
-            self.model = model_from_file(self.config['model_file'])
-        else:
-            self.model = self.config['model_file']
+        self.model = model_from_file(self.config['model_file'])
 
         if self.config["bounds"] is not None:
             if len(self.config["bounds"]) != 0:
@@ -322,7 +318,7 @@ def run_environment(core):
         }
     }
 
-    pprint.pprint(spec)
+    # pprint.pprint(spec)
 
     # put it in a composite
     sim = Composite({
@@ -331,10 +327,11 @@ def run_environment(core):
     },
         core=core
     )
-    # pprint.pprint(sim.state)
+    pprint.pprint(sim.state)
+
     # run the simulation
     sim.run(40)
-    results = sim.gather_results()[('emitter',)]
+    results = gather_emitter_results(sim)[('emitter',)]
 
     # print the results
     timepoints = []
@@ -372,7 +369,7 @@ if __name__ == "__main__":
     # register data types
     core = register_types(core)
     # register all processes and steps
-    core.register_process('DFBA', DFBA)
+    core.register_process('dFBA', dFBA)
     core.register_process('UpdateEnvironment', UpdateEnvironment)
     core.register_process('StaticConcentration', StaticConcentration)
     core.register_process('WaveFunction', WaveFunction)
