@@ -1,0 +1,3 @@
+vivarium-interface
+cobra
+matplotlib

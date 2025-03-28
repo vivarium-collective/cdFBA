@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="renamed Chemostat to StaticConcentration">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="EnvironmentMonitor and compatibility fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +20,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Jupyter Notebook" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -80,10 +83,11 @@
     "Python.composite.executor": "Debug",
     "Python.debug_noteboook.executor": "Debug",
     "Python.dfba.executor": "Debug",
+    "Python.dfbalauncher.executor": "Debug",
     "Python.utils.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "valuefunctions",
+    "git-widget-placeholder": "dynamicspec",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -96,8 +100,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-PY-243.22562.180" />
-        <option value="bundled-python-sdk-85c76a3b01b3-9a18a617cbe4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.22562.180" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.25659.43" />
+        <option value="bundled-python-sdk-181015f7ab06-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.25659.43" />
       </set>
     </attachedChunks>
   </component>
@@ -121,7 +125,8 @@
       <workItem from="1739463931074" duration="37398000" />
       <workItem from="1739896462223" duration="164000" />
       <workItem from="1739896938801" duration="1465000" />
-      <workItem from="1741703537823" duration="3682000" />
+      <workItem from="1741703537823" duration="12437000" />
+      <workItem from="1742222975196" duration="86185000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
       <option name="closed" value="true" />
@@ -451,7 +456,55 @@
       <option name="project" value="LOCAL" />
       <updated>1741624200836</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="renamed Chemostat to StaticConcentration">
+      <option name="closed" value="true" />
+      <created>1741894817218</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1741894817218</updated>
+    </task>
+    <task id="LOCAL-00043" summary="changed utility functions and spec structure">
+      <option name="closed" value="true" />
+      <created>1742222918842</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1742222918842</updated>
+    </task>
+    <task id="LOCAL-00044" summary="changed utility functions and spec structure">
+      <option name="closed" value="true" />
+      <created>1742225798964</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1742225798964</updated>
+    </task>
+    <task id="LOCAL-00045" summary="EnvironmentMonitor and compatibility fixes">
+      <option name="closed" value="true" />
+      <created>1743084473254</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1743084473254</updated>
+    </task>
+    <task id="LOCAL-00046" summary="EnvironmentMonitor and compatibility fixes">
+      <option name="closed" value="true" />
+      <created>1743085520183</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1743085520183</updated>
+    </task>
+    <task id="LOCAL-00047" summary="EnvironmentMonitor and compatibility fixes">
+      <option name="closed" value="true" />
+      <created>1743090615015</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1743090615015</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -486,7 +539,9 @@
     <MESSAGE value="added new notebooks" />
     <MESSAGE value="changed Chemostat to StaticConcentrations and utility functions" />
     <MESSAGE value="renamed Chemostat to StaticConcentration" />
-    <option name="LAST_COMMIT_MESSAGE" value="renamed Chemostat to StaticConcentration" />
+    <MESSAGE value="changed utility functions and spec structure" />
+    <MESSAGE value="EnvironmentMonitor and compatibility fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="EnvironmentMonitor and compatibility fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -497,14 +552,29 @@
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>85</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
           <line>1242</line>
           <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_system.py</url>
+          <line>1113</line>
+          <option name="timeStamp" value="98" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/composite.py</url>
+          <line>709</line>
+          <option name="timeStamp" value="99" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
+          <line>326</line>
+          <option name="timeStamp" value="100" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
+          <line>332</line>
+          <option name="timeStamp" value="101" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>file://$PROJECT_DIR$/Notebooks/vivarium-demo.ipynb</url>
@@ -520,11 +590,17 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="spec" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/cdFBA$debug_noteboook.coverage" NAME="debug_noteboook Coverage Results" MODIFIED="1738769941297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Notebooks" />
-    <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1739813469159" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
-    <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1740587865608" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1742220698421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1743098241430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1743107340338" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1734709845989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$composite.coverage" NAME="composite Coverage Results" MODIFIED="1738599233475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../process-bigraph/process_bigraph" />
   </component>
