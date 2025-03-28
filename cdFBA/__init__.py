@@ -69,11 +69,12 @@ dfba_launch_type = {
 }
 
 dfba_changes_type = {
-    "gene_knockout": "maybe[list[string]]",
-    "reaction_knockout": "maybe[list[string]]",
+    "gene_knockout": "maybe[list]",
+    "reaction_knockout": "maybe[list]",
 }
 
 threshold_type = {
+    "type": "string",
     "substrate": "string",
     "range": {
         "upper": "maybe[float]",

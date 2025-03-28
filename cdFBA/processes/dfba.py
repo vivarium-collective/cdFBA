@@ -50,14 +50,12 @@ class dFBA(Process):
                         self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
 
         if self.config["changes"] is not None:
-            if "gene_knockout" in self.config["changes"].keys():
-                if len(self.config["changes"]["gene_knockout"]) > 0:
-                    for gene in self.config["changes"]["gene_knockout"]:
-                        self.model.genes.get_by_id(gene).knock_out()
-            if "reaction_knockout" in self.config["changes"].keys():
-                if len(self.config["changes"]["reaction_knockout"]) > 0:
-                    for reaction in self.config["changes"]["reaction_knockout"]:
-                        self.model.reactions.get_by_id(reaction).knock_out()
+            if len(self.config["changes"]["gene_knockout"]) > 0:
+                for gene in self.config["changes"]["gene_knockout"]:
+                    self.model.genes.get_by_id(gene).knock_out()
+            if len(self.config["changes"]["reaction_knockout"]) > 0:
+                for reaction in self.config["changes"]["reaction_knockout"]:
+                    self.model.reactions.get_by_id(reaction).knock_out()
 
     def inputs(self):
         return {
