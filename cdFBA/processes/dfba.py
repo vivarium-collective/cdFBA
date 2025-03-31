@@ -32,7 +32,7 @@ class dFBA(Process):
         "kinetics": "any",
         "reaction_map": "any",
         "bounds": "maybe[map[bounds]]",
-        "changes": "maybe[dfba_changes]"
+        "changes": "dfba_changes"
     }
     #TODO -- Add "changes" to the config that allows us to change the model
     def __init__(self, config, core):
@@ -377,7 +377,5 @@ if __name__ == "__main__":
     core.register_process("Injector", Injector)
 
     # print(get_single_dfba_spec())
-    # test_dfba_alone(core)
-    # test_dfba(core)
     run_environment(core)
-    # test_composite()
+

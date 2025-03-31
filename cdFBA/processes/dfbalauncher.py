@@ -45,20 +45,28 @@ class EnvironmentMonitor(Step):
                         and inputs["shared_environment"]["concentrations"][substrate] < threshold["range"]["lower"])):
                 if threshold["type"] == "add":
                     name = threshold["name"]
-                    interval = inputs["species"][threshold["parent"]]["interval"]
-                    config = inputs["species"][threshold["parent"]]["config"]
-                    config["name"] = name
-                    config["changes"] = threshold["changes"]
-                    spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
-                    to_add[name] = spec
+                    if not name in inputs["species"].keys():
+                        interval = inputs["species"][threshold["parent"]]["interval"]
+                        config = inputs["species"][threshold["parent"]]["config"]
+                        config["name"] = name
+                        config["changes"] = threshold["changes"]
+                        spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
+                        to_add[name] = spec
                 if threshold["type"] == "remove":
                     model = threshold["name"]
                     to_remove.append(model)
-
+        if to_add:
+            breakpoint()
         return {
             "new_species": {
-                "_add": to_add,
-                "_remove": to_remove
+                '_react': {
+                    "add": {
+                        "path": [],
+                        "add": to_add,
+                    },
+                }
+                # "_add": to_add,
+                # "_remove": to_remove
             }
         }
 

@@ -82,7 +82,7 @@ threshold_type = {
     },
     "parent": "string",
     "name": "string",
-    "changes": "maybe[dfba_changes]"
+    "changes": "dfba_changes"
 }
 
 def register_types(core):
