@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="type fixes">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="environmentmonitor updates">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/pytest.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,15 +124,7 @@
       <workItem from="1741703537823" duration="12437000" />
       <workItem from="1742222975196" duration="98079000" />
       <workItem from="1743188364841" duration="11108000" />
-      <workItem from="1743433750129" duration="4696000" />
-    </task>
-    <task id="LOCAL-00001" summary="Fixed dfba process and added setfloat type">
-      <option name="closed" value="true" />
-      <created>1736349097366</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1736349097366</updated>
+      <workItem from="1743433750129" duration="6080000" />
     </task>
     <task id="LOCAL-00002" summary="added bounds and fixed type for bounds to allow acetate production">
       <option name="closed" value="true" />
@@ -520,7 +510,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743186370459</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="environmentmonitor updates">
+      <option name="closed" value="true" />
+      <created>1743440369418</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1743440369418</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -559,7 +557,8 @@
     <MESSAGE value="EnvironmentMonitor and compatibility fixes" />
     <MESSAGE value="global variables dfba config changes" />
     <MESSAGE value="type fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="type fixes" />
+    <MESSAGE value="environmentmonitor updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="environmentmonitor updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
