@@ -69,11 +69,12 @@ dfba_launch_type = {
 }
 
 dfba_changes_type = {
-    "gene_knockout": "maybe[list[string]]",
-    "reaction_knockout": "maybe[list[string]]",
+    "gene_knockout": "maybe[list]",
+    "reaction_knockout": "maybe[list]",
 }
 
 threshold_type = {
+    "type": "string",
     "substrate": "string",
     "range": {
         "upper": "maybe[float]",
@@ -81,7 +82,7 @@ threshold_type = {
     },
     "parent": "string",
     "name": "string",
-    "changes": "maybe[dfba_changes]"
+    "changes": "dfba_changes"
 }
 
 def register_types(core):

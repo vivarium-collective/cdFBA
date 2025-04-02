@@ -1,6 +1,7 @@
 import random
 import pprint
 import math
+import pytest
 
 from process_bigraph import Process, Step, Composite, ProcessTypes
 from process_bigraph.emitter import gather_emitter_results
@@ -32,7 +33,7 @@ class dFBA(Process):
         "kinetics": "any",
         "reaction_map": "any",
         "bounds": "maybe[map[bounds]]",
-        "changes": "maybe[dfba_changes]"
+        "changes": "dfba_changes"
     }
     #TODO -- Add "changes" to the config that allows us to change the model
     def __init__(self, config, core):
@@ -50,14 +51,12 @@ class dFBA(Process):
                         self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
 
         if self.config["changes"] is not None:
-            if "gene_knockout" in self.config["changes"].keys():
-                if len(self.config["changes"]["gene_knockout"]) > 0:
-                    for gene in self.config["changes"]["gene_knockout"]:
-                        self.model.genes.get_by_id(gene).knock_out()
-            if "reaction_knockout" in self.config["changes"].keys():
-                if len(self.config["changes"]["reaction_knockout"]) > 0:
-                    for reaction in self.config["changes"]["reaction_knockout"]:
-                        self.model.reactions.get_by_id(reaction).knock_out()
+            if len(self.config["changes"]["gene_knockout"]) > 0:
+                for gene in self.config["changes"]["gene_knockout"]:
+                    self.model.genes.get_by_id(gene).knock_out()
+            if len(self.config["changes"]["reaction_knockout"]) > 0:
+                for reaction in self.config["changes"]["reaction_knockout"]:
+                    self.model.reactions.get_by_id(reaction).knock_out()
 
     def inputs(self):
         return {
@@ -260,14 +259,17 @@ class Injector(Process):
         t = inputs["global_time"]
         update = {}
         for substrate in self.config["injection_params"]:
-            if ((t % self.config["injection_params"][substrate]["interval"]) == 0) & (t!=0.0):
+            if (((t+1) % self.config["injection_params"][substrate]["interval"]) == 0) & (t!=0.0):
                 update[substrate] = self.config["injection_params"][substrate]["amount"]
         return {
             "shared_environment": {"counts": update}
         }
 
-def run_environment(core):
-    """This tests that the environment runs"""
+#=======
+# TESTS
+#=======
+
+def get_test_spec():
     # BiGG model ids or the path name to the associated model file
     model_dict = {
         "E.coli": "iAF1260",
@@ -320,9 +322,25 @@ def run_environment(core):
             "global_time": ["global_time"]
         }
     }
+    return spec
 
-    # pprint.pprint(spec)
+@pytest.fixture
+def core():
+    from cdFBA import register_types
+    # create the core object
+    core = ProcessTypes()
+    # register data types
+    core = register_types(core)
+    # register all processes and steps
+    core.register_process("dFBA", dFBA)
+    core.register_process("UpdateEnvironment", UpdateEnvironment)
+    core.register_process("StaticConcentration", StaticConcentration)
+    core.register_process("WaveFunction", WaveFunction)
+    core.register_process("Injector", Injector)
 
+def test_environment(core):
+    """This tests that the environment runs"""
+    spec = get_test_spec()
     # put it in a composite
     sim = Composite({
         "state": spec,
@@ -330,39 +348,66 @@ def run_environment(core):
     },
         core=core
     )
-    pprint.pprint(sim.state)
 
     # run the simulation
-    sim.run(40)
+    sim.run(10)
     results = gather_emitter_results(sim)[("emitter",)]
 
-    # print the results
-    timepoints = []
-    for timepoint in results:
-        time = timepoint.pop("global_time")
-        timepoints.append(time)
-        # dfba_spec = timepoint.pop(name1)
-        print(f"TIME: {time}")
-        print(f"STATE: {timepoint}")
+    assert len(results) == 11
+    assert results[2]["shared_environment"]["counts"]["D-Glucose"] > results[4]["shared_environment"]["counts"]["D-Glucose"]
+    assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
 
-    env = [timepoint["shared_environment"]["concentrations"] for timepoint in results]
-    env_combined = {}
-    for d in env:
-        for key, value in d.items():
-            if key not in env_combined:
-                env_combined[key] = []
-            env_combined[key].append(value)
+def test_static_concentration(core):
+    spec = get_test_spec()
+    StaticConcentration_config = {
+        "substrate_concentrations": {
+            "D-Glucose": 40
+        }
+    }
+    spec['StaticConcentration'] = get_static_spec(StaticConcentration_config, interval=1.0)
+    # put it in a composite
+    sim = Composite({
+        "state": spec,
+        # "emitter": {"mode": "all"}
+    },
+        core=core
+    )
 
-    fig, ax = plt.subplots(dpi=300)
-    for key, value in env_combined.items():
-        # if not key == "glucose":
-        #     continue
-        ax.plot(timepoints, env_combined[key], label=key)
-    plt.xlabel("Time")
-    plt.ylabel("Substrate Concentration")
-    plt.legend()
-    plt.tight_layout()
-    plt.show()
+    # run the simulation
+    sim.run(10)
+    results = gather_emitter_results(sim)[("emitter",)]
+
+    assert len(results) == 11
+    assert results[2]["shared_environment"]["counts"]["D-Glucose"] == results[4]["shared_environment"]["counts"][
+        "D-Glucose"]
+    assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
+
+def test_injector(core):
+    spec = get_test_spec()
+    injector_config = {
+        "injection_params": {
+            "D-Glucose": {
+                "amount": 80,
+                "interval": 5,
+            }
+        }
+    }
+    spec['Injector'] = get_injector_spec(injector_config, interval=1.0)
+    # put it in a composite
+    sim = Composite({
+        "state": spec,
+        # "emitter": {"mode": "all"}
+    },
+        core=core
+    )
+
+    # run the simulation
+    sim.run(20)
+    results = gather_emitter_results(sim)[("emitter",)]
+
+    assert len(results) == 21
+    assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
+    assert results[10]["shared_environment"]["counts"]["D-Glucose"]== results[20]["shared_environment"]["counts"]["D-Glucose"]
 
 if __name__ == "__main__":
     from cdFBA import register_types
@@ -378,8 +423,7 @@ if __name__ == "__main__":
     core.register_process("WaveFunction", WaveFunction)
     core.register_process("Injector", Injector)
 
-    # print(get_single_dfba_spec())
-    # test_dfba_alone(core)
-    # test_dfba(core)
-    run_environment(core)
-    # test_composite()
+    test_environment(core)
+    test_static_concentration(core)
+    test_injector(core)
+

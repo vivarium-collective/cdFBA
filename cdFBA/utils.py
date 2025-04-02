@@ -244,8 +244,13 @@ def dfba_config(
     if kinetics is None:
         kinetics = {
             "glucose": (0.02, 15),
-            "acetate": (0.5, 7)}
-
+            "acetate": (0.5, 7)
+        }
+    if changes is None:
+        changes = {
+            "gene_knockout": [],
+            "reaction_knockout": [],
+        }
     return {
         "model_file": model_file,
         "name": name,

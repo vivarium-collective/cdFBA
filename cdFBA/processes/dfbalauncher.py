@@ -17,8 +17,8 @@ class EnvironmentMonitor(Step):
     """
     config_schema = {}
 
-    def __init__(self, config):
-        super().__init__(self, config)
+    def __init__(self, config, core):
+        super().__init__(config, core)
 
     def inputs(self):
         return {
@@ -39,26 +39,34 @@ class EnvironmentMonitor(Step):
 
         for threshold in inputs["thresholds"].values():
             substrate = threshold["substrate"]
-            if ((threshold["upper"] is not None
-                and inputs["shared_environment"][substrate] > threshold["upper"])
-                    or (threshold["lower"] is not None
-                        and inputs["shared_environment"][substrate] < threshold["lower"])):
+            if ((isinstance(threshold["range"]["upper"], (float, int))
+                and inputs["shared_environment"]["concentrations"][substrate] > threshold["range"]["upper"])
+                    or (isinstance(threshold["range"]["lower"], (float, int))
+                        and inputs["shared_environment"]["concentrations"][substrate] < threshold["range"]["lower"])):
                 if threshold["type"] == "add":
                     name = threshold["name"]
-                    interval = inputs["species"][threshold["parent"]]["interval"]
-                    config = inputs["species"][threshold["parent"]]["config"]
-                    config["name"] = name
-                    config["changes"] = threshold["changes"]
-                    spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
-                    to_add[name] = spec
+                    if not name in inputs["species"].keys():
+                        interval = inputs["species"][threshold["parent"]]["interval"]
+                        config = inputs["species"][threshold["parent"]]["config"]
+                        config["name"] = name
+                        config["changes"] = threshold["changes"]
+                        spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
+                        to_add[name] = spec
                 if threshold["type"] == "remove":
                     model = threshold["name"]
                     to_remove.append(model)
-
+        if to_add:
+            breakpoint()
         return {
             "new_species": {
-                "_add": to_add,
-                "_remove": to_remove
+                '_react': {
+                    "add": {
+                        "path": [],
+                        "add": to_add,
+                    },
+                }
+                # "_add": to_add,
+                # "_remove": to_remove
             }
         }
 
@@ -93,14 +101,18 @@ def run_env_monitor(core):
     #create thresholds store
     spec[THRESHOLDS] = {
         "Acetate": {
+            "type": "add",
             "substrate": "Acetate",
             "range": {
                 "upper": 20,
                 "lower": None,
             },
-            "model": "iAF1260",
             "parent": "E.coli",
-            "name": "E.coli 2"
+            "name": "E.coli 2",
+            "changes":{
+                "gene_knockout": [],
+                "reaction_knockout": [],
+            }
         }
     }
     spec["monitor"] = get_env_monitor_spec(interval=1.0)
@@ -182,6 +194,8 @@ def run_env_monitor(core):
     plt.legend()
     plt.tight_layout()
     plt.show()
+
+    pprint.pprint(sim.state)
 
 if __name__ == "__main__":
     from cdFBA import register_types
