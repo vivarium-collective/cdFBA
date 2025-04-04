@@ -109,7 +109,7 @@ class UpdateEnvironment(Step):
     def inputs(self):
         return {
              "shared_environment": "volumetric",
-             "species_updates": "map[map[set_float]]"
+             "species_updates": "map[map[set_float]]",
         }
 
     def outputs(self):
@@ -219,8 +219,10 @@ class WaveFunction(Process):
             phi = self.config["substrate_params"][substrate]["phase_shift"]
 
             current_count = (A*math.sin(w*t+phi) + B) * inputs["shared_environment"]["volume"]
-
-            update[substrate] = (current_count - shared_environment[substrate])
+            if current_count > 0:
+                update[substrate] = (current_count - shared_environment[substrate])
+            else:
+                update[substrate] = 0
 
         return {
             "shared_environment": {"counts": update}
@@ -338,6 +340,8 @@ def core():
     core.register_process("WaveFunction", WaveFunction)
     core.register_process("Injector", Injector)
 
+    return core
+
 def test_environment(core):
     """This tests that the environment runs"""
     spec = get_test_spec()
@@ -426,4 +430,3 @@ if __name__ == "__main__":
     test_environment(core)
     test_static_concentration(core)
     test_injector(core)
-

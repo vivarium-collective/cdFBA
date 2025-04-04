@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="environmentmonitor updates">
+      <change afterPath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/Synechococcus-PCC11901.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/iSO595v7.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cdFBA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cdFBA.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +22,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Jupyter Notebook" />
         <option value="Python Script" />
+        <option value="Jupyter Notebook" />
       </list>
     </option>
   </component>
@@ -94,6 +99,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Notebooks" />
+      <recent name="$PROJECT_DIR$/Notebooks/out" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -126,15 +137,7 @@
       <workItem from="1742222975196" duration="98079000" />
       <workItem from="1743188364841" duration="11108000" />
       <workItem from="1743433750129" duration="20507000" />
-      <workItem from="1743533083495" duration="6310000" />
-    </task>
-    <task id="LOCAL-00003" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
-      <option name="closed" value="true" />
-      <created>1736876204499</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1736876204499</updated>
+      <workItem from="1743533083495" duration="23138000" />
     </task>
     <task id="LOCAL-00004" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
       <option name="closed" value="true" />
@@ -520,7 +523,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743442522445</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="environmentmonitor updates">
+      <option name="closed" value="true" />
+      <created>1743620784116</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1743620784116</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -587,7 +598,7 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>344</line>
+          <line>348</line>
           <option name="timeStamp" value="100" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -614,11 +625,6 @@
           <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
           <line>56</line>
           <option name="timeStamp" value="115" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py</url>
-          <line>58</line>
-          <option name="timeStamp" value="116" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
@@ -655,7 +661,7 @@
     <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1742220698421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
     <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1743526050114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1743436851607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1743519496110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1743775098454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$composite.coverage" NAME="composite Coverage Results" MODIFIED="1738599233475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../process-bigraph/process_bigraph" />
   </component>
 </project>
