@@ -4,15 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="environmentmonitor updates">
-      <change afterPath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Notebooks/Synechococcus-PCC11901.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Notebooks/iSO595v7.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cdFBA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cdFBA.iml" afterDir="false" />
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="changes to WaveFunction">
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Bacteroides_fragilis_NCTC_9343.mat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Bacteroides_fragilis_NCTC_9343.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Clostridium_bartlettii_DSM_16795.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Porphyromonas_uenonis_60_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Shigella_sonnei_Ss046.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Streptococcus_anginosus_1_2_62CV.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Streptococcus_thoraltensis_DSM_12221.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notebooks/representative_species/Sulfolobus_solfataricus_P2.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,28 +82,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Python tests.Python tests in dfba.py.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.composite.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.debug_noteboook.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.dfba.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.dfbalauncher.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.utils.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dynamicspec&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Python tests.Python tests in dfba.py.executor": "Debug",
+    "Python.composite.executor": "Debug",
+    "Python.debug_noteboook.executor": "Debug",
+    "Python.dfba.executor": "Debug",
+    "Python.dfbalauncher.executor": "Debug",
+    "Python.utils.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "dynamicspec",
+    "last_opened_file_path": "/Users/tasnifrahman/PycharmProjects/cdFBA/Notebooks/representative_species",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Notebooks/representative_species" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Notebooks" />
       <recent name="$PROJECT_DIR$/Notebooks/out" />
@@ -137,15 +145,7 @@
       <workItem from="1742222975196" duration="98079000" />
       <workItem from="1743188364841" duration="11108000" />
       <workItem from="1743433750129" duration="20507000" />
-      <workItem from="1743533083495" duration="23138000" />
-    </task>
-    <task id="LOCAL-00004" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
-      <option name="closed" value="true" />
-      <created>1736876232977</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1736876232977</updated>
+      <workItem from="1743533083495" duration="38777000" />
     </task>
     <task id="LOCAL-00005" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
       <option name="closed" value="true" />
@@ -531,7 +531,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743620784116</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="changes to WaveFunction">
+      <option name="closed" value="true" />
+      <created>1743786446874</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1743786446874</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -571,7 +579,8 @@
     <MESSAGE value="global variables dfba config changes" />
     <MESSAGE value="type fixes" />
     <MESSAGE value="environmentmonitor updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="environmentmonitor updates" />
+    <MESSAGE value="changes to WaveFunction" />
+    <option name="LAST_COMMIT_MESSAGE" value="changes to WaveFunction" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
