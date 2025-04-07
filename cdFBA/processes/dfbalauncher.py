@@ -29,7 +29,7 @@ class EnvironmentMonitor(Step):
 
     def outputs(self):
         return {
-            "new_species":"map"
+            "new_species": "map"
         }
 
     def update(self, inputs):
@@ -56,17 +56,11 @@ class EnvironmentMonitor(Step):
                     model = threshold["name"]
                     to_remove.append(model)
         if to_add:
-            breakpoint()
+            import ipdb; ipdb.set_trace()
         return {
             "new_species": {
-                '_react': {
-                    "add": {
-                        "path": [],
-                        "add": to_add,
-                    },
-                }
-                # "_add": to_add,
-                # "_remove": to_remove
+                '_add': to_add,
+                '_remove': to_remove
             }
         }
 

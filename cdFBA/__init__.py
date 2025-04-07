@@ -5,10 +5,10 @@ def apply_non_negative(schema, current, update, core):
     new_value = current + update
     return max(0, new_value)
 
-def set_update(schema, current, update, core):
+def set_update(schema, current, update, top_schema, top_state, path, core):
     return update
 
-def volumetric_update(schema, current, update, core):
+def volumetric_update(schema, current, update, top_schema, top_state, path, core):
     counts = update.get("counts")
     volume = current.get("volume")
 
