@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="changes to WaveFunction">
-      <change afterPath="$PROJECT_DIR$/Notebooks/bigraphviz.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cdFBA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cdFBA.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/Chemostat Demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Chemostat Demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
-    </list>
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="changes to WaveFunction" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -142,15 +133,7 @@
       <workItem from="1743188364841" duration="11108000" />
       <workItem from="1743433750129" duration="20507000" />
       <workItem from="1743533083495" duration="38777000" />
-      <workItem from="1744052085931" duration="19329000" />
-    </task>
-    <task id="LOCAL-00005" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
-      <option name="closed" value="true" />
-      <created>1736876260591</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1736876260591</updated>
+      <workItem from="1744052085931" duration="20084000" />
     </task>
     <task id="LOCAL-00006" summary="introduced volume and concentration calculaion for `shared environment`">
       <option name="closed" value="true" />
@@ -536,7 +519,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743786446874</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="changes to WaveFunction">
+      <option name="closed" value="true" />
+      <created>1744216776372</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1744216776372</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -691,7 +682,7 @@
     <SUITE FILE_PATH="coverage/cdFBA$debug_noteboook.coverage" NAME="debug_noteboook Coverage Results" MODIFIED="1738769941297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Notebooks" />
     <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1742220698421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
     <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1743526050114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1744211148958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1744216608392" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1743775098454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$composite.coverage" NAME="composite Coverage Results" MODIFIED="1738599233475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../process-bigraph/process_bigraph" />
   </component>
