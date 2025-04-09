@@ -5,7 +5,7 @@ import math
 from process_bigraph import ProcessTypes, Process, Step, Composite
 from process_bigraph.emitter import gather_emitter_results
 
-from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, THRESHOLDS
+from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, THRESHOLDS, DFBA_RESULTS
 from cdFBA.utils import model_from_file, get_single_dfba_spec, set_concentration, make_cdfba_composite, set_kinetics, get_objective_reaction
 from cdFBA.processes.dfba import dFBA, UpdateEnvironment
 
@@ -24,12 +24,17 @@ class EnvironmentMonitor(Step):
         return {
             "thresholds": "map[threshold]",
             "shared_environment": "volumetric",
-            "species": "any" #connect to SPECIES_STORE store with all dFBAs
+            "species": "any", #connect to SPECIES_STORE store with all dFBAs
+            "dfba_results": "any",
         }
 
     def outputs(self):
         return {
-            "new_species": "map"
+            "new_species": "map",
+            "concentrations": "map",
+            "counts": "map",
+            "dfba_results": "any",
+            "mass_removal": "map[float]"
         }
 
     def update(self, inputs):
@@ -37,31 +42,68 @@ class EnvironmentMonitor(Step):
         to_add = {}
         to_remove = []
 
+        add_concentrations = {}
+        add_counts = {}
+
+        remove_concentrations = []
+        remove_counts = []
+
+        add_dfba_updates = {}
+        remove_dfba_updates = []
+
+        mass_updates = {}
+
         for threshold in inputs["thresholds"].values():
             substrate = threshold["substrate"]
             if ((isinstance(threshold["range"]["upper"], (float, int))
                 and inputs["shared_environment"]["concentrations"][substrate] > threshold["range"]["upper"])
                     or (isinstance(threshold["range"]["lower"], (float, int))
                         and inputs["shared_environment"]["concentrations"][substrate] < threshold["range"]["lower"])):
+                name = threshold["name"]
+                parent = threshold["parent"]
+                mass = threshold["mass"]
                 if threshold["type"] == "add":
-                    name = threshold["name"]
                     if not name in inputs["species"].keys():
-                        interval = inputs["species"][threshold["parent"]]["interval"]
-                        config = inputs["species"][threshold["parent"]]["config"]
+                        interval = inputs["species"][parent]["interval"]
+                        config = inputs["species"][parent]["config"]
                         config["name"] = name
                         config["changes"] = threshold["changes"]
                         spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
                         to_add[name] = spec
+                        add_counts[name] = inputs["thresholds"][threshold]["counts"]
+                        add_concentrations[name] = inputs["thresholds"][threshold]["mass"]/inputs["shared_environment"]["volume"]
+                        environment_substrates = [substrate for substrate in inputs["dfba_results"][parent].keys() if substrate != parent]
+                        environment_substrates.append(name)
+                        add_dfba_updates[name] = {substrate: 0 for substrate in environment_substrates}
+                        add_dfba_updates[name][substrate] = mass
+                        mass_updates[parent] = {parent: -mass}
+
                 if threshold["type"] == "remove":
-                    model = threshold["name"]
-                    to_remove.append(model)
+                    to_remove.append(name)
+                    remove_counts.append(name)
+                    remove_concentrations.append(name)
+                    remove_dfba_updates.append(name)
+
         if to_add:
             import ipdb; ipdb.set_trace()
         return {
             "new_species": {
                 '_add': to_add,
                 '_remove': to_remove
-            }
+            },
+            "concentrations": {
+                '_add': add_concentrations,
+                '_remove': remove_concentrations,
+            },
+            "counts": {
+                '_add': add_counts,
+                '_remove': remove_counts,
+            },
+            "dfba_results": {
+                '_add': add_dfba_updates,
+                '_remove': remove_dfba_updates,
+            },
+            "mass_removal": {"counts": mass_updates}
         }
 
 def get_env_monitor_spec(interval):
@@ -73,10 +115,15 @@ def get_env_monitor_spec(interval):
         "inputs": {
             "thresholds": [THRESHOLDS],
             "shared_environment": [SHARED_ENVIRONMENT],
-            "species": [SPECIES_STORE]
+            "species": [SPECIES_STORE],
+            "dfba_results": [DFBA_RESULTS],
         },
         "outputs": {
-            "new_species": [SPECIES_STORE]
+            "new_species": [SPECIES_STORE],
+            "concentrations": [SHARED_ENVIRONMENT, "concentrations"],
+            "counts": [SHARED_ENVIRONMENT, "counts"],
+            "dfba_results": [DFBA_RESULTS],
+            "mass_removal": [SHARED_ENVIRONMENT],
         },
     }
 
