@@ -1,4 +1,5 @@
 from cdFBA.processes import register_processes
+from copy import deepcopy
 #TODO -- add global store name variables
 
 def apply_non_negative(schema, current, update, core):
@@ -9,13 +10,20 @@ def set_update(schema, current, update, top_schema, top_state, path, core):
     return update
 
 def volumetric_update(schema, current, update, top_schema, top_state, path, core):
-    counts = update.get("counts")
     volume = current.get("volume")
-
     new_counts = current["counts"]
     new_concentrations = current["concentrations"]
-    if counts:
-        for key, value in counts.items():
+
+    if ('_add' in update.keys()) or ('_remove' in update.keys()):
+        for name in update["_add"].keys():
+            new_counts[name] = update["_add"][name]
+            new_concentrations[name] = update["_add"][name]/volume
+        for name in update["_remove"]:
+            new_counts.pop(name)
+            new_concentrations.pop(name)
+
+    for key, value in update["counts"].items():
+        if (key != "_add") and (key != "_remove"):
             new = new_counts[key] + value
             new_counts[key] = new
             new_concentrations[key] = new/volume

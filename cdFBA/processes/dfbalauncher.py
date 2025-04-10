@@ -31,23 +31,17 @@ class EnvironmentMonitor(Step):
     def outputs(self):
         return {
             "new_species": "map",
-            "concentrations": "map",
             "counts": "map",
+            "shared_environment": "map",
             "dfba_results": "any",
-            "mass_removal": "map[float]"
         }
 
     def update(self, inputs):
 
         to_add = {}
         to_remove = []
-
-        add_concentrations = {}
         add_counts = {}
-
-        remove_concentrations = []
         remove_counts = []
-
         add_dfba_updates = {}
         remove_dfba_updates = []
 
@@ -70,32 +64,34 @@ class EnvironmentMonitor(Step):
                         config["changes"] = threshold["changes"]
                         spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
                         to_add[name] = spec
-                        add_counts[name] = inputs["thresholds"][threshold]["counts"]
-                        add_concentrations[name] = inputs["thresholds"][threshold]["mass"]/inputs["shared_environment"]["volume"]
+                        add_counts[name] = mass
+                        # add_concentrations[name] = inputs["thresholds"][threshold]["mass"]/inputs["shared_environment"]["volume"]
                         environment_substrates = [substrate for substrate in inputs["dfba_results"][parent].keys() if substrate != parent]
                         environment_substrates.append(name)
                         add_dfba_updates[name] = {substrate: 0 for substrate in environment_substrates}
-                        add_dfba_updates[name][substrate] = mass
-                        mass_updates[parent] = {parent: -mass}
+                        # add_dfba_updates[name][name] = mass
+                        mass_updates[parent] =  -mass
 
                 if threshold["type"] == "remove":
                     to_remove.append(name)
                     remove_counts.append(name)
-                    remove_concentrations.append(name)
+                    # remove_concentrations.append(name)
                     remove_dfba_updates.append(name)
 
-        if to_add:
-            import ipdb; ipdb.set_trace()
+        environment_updates = {
+            '_add': add_dfba_updates,
+            '_remove': remove_dfba_updates,
+        }
+        environment_updates.update(mass_updates)
+
+        # if to_add:
+        #     import ipdb; ipdb.set_trace()
         return {
             "new_species": {
                 '_add': to_add,
                 '_remove': to_remove
             },
-            "concentrations": {
-                '_add': add_concentrations,
-                '_remove': remove_concentrations,
-            },
-            "counts": {
+            "shared_environment": {
                 '_add': add_counts,
                 '_remove': remove_counts,
             },
@@ -120,8 +116,8 @@ def get_env_monitor_spec(interval):
         },
         "outputs": {
             "new_species": [SPECIES_STORE],
-            "concentrations": [SHARED_ENVIRONMENT, "concentrations"],
-            "counts": [SHARED_ENVIRONMENT, "counts"],
+            # "concentrations": [SHARED_ENVIRONMENT, "concentrations"],
+            "shared_environment": [SHARED_ENVIRONMENT],
             "dfba_results": [DFBA_RESULTS],
             "mass_removal": [SHARED_ENVIRONMENT],
         },
@@ -131,21 +127,20 @@ def run_env_monitor(core):
     # BiGG model ids or the path name to the associated model file
     model_dict = {
         "E.coli": "iAF1260",
-        # "S.flexneri": "iSFxv_1172"
     }
     # list exchange reactions
     exchanges = ["EX_glc__D_e", "EX_ac_e"]
     # set environment volume
     volume = 2
     # define a single dFBA model
-    spec = make_cdfba_composite(model_dict, medium_type=None, exchanges=exchanges, volume=volume, interval=1.0)
+    spec = make_cdfba_composite(model_dict, medium_type=None, exchanges=exchanges, volume=volume, interval=0.1)
     #create thresholds store
     spec[THRESHOLDS] = {
         "Acetate": {
             "type": "add",
             "substrate": "Acetate",
             "range": {
-                "upper": 20,
+                "upper": 5,
                 "lower": None,
             },
             "parent": "E.coli",
@@ -153,7 +148,8 @@ def run_env_monitor(core):
             "changes":{
                 "gene_knockout": [],
                 "reaction_knockout": [],
-            }
+            },
+            "mass": 0.25,
         }
     }
     spec["monitor"] = get_env_monitor_spec(interval=1.0)
@@ -167,7 +163,8 @@ def run_env_monitor(core):
     # set external substrate concentrations
     concentrations = {
         "Acetate": 0,
-        "D-Glucose": 40
+        "D-Glucose": 40,
+        "E.coli": 0.1,
     }
     set_concentration(spec, concentrations)
     # set kinetics
@@ -227,9 +224,13 @@ def run_env_monitor(core):
 
     fig, ax = plt.subplots(dpi=300)
     for key, value in env_combined.items():
-        # if not key == "glucose":
-        #     continue
-        ax.plot(timepoints, env_combined[key], label=key)
+        length_diff = len(timepoints) - len(value)
+        if length_diff > 0:
+            # Align the data to the end of the timepoints
+            aligned_timepoints = timepoints[length_diff:]
+        else:
+            aligned_timepoints = timepoints
+        ax.plot(aligned_timepoints, value, label=key)
     plt.xlabel("Time")
     plt.ylabel("Substrate Concentration")
     plt.legend()
