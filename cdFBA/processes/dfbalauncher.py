@@ -65,11 +65,9 @@ class EnvironmentMonitor(Step):
                         spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
                         to_add[name] = spec
                         add_counts[name] = mass
-                        # add_concentrations[name] = inputs["thresholds"][threshold]["mass"]/inputs["shared_environment"]["volume"]
                         environment_substrates = [substrate for substrate in inputs["dfba_results"][parent].keys() if substrate != parent]
                         environment_substrates.append(name)
                         add_dfba_updates[name] = {substrate: 0 for substrate in environment_substrates}
-                        # add_dfba_updates[name][name] = mass
                         mass_updates[parent] =  -mass
 
                 if threshold["type"] == "remove":
