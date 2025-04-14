@@ -32,7 +32,6 @@ class EnvironmentMonitor(Step):
         return {
             "new_species": "map",
             "counts": "map[float]",
-            # "shared_environment": "map",
             "dfba_results": "any",
         }
 
@@ -76,15 +75,6 @@ class EnvironmentMonitor(Step):
                     # remove_concentrations.append(name)
                     remove_dfba_updates.append(name)
 
-        # environment_updates = {
-        #     '_add': add_dfba_updates,
-        #     '_remove': remove_dfba_updates,
-        # }
-        # environment_updates.update(mass_updates)
-
-        # if to_add:
-        #     import ipdb; ipdb.set_trace()
-
         counts_updates = {
             '_add': add_counts,
             '_remove': remove_counts,
@@ -102,11 +92,7 @@ class EnvironmentMonitor(Step):
                 '_add': add_dfba_updates,
                 '_remove': remove_dfba_updates,
             },
-            # "mass_removal": {"counts": mass_updates}
         }
-
-        if add_counts:
-            import ipdb; ipdb.set_trace()
 
         return update
 
@@ -124,8 +110,6 @@ def get_env_monitor_spec(interval):
         },
         "outputs": {
             "new_species": [SPECIES_STORE],
-            # "concentrations": [SHARED_ENVIRONMENT, "concentrations"],
-            # "shared_environment": [SHARED_ENVIRONMENT],
             "dfba_results": [DFBA_RESULTS],
             "counts": [SHARED_ENVIRONMENT, "counts"],
         },
