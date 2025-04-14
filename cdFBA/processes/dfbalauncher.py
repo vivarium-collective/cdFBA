@@ -31,8 +31,8 @@ class EnvironmentMonitor(Step):
     def outputs(self):
         return {
             "new_species": "map",
-            "counts": "map",
-            "shared_environment": "map",
+            "counts": "map[float]",
+            # "shared_environment": "map",
             "dfba_results": "any",
         }
 
@@ -76,29 +76,39 @@ class EnvironmentMonitor(Step):
                     # remove_concentrations.append(name)
                     remove_dfba_updates.append(name)
 
-        environment_updates = {
-            '_add': add_dfba_updates,
-            '_remove': remove_dfba_updates,
-        }
-        environment_updates.update(mass_updates)
+        # environment_updates = {
+        #     '_add': add_dfba_updates,
+        #     '_remove': remove_dfba_updates,
+        # }
+        # environment_updates.update(mass_updates)
 
         # if to_add:
         #     import ipdb; ipdb.set_trace()
-        return {
+
+        counts_updates = {
+            '_add': add_counts,
+            '_remove': remove_counts,
+        }
+
+        counts_updates.update(mass_updates)
+
+        update = {
             "new_species": {
                 '_add': to_add,
                 '_remove': to_remove
             },
-            "shared_environment": {
-                '_add': add_counts,
-                '_remove': remove_counts,
-            },
+            "counts": counts_updates,
             "dfba_results": {
                 '_add': add_dfba_updates,
                 '_remove': remove_dfba_updates,
             },
-            "mass_removal": {"counts": mass_updates}
+            # "mass_removal": {"counts": mass_updates}
         }
+
+        if add_counts:
+            import ipdb; ipdb.set_trace()
+
+        return update
 
 def get_env_monitor_spec(interval):
     """Returns a specification dictionary for the environment monitor"""
@@ -115,9 +125,9 @@ def get_env_monitor_spec(interval):
         "outputs": {
             "new_species": [SPECIES_STORE],
             # "concentrations": [SHARED_ENVIRONMENT, "concentrations"],
-            "shared_environment": [SHARED_ENVIRONMENT],
+            # "shared_environment": [SHARED_ENVIRONMENT],
             "dfba_results": [DFBA_RESULTS],
-            "mass_removal": [SHARED_ENVIRONMENT],
+            "counts": [SHARED_ENVIRONMENT, "counts"],
         },
     }
 

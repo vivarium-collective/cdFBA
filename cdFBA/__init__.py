@@ -14,6 +14,8 @@ def volumetric_update(schema, current, update, top_schema, top_state, path, core
     new_counts = current["counts"]
     new_concentrations = current["concentrations"]
 
+    import ipdb; ipdb.set_trace()
+
     if ('_add' in update.keys()) or ('_remove' in update.keys()):
         for name in update["_add"].keys():
             new_counts[name] = update["_add"][name]
