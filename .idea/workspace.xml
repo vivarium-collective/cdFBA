@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="EnvironmentMonitor Updates">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="environmentmonitor updates">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/debug_noteboook.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +15,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Jupyter Notebook" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -40,7 +36,7 @@
     </excluded-from-favorite>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="add_process" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -75,37 +71,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Python tests.Python tests in dfba.py.executor": "Debug",
-    "Python.composite.executor": "Debug",
-    "Python.debug_noteboook.executor": "Debug",
-    "Python.dfba.executor": "Debug",
-    "Python.dfbalauncher.executor": "Debug",
-    "Python.utils.executor": "Debug",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "dynamicspec",
-    "last_opened_file_path": "/Users/tasnifrahman/PycharmProjects/cdFBA/Notebooks/representative_species",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "dev.gabrielchl.intellijPets.settings.PetsSettingsConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests in dfba.py.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.composite.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.debug_noteboook.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.dfba.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.dfbalauncher.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.utils.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Notebooks/representative_species" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Notebooks" />
-      <recent name="$PROJECT_DIR$/Notebooks/out" />
-    </key>
-  </component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -138,10 +124,64 @@
       <workItem from="1742222975196" duration="98079000" />
       <workItem from="1743188364841" duration="11108000" />
       <workItem from="1743433750129" duration="20507000" />
-      <workItem from="1743533083495" duration="38777000" />
-      <workItem from="1744052085931" duration="49367000" />
-      <workItem from="1744652957380" duration="5323000" />
-      <workItem from="1744659404334" duration="25290000" />
+      <workItem from="1743533083495" duration="6310000" />
+      <workItem from="1744914456356" duration="38000" />
+    </task>
+    <task id="LOCAL-00003" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
+      <option name="closed" value="true" />
+      <created>1736876204499</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1736876204499</updated>
+    </task>
+    <task id="LOCAL-00004" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
+      <option name="closed" value="true" />
+      <created>1736876232977</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1736876232977</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
+      <option name="closed" value="true" />
+      <created>1736876260591</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1736876260591</updated>
+    </task>
+    <task id="LOCAL-00006" summary="introduced volume and concentration calculaion for `shared environment`">
+      <option name="closed" value="true" />
+      <created>1736971539479</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1736971539479</updated>
+    </task>
+    <task id="LOCAL-00007" summary="added volumetric type to handle new shared environment structure">
+      <option name="closed" value="true" />
+      <created>1737128621220</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1737128621220</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added volumetric type to handle new shared environment structure">
+      <option name="closed" value="true" />
+      <created>1737143823698</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1737143823698</updated>
+    </task>
+    <task id="LOCAL-00009" summary="fixed util function to get substrate names">
+      <option name="closed" value="true" />
+      <created>1737572690819</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1737572690819</updated>
     </task>
     <task id="LOCAL-00010" summary="fixed util function to get substrate names">
       <option name="closed" value="true" />
@@ -479,63 +519,7 @@
       <option name="project" value="LOCAL" />
       <updated>1743442522445</updated>
     </task>
-    <task id="LOCAL-00052" summary="environmentmonitor updates">
-      <option name="closed" value="true" />
-      <created>1743620784116</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1743620784116</updated>
-    </task>
-    <task id="LOCAL-00053" summary="changes to WaveFunction">
-      <option name="closed" value="true" />
-      <created>1743786446874</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1743786446874</updated>
-    </task>
-    <task id="LOCAL-00054" summary="changes to WaveFunction">
-      <option name="closed" value="true" />
-      <created>1744216776372</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1744216776372</updated>
-    </task>
-    <task id="LOCAL-00055" summary="EnvironmentMonitor Updates">
-      <option name="closed" value="true" />
-      <created>1744216970318</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1744216970318</updated>
-    </task>
-    <task id="LOCAL-00056" summary="EnvironmentMonitor Updates">
-      <option name="closed" value="true" />
-      <created>1744316324974</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1744316324974</updated>
-    </task>
-    <task id="LOCAL-00057" summary="EnvironmentMonitor Updates">
-      <option name="closed" value="true" />
-      <created>1744376225259</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1744376225259</updated>
-    </task>
-    <task id="LOCAL-00058" summary="EnvironmentMonitor Updates">
-      <option name="closed" value="true" />
-      <created>1744910180586</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1744910180586</updated>
-    </task>
-    <option name="localTasksCounter" value="59" />
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -575,12 +559,82 @@
     <MESSAGE value="global variables dfba config changes" />
     <MESSAGE value="type fixes" />
     <MESSAGE value="environmentmonitor updates" />
-    <MESSAGE value="changes to WaveFunction" />
-    <MESSAGE value="EnvironmentMonitor Updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="EnvironmentMonitor Updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="environmentmonitor updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>932</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
+          <line>1242</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_system.py</url>
+          <line>1113</line>
+          <option name="timeStamp" value="98" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/composite.py</url>
+          <line>709</line>
+          <option name="timeStamp" value="99" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
+          <line>344</line>
+          <option name="timeStamp" value="100" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/process_types.py</url>
+          <line>146</line>
+          <option name="timeStamp" value="103" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/edge.py</url>
+          <line>21</line>
+          <option name="timeStamp" value="104" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py</url>
+          <line>41</line>
+          <option name="timeStamp" value="106" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_functions.py</url>
+          <line>2194</line>
+          <option name="timeStamp" value="111" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="115" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py</url>
+          <line>58</line>
+          <option name="timeStamp" value="116" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>59</line>
+          <option name="timeStamp" value="117" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>901</line>
+          <option name="timeStamp" value="119" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
+          <url>file://$PROJECT_DIR$/Notebooks/vivarium-demo.ipynb</url>
+          <line>109</line>
+          <option name="timeStamp" value="94" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -599,8 +653,8 @@
     <SUITE FILE_PATH="coverage/cdFBA$debug_noteboook.coverage" NAME="debug_noteboook Coverage Results" MODIFIED="1738769941297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Notebooks" />
     <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1742220698421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
     <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1743526050114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1744902435666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1744902007420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1743436851607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1743519496110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$composite.coverage" NAME="composite Coverage Results" MODIFIED="1738599233475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../process-bigraph/process_bigraph" />
   </component>
 </project>
