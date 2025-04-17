@@ -6,11 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="EnvironmentMonitor Updates">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/debug_noteboook.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,15 +141,7 @@
       <workItem from="1743533083495" duration="38777000" />
       <workItem from="1744052085931" duration="49367000" />
       <workItem from="1744652957380" duration="5323000" />
-      <workItem from="1744659404334" duration="22952000" />
-    </task>
-    <task id="LOCAL-00009" summary="fixed util function to get substrate names">
-      <option name="closed" value="true" />
-      <created>1737572690819</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1737572690819</updated>
+      <workItem from="1744659404334" duration="25290000" />
     </task>
     <task id="LOCAL-00010" summary="fixed util function to get substrate names">
       <option name="closed" value="true" />
@@ -536,7 +527,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744376225259</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="EnvironmentMonitor Updates">
+      <option name="closed" value="true" />
+      <created>1744910180586</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1744910180586</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

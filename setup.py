@@ -2,7 +2,7 @@ import re
 from setuptools import setup, find_packages
 
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 
 with open("README.md", "r") as readme:
@@ -47,7 +47,11 @@ setup(
     python_requires=">=3.9",
     install_requires=[
         "vivarium-interface",
+        "process_bigraph==0.0.33",
+        "bigraph-schema==0.0.54",
         "cobra",
-        "matplotlib"
+        "matplotlib",
+        "ipdb",
+        "pytest"
     ]
 )

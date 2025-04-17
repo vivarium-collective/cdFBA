@@ -1,6 +1,4 @@
 from cdFBA.processes import register_processes
-from copy import deepcopy
-#TODO -- add global store name variables
 
 def apply_non_negative(schema, current, update, core):
     new_value = current + update

@@ -1,12 +1,10 @@
-import random
 import pprint
-import math
 
 from process_bigraph import ProcessTypes, Process, Step, Composite
 from process_bigraph.emitter import gather_emitter_results
 
 from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, THRESHOLDS, DFBA_RESULTS
-from cdFBA.utils import model_from_file, get_single_dfba_spec, set_concentration, make_cdfba_composite, set_kinetics, get_objective_reaction
+from cdFBA.utils import get_single_dfba_spec, set_concentration, make_cdfba_composite, set_kinetics
 from cdFBA.processes.dfba import dFBA, UpdateEnvironment
 
 from matplotlib import pyplot as plt
