@@ -81,16 +81,18 @@ dfba_launch_type = {
 dfba_changes_type = {
     "gene_knockout": "maybe[list]",
     "reaction_knockout": "maybe[list]",
+    "bounds": "any",
+    "kinetics": "any",
 }
 
 threshold_type = {
-    "type": "string",
-    "substrate": "string",
+    "type": "string", #add or remove
+    "substrate": "string", #substrate or species to monitor
     "range": {
         "upper": "maybe[float]",
         "lower": "maybe[float]",
     },
-    "parent": "string",
+    "parent": "string", #bane of parent species
     "name": "string",
     "changes": "dfba_changes",
     "mass": "float"

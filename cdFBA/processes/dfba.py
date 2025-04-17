@@ -57,6 +57,14 @@ class dFBA(Process):
             if len(self.config["changes"]["reaction_knockout"]) > 0:
                 for reaction in self.config["changes"]["reaction_knockout"]:
                     self.model.reactions.get_by_id(reaction).knock_out()
+            if len(self.config["changes"]["bounds"]) > 0:
+                for reaction_id, bounds in self.config["changes"]["bounds"].items():
+                    if bounds["lower"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
+                    if bounds["upper"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
+            if len(self.config["changes"]["kinetics"]) > 0:
+                self.config["kinetics"].update(self.config["changes"]["kinetics"])
 
     def inputs(self):
         return {
@@ -354,10 +362,10 @@ def test_environment(core):
     )
 
     # run the simulation
-    sim.run(10)
+    sim.run(20)
     results = gather_emitter_results(sim)[("emitter",)]
 
-    assert len(results) == 11
+    assert len(results) == 21
     assert results[2]["shared_environment"]["counts"]["D-Glucose"] > results[4]["shared_environment"]["counts"]["D-Glucose"]
     assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
 

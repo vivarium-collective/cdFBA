@@ -132,7 +132,7 @@ def run_env_monitor(core):
             "type": "add",
             "substrate": "Acetate",
             "range": {
-                "upper": 5,
+                "upper": 10,
                 "lower": None,
             },
             "parent": "E.coli",
@@ -140,11 +140,13 @@ def run_env_monitor(core):
             "changes":{
                 "gene_knockout": [],
                 "reaction_knockout": [],
+                "bounds": {},
+                "kinetics": {},
             },
             "mass": 0.25,
         }
     }
-    spec["monitor"] = get_env_monitor_spec(interval=1.0)
+    spec["monitor"] = get_env_monitor_spec(interval=0.1)
 
     # Set reaction bounds
     spec[SPECIES_STORE]["E.coli"]["config"]["bounds"] = {
@@ -156,7 +158,7 @@ def run_env_monitor(core):
     concentrations = {
         "Acetate": 0,
         "D-Glucose": 40,
-        "E.coli": 0.1,
+        "E.coli": 0.25,
     }
     set_concentration(spec, concentrations)
     # set kinetics

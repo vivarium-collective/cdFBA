@@ -253,6 +253,8 @@ def dfba_config(
         changes = {
             "gene_knockout": [],
             "reaction_knockout": [],
+            "bounds": {},
+            "kinetics": {},
         }
     return {
         "model_file": model_file,

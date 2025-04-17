@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="EnvironmentMonitor Updates">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +41,7 @@
     </excluded-from-favorite>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="add_process" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,28 +76,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Python tests.Python tests in dfba.py.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.composite.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.debug_noteboook.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.dfba.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.dfbalauncher.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.utils.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dynamicspec&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/tasnifrahman/PycharmProjects/cdFBA/Notebooks/representative_species&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Python tests.Python tests in dfba.py.executor": "Debug",
+    "Python.composite.executor": "Debug",
+    "Python.debug_noteboook.executor": "Debug",
+    "Python.dfba.executor": "Debug",
+    "Python.dfbalauncher.executor": "Debug",
+    "Python.utils.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "dynamicspec",
+    "last_opened_file_path": "/Users/tasnifrahman/PycharmProjects/cdFBA/Notebooks/representative_species",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "dev.gabrielchl.intellijPets.settings.PetsSettingsConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Notebooks/representative_species" />
@@ -135,15 +140,9 @@
       <workItem from="1743188364841" duration="11108000" />
       <workItem from="1743433750129" duration="20507000" />
       <workItem from="1743533083495" duration="38777000" />
-      <workItem from="1744052085931" duration="42496000" />
-    </task>
-    <task id="LOCAL-00008" summary="added volumetric type to handle new shared environment structure">
-      <option name="closed" value="true" />
-      <created>1737143823698</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1737143823698</updated>
+      <workItem from="1744052085931" duration="49367000" />
+      <workItem from="1744652957380" duration="5323000" />
+      <workItem from="1744659404334" duration="22952000" />
     </task>
     <task id="LOCAL-00009" summary="fixed util function to get substrate names">
       <option name="closed" value="true" />
@@ -529,7 +528,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744316324974</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="EnvironmentMonitor Updates">
+      <option name="closed" value="true" />
+      <created>1744376225259</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1744376225259</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -575,103 +582,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
-          <line>932</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
-          <line>1242</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/../bigraph-schema/bigraph_schema/type_system.py</url>
-          <line>1113</line>
-          <option name="timeStamp" value="98" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/composite.py</url>
-          <line>709</line>
-          <option name="timeStamp" value="99" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>348</line>
-          <option name="timeStamp" value="100" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/process_types.py</url>
-          <line>146</line>
-          <option name="timeStamp" value="103" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py</url>
-          <line>51</line>
-          <option name="timeStamp" value="106" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_functions.py</url>
-          <line>2194</line>
-          <option name="timeStamp" value="111" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="115" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
-          <line>59</line>
-          <option name="timeStamp" value="117" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
-          <line>901</line>
-          <option name="timeStamp" value="119" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/edge.py</url>
-          <line>25</line>
-          <option name="timeStamp" value="120" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/composite.py</url>
-          <line>421</line>
-          <option name="timeStamp" value="123" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
-          <line>2078</line>
-          <option name="timeStamp" value="124" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_functions.py</url>
-          <line>2258</line>
-          <option name="timeStamp" value="125" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_functions.py</url>
-          <line>2212</line>
-          <option name="timeStamp" value="132" />
-        </line-breakpoint>
-        <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>100</line>
-          <option name="timeStamp" value="144" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py</url>
-          <line>222</line>
-          <option name="timeStamp" value="147" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
-          <url>file://$PROJECT_DIR$/Notebooks/vivarium-demo.ipynb</url>
-          <line>109</line>
-          <option name="timeStamp" value="94" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -690,8 +600,8 @@
     <SUITE FILE_PATH="coverage/cdFBA$debug_noteboook.coverage" NAME="debug_noteboook Coverage Results" MODIFIED="1738769941297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Notebooks" />
     <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1742220698421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
     <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1743526050114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1744314278944" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1743775098454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1744902435666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1744902007420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$composite.coverage" NAME="composite Coverage Results" MODIFIED="1738599233475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../process-bigraph/process_bigraph" />
   </component>
 </project>
