@@ -454,7 +454,7 @@ def environment_spec():
             "shared_environment": [SHARED_ENVIRONMENT]
         },
         "outputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
+            "counts": [SHARED_ENVIRONMENT, "counts"],
         }
     }
 

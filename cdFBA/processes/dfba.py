@@ -108,13 +108,13 @@ class UpdateEnvironment(Step):
 
     def inputs(self):
         return {
-             "shared_environment": "volumetric",
-             "species_updates": "map[map[set_float]]",
+            "shared_environment": "volumetric",
+            "species_updates": "map[map[set_float]]",
         }
 
     def outputs(self):
         return {
-            "shared_environment": "map[float]",
+            "counts": "map[float]",
         }
 
     def update(self, inputs):
@@ -135,7 +135,7 @@ class UpdateEnvironment(Step):
                     update[substrate_id] = -shared_environment[substrate_id]
 
         return {
-            "shared_environment": {"counts": update}
+            "counts": update
         }
 
 class StaticConcentration(Process):

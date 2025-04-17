@@ -9,30 +9,32 @@ def apply_non_negative(schema, current, update, core):
 def set_update(schema, current, update, top_schema, top_state, path, core):
     return update
 
+def conditional_apply(schema, current, update, key, core):
+    if key in update:
+        applied = core.apply(
+            schema[key],
+            current[key],
+            update[key])
+    else:
+        applied = current[key]
+
+    return applied
+
 def volumetric_update(schema, current, update, top_schema, top_state, path, core):
-    volume = current.get("volume")
-    new_counts = current["counts"]
-    new_concentrations = current["concentrations"]
+    updated_counts = conditional_apply(schema, current, update, 'counts', core)
+    updated_volume = conditional_apply(schema, current, update, 'volume', core)
+    updated_concentrations = {}
 
-    if ('_add' in update.keys()) or ('_remove' in update.keys()):
-        for name in update["_add"].keys():
-            new_counts[name] = update["_add"][name]
-            new_concentrations[name] = update["_add"][name]/volume
-        for name in update["_remove"]:
-            new_counts.pop(name)
-            new_concentrations.pop(name)
+    for key, counts in updated_counts.items():
+        updated_concentrations[key] = counts / updated_volume
 
-    for key, value in update["counts"].items():
-        if (key != "_add") and (key != "_remove"):
-            new = new_counts[key] + value
-            new_counts[key] = new
-            new_concentrations[key] = new/volume
-
-    return {
-        "counts": new_counts,
-        "concentrations": new_concentrations,
-        "volume": volume,
+    applied = {
+        'counts': updated_counts,
+        'concentrations': updated_concentrations,
+        'volume': updated_volume,
     }
+    
+    return applied
 
 positive_float = {
     "_type": "positive_float",
