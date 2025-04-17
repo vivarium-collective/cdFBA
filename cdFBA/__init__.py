@@ -1,30 +1,38 @@
 from cdFBA.processes import register_processes
-#TODO -- add global store name variables
 
 def apply_non_negative(schema, current, update, core):
     new_value = current + update
     return max(0, new_value)
 
-def set_update(schema, current, update, core):
+def set_update(schema, current, update, top_schema, top_state, path, core):
     return update
 
-def volumetric_update(schema, current, update, core):
-    counts = update.get("counts")
-    volume = current.get("volume")
+def conditional_apply(schema, current, update, key, core):
+    if key in update:
+        applied = core.apply(
+            schema[key],
+            current[key],
+            update[key])
+    else:
+        applied = current[key]
 
-    new_counts = current["counts"]
-    new_concentrations = current["concentrations"]
-    if counts:
-        for key, value in counts.items():
-            new = new_counts[key] + value
-            new_counts[key] = new
-            new_concentrations[key] = new/volume
+    return applied
 
-    return {
-        "counts": new_counts,
-        "concentrations": new_concentrations,
-        "volume": volume,
+def volumetric_update(schema, current, update, top_schema, top_state, path, core):
+    updated_counts = conditional_apply(schema, current, update, 'counts', core)
+    updated_volume = conditional_apply(schema, current, update, 'volume', core)
+    updated_concentrations = {}
+
+    for key, counts in updated_counts.items():
+        updated_concentrations[key] = counts / updated_volume
+
+    applied = {
+        'counts': updated_counts,
+        'concentrations': updated_concentrations,
+        'volume': updated_volume,
     }
+    
+    return applied
 
 positive_float = {
     "_type": "positive_float",
@@ -71,18 +79,21 @@ dfba_launch_type = {
 dfba_changes_type = {
     "gene_knockout": "maybe[list]",
     "reaction_knockout": "maybe[list]",
+    "bounds": "any",
+    "kinetics": "any",
 }
 
 threshold_type = {
-    "type": "string",
-    "substrate": "string",
+    "type": "string", #add or remove
+    "substrate": "string", #substrate or species to monitor
     "range": {
         "upper": "maybe[float]",
         "lower": "maybe[float]",
     },
-    "parent": "string",
+    "parent": "string", #bane of parent species
     "name": "string",
-    "changes": "dfba_changes"
+    "changes": "dfba_changes",
+    "mass": "float"
 }
 
 def register_types(core):

@@ -57,6 +57,14 @@ class dFBA(Process):
             if len(self.config["changes"]["reaction_knockout"]) > 0:
                 for reaction in self.config["changes"]["reaction_knockout"]:
                     self.model.reactions.get_by_id(reaction).knock_out()
+            if len(self.config["changes"]["bounds"]) > 0:
+                for reaction_id, bounds in self.config["changes"]["bounds"].items():
+                    if bounds["lower"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
+                    if bounds["upper"] is not None:
+                        self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
+            if len(self.config["changes"]["kinetics"]) > 0:
+                self.config["kinetics"].update(self.config["changes"]["kinetics"])
 
     def inputs(self):
         return {
@@ -108,13 +116,13 @@ class UpdateEnvironment(Step):
 
     def inputs(self):
         return {
-             "shared_environment": "volumetric",
-             "species_updates": "map[map[set_float]]"
+            "shared_environment": "volumetric",
+            "species_updates": "map[map[set_float]]",
         }
 
     def outputs(self):
         return {
-            "shared_environment": "map[float]",
+            "counts": "map[float]",
         }
 
     def update(self, inputs):
@@ -135,7 +143,7 @@ class UpdateEnvironment(Step):
                     update[substrate_id] = -shared_environment[substrate_id]
 
         return {
-            "shared_environment": {"counts": update}
+            "counts": update
         }
 
 class StaticConcentration(Process):
@@ -219,8 +227,10 @@ class WaveFunction(Process):
             phi = self.config["substrate_params"][substrate]["phase_shift"]
 
             current_count = (A*math.sin(w*t+phi) + B) * inputs["shared_environment"]["volume"]
-
-            update[substrate] = (current_count - shared_environment[substrate])
+            if current_count > 0:
+                update[substrate] = (current_count - shared_environment[substrate])
+            else:
+                update[substrate] = 0
 
         return {
             "shared_environment": {"counts": update}
@@ -338,6 +348,8 @@ def core():
     core.register_process("WaveFunction", WaveFunction)
     core.register_process("Injector", Injector)
 
+    return core
+
 def test_environment(core):
     """This tests that the environment runs"""
     spec = get_test_spec()
@@ -350,10 +362,10 @@ def test_environment(core):
     )
 
     # run the simulation
-    sim.run(10)
+    sim.run(20)
     results = gather_emitter_results(sim)[("emitter",)]
 
-    assert len(results) == 11
+    assert len(results) == 21
     assert results[2]["shared_environment"]["counts"]["D-Glucose"] > results[4]["shared_environment"]["counts"]["D-Glucose"]
     assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
 
@@ -426,4 +438,3 @@ if __name__ == "__main__":
     test_environment(core)
     test_static_concentration(core)
     test_injector(core)
-

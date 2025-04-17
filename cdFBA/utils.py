@@ -24,6 +24,7 @@ def model_from_file(model_file="textbook"):
     Returns:
         model: cobra model
     """
+    #check for model type and load model
     if ".xml" in model_file:
         model = read_sbml_model(model_file)
     elif ".json" in model_file:
@@ -41,7 +42,7 @@ def model_from_file(model_file="textbook"):
 
 def get_model_dict(model_dict):
     """
-    Returns a dictionary of the cobra model from a dictionary of model IDs/paths
+    Returns a dictionary of the cobra model from a dictionary of model IDs/file paths
     Args:
         model_dict: dict, dictionary of BIGG IDs or model paths
     Returns:
@@ -57,6 +58,7 @@ def set_counts(spec, counts):
             counts : dict, dictionary with substrate names as keys and counts as values
         """
     for substrate, count in counts.items():
+        #make sure substrates are present in the cdfba model
         if substrate not in spec[SHARED_ENVIRONMENT]["concentrations"].keys():
             raise ValueError(f"{substrate} is not in shared environment")
         else:
@@ -69,6 +71,7 @@ def set_concentration(spec, concentrations):
         spec : dict, cdFBA specification dictionary
         concentrations : dict, dictionary with substrate names as keys and concentrations as values
     """
+    # make sure substrates are present in the cdfba model
     for substrate, concentration in concentrations.items():
         if substrate not in spec[SHARED_ENVIRONMENT]["concentrations"].keys():
             raise ValueError(f"{substrate} is not in shared environment")
@@ -250,6 +253,8 @@ def dfba_config(
         changes = {
             "gene_knockout": [],
             "reaction_knockout": [],
+            "bounds": {},
+            "kinetics": {},
         }
     return {
         "model_file": model_file,
@@ -312,33 +317,42 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
     Returns:
         spec : dict, cdfba composite spec
     """
+    #load models
     models_dict = get_model_dict(model_dict)
+    #initialize spec
     spec = {DFBA_RESULTS: {}}
+    #ensure only one of medium_type or exchanges is provided
     if medium_type is None:
         if exchanges is None:
             raise ValueError("Must provide medium_type or exchanges list")
-
     if medium_type is not None:
         if exchanges is not None:
             raise ValueError("Provide only on of medium_type or exchanges list")
-
+    #get union of exchange reactions from all species if exchanges not provided
     if exchanges is None:
         env_exchanges = get_combined_exchanges(models_dict, medium_type=medium_type)
     else:
         env_exchanges = exchanges
-
+    #set initial environment
     initial_counts = get_initial_counts(models_dict, exchanges=env_exchanges)
     initial_env = initial_environment(volume=volume, initial_counts=initial_counts, species_list=models_dict.keys())
     spec[SHARED_ENVIRONMENT] = initial_env
+    #generate all dFBA processes
     spec[SPECIES_STORE] = {}
     for model_name, model_file in models_dict.items():
+        #get model-specific exchanges if exchanges not provided
         if exchanges is None:
             model_exchanges = get_exchanges(model_file=model_file, medium_type=medium_type)
+            model_exchanges = [exchange for exchange in model_exchanges if exchange in env_exchanges]
         else:
-            model_exchanges = exchanges
+            model_exchanges = env_exchanges
+        #get list of substrates
         substrates = get_substrates(model_file=model_file, exchanges=model_exchanges)
+        #get default kinetics parameters
         kinetics = get_kinetics(model_file=model_file, exchanges=model_exchanges)
+        #get reaction map
         reaction_map = get_reaction_map(model_file=model_file, exchanges=model_exchanges)
+        #set default bounds
         bounds = {}
 
         config = dfba_config(
@@ -354,10 +368,12 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
             config=config,
             interval=interval
         )
+        #add dFBA spec to composite spec
         spec[SPECIES_STORE][model_name] = model_spec
+        #initialize dFBA results store
         spec[DFBA_RESULTS][model_name] = {substrate: 0 for substrate in substrates}
         spec[DFBA_RESULTS][model_name].update({model_name: 0})
-
+    #add UpdateEnvironment step spec
     spec["update environment"] = environment_spec()
     return spec
 
@@ -388,6 +404,8 @@ def get_initial_counts(model_dict, biomass=0.5, initial_value=20, exchanges=None
     Returns:
         conditions : dict, initial conditions dictionary
     """
+    if exchanges is None:
+        raise ValueError("Must provide list of exchange reaction ids")
     all_substrates = []
     for model_name in model_dict.keys():
         model_file=model_dict[model_name]
@@ -438,7 +456,7 @@ def environment_spec():
             "shared_environment": [SHARED_ENVIRONMENT]
         },
         "outputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
+            "counts": [SHARED_ENVIRONMENT, "counts"],
         }
     }
 
@@ -511,7 +529,10 @@ def get_injector_spec(config=None, interval=1.0):
         interval: interval,
     }
 
-#Tests
+#=======
+# TESTS
+#=======
+
 def run_single_dfba_spec(model_file="textbook"):
     model = model_from_file(model_file)
     exchanges = get_exchanges(model_file=model_file, medium_type="exchange")
