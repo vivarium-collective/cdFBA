@@ -34,7 +34,7 @@
     </excluded-from-favorite>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="spatial" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -558,7 +558,8 @@
     <MESSAGE value="global variables dfba config changes" />
     <MESSAGE value="type fixes" />
     <MESSAGE value="environmentmonitor updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="environmentmonitor updates" />
+    <MESSAGE value="update environment fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="update environment fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -649,10 +650,12 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/cdFBA$cdFBA_peristalsis.coverage" NAME="cdFBA-peristalsis Coverage Results" MODIFIED="1745345432986" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Research/cdfba-peristalsis" />
+    <SUITE FILE_PATH="coverage/cdFBA$spatial.coverage" NAME="spatial Coverage Results" MODIFIED="1745506081699" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$debug_noteboook.coverage" NAME="debug_noteboook Coverage Results" MODIFIED="1738769941297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Notebooks" />
     <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1742220698421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
     <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1743526050114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1743436851607" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1745508738546" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1743519496110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$composite.coverage" NAME="composite Coverage Results" MODIFIED="1738599233475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../process-bigraph/process_bigraph" />
   </component>
