@@ -58,7 +58,7 @@ class EnvironmentMonitor(Step):
                         interval = inputs["species"][parent]["interval"]
                         config = inputs["species"][parent]["config"]
                         config["name"] = name
-                        config["changes"] = threshold["changes"]
+                        config["changes"] = threshold["changes"] #TODO: merge with parent somehow
                         spec = get_single_dfba_spec(model_file=config["model_file"], name=threshold["name"], config=config, interval=interval)
                         to_add[name] = spec
                         add_counts[name] = mass
@@ -142,7 +142,7 @@ def run_env_monitor(core):
                 "kinetics": {},
             },
             "mass": 0.25,
-        }
+        },
     }
     spec["monitor"] = get_env_monitor_spec(interval=0.1)
 

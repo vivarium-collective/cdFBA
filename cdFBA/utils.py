@@ -15,6 +15,7 @@ SHARED_ENVIRONMENT = "Shared Environment"
 SPECIES_STORE = "Species"
 DFBA_RESULTS = "dFBA Results"
 THRESHOLDS = "Thresholds"
+FIELDS = "Fields"
 
 #basic functions
 def model_from_file(model_file="textbook"):
