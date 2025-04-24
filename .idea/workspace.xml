@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="environmentmonitor updates">
-      <change beforePath="$PROJECT_DIR$/Notebooks/Chemostat Demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Chemostat Demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +85,7 @@
     "Python.utils.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "spatial",
+    "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -132,6 +132,7 @@
       <workItem from="1744914519874" duration="47000" />
       <workItem from="1744914707411" duration="2874000" />
       <workItem from="1745264136100" duration="37763000" />
+      <workItem from="1745515368317" duration="17000" />
     </task>
     <task id="LOCAL-00005" summary="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment">
       <option name="closed" value="true" />
