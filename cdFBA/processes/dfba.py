@@ -134,13 +134,17 @@ class UpdateEnvironment(Step):
         random.shuffle(species_list)
 
         update = shared_environment.copy()
+        for substrate in shared_environment.keys():
+            update[substrate] = 0
 
         for species in species_list:
             for substrate_id in species_updates[species]:
-                if (shared_environment[substrate_id] + species_updates[species][substrate_id]) > 0:
-                    update[substrate_id] = species_updates[species][substrate_id]
-                else:
+                if (shared_environment[substrate_id] + species_updates[species][substrate_id]) < 0:
                     update[substrate_id] = -shared_environment[substrate_id]
+                    break
+                else:
+                    update[substrate_id] += species_updates[species][substrate_id]
+
 
         return {
             "counts": update

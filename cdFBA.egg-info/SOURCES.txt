@@ -10,3 +10,4 @@ cdFBA.egg-info/requires.txt
 cdFBA.egg-info/top_level.txt
 cdFBA/processes/__init__.py
 cdFBA/processes/dfba.py
+cdFBA/processes/dfbalauncher.py
