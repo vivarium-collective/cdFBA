@@ -286,7 +286,7 @@ def get_single_dfba_spec(
     else:
         model = model_file
     if config is None:
-        config = dfba_config(model_file=model, name=name)
+        config = dfba_config(model_file=model_file, model=model, name=name)
 
     return {
         "_type": "process",
