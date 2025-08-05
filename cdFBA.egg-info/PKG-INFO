@@ -1,6 +1,6 @@
-Metadata-Version: 2.4
+Metadata-Version: 2.1
 Name: cdFBA
-Version: 0.0.2
+Version: 0.0.3
 Home-page: https://github.com/vivarium-collective/cdFBA
 Author: Tasnif Rahman
 Author-email: trahman@uchc.edu
@@ -24,16 +24,6 @@ Requires-Dist: cobra
 Requires-Dist: matplotlib
 Requires-Dist: ipdb
 Requires-Dist: pytest
-Dynamic: author
-Dynamic: author-email
-Dynamic: classifier
-Dynamic: description
-Dynamic: description-content-type
-Dynamic: home-page
-Dynamic: license
-Dynamic: license-file
-Dynamic: requires-dist
-Dynamic: requires-python
 
 # cdFBA
 Community Dynamic Flux Balance Analysis using process-bigraph.

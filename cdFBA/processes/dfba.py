@@ -4,7 +4,7 @@ import math
 import pytest
 
 from process_bigraph import Process, Step, Composite, ProcessTypes
-from process_bigraph.emitter import gather_emitter_results
+from process_bigraph.emitter import gather_emitter_results, emitter_from_wires
 
 from cdFBA.utils import SHARED_ENVIRONMENT
 from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec, set_concentration
@@ -322,20 +322,11 @@ def get_test_spec():
         set_kinetics(species, spec, kinetics)
 
     # set emitter specs
-    spec["emitter"] = {
-        "_type": "step",
-        "address": "local:ram-emitter",
-        "config": {
-            "emit": {
-                "shared_environment": "any",
-                "global_time": "any",
-            }
-        },
-        "inputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
-            "global_time": ["global_time"]
-        }
-    }
+    spec["emitter"] = emitter_from_wires({
+        "global_time": ["global_time"],
+        "shared_environment": [SHARED_ENVIRONMENT],
+    })
+
     return spec
 
 @pytest.fixture

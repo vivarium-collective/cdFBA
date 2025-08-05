@@ -1,7 +1,7 @@
 import pprint
 
 from process_bigraph import ProcessTypes, Process, Step, Composite
-from process_bigraph.emitter import gather_emitter_results
+from process_bigraph.emitter import gather_emitter_results, emitter_from_wires
 
 from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, THRESHOLDS, DFBA_RESULTS
 from cdFBA.utils import get_single_dfba_spec, set_concentration, make_cdfba_composite, set_kinetics
@@ -168,20 +168,10 @@ def run_env_monitor(core):
         set_kinetics(species, spec, kinetics)
 
     # set emitter specs
-    spec["emitter"] = {
-        "_type": "step",
-        "address": "local:ram-emitter",
-        "config": {
-            "emit": {
-                "shared_environment": "any",
-                "global_time": "any",
-            }
-        },
-        "inputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
-            "global_time": ["global_time"]
-        }
-    }
+    spec["emitter"] = emitter_from_wires({
+        "global_time": ["global_time"],
+        "shared_environment": [SHARED_ENVIRONMENT],
+    })
     pprint.pprint(spec)
 
     # put it in a composite
