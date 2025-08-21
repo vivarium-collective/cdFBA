@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="environmentmonitor updates">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="emitter updates">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA.egg-info/SOURCES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA.egg-info/SOURCES.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +37,7 @@
     </excluded-from-favorite>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="spatial" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -89,7 +85,7 @@
     "Python.utils.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "volumetricupdates",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -168,15 +164,8 @@
       <workItem from="1745264136100" duration="37763000" />
       <workItem from="1745515368317" duration="17000" />
       <workItem from="1750873923904" duration="6957000" />
-      <workItem from="1753983984634" duration="7884000" />
-    </task>
-    <task id="LOCAL-00006" summary="introduced volume and concentration calculaion for `shared environment`">
-      <option name="closed" value="true" />
-      <created>1736971539479</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1736971539479</updated>
+      <workItem from="1753983984634" duration="9130000" />
+      <workItem from="1755792730080" duration="2335000" />
     </task>
     <task id="LOCAL-00007" summary="added volumetric type to handle new shared environment structure">
       <option name="closed" value="true" />
@@ -562,7 +551,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749829140103</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="emitter updates">
+      <option name="closed" value="true" />
+      <created>1754407617822</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1754407617823</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -603,7 +600,8 @@
     <MESSAGE value="type fixes" />
     <MESSAGE value="update environment fix" />
     <MESSAGE value="environmentmonitor updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="environmentmonitor updates" />
+    <MESSAGE value="emitter updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="emitter updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

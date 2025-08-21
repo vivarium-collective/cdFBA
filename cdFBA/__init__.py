@@ -19,12 +19,25 @@ def conditional_apply(schema, current, update, key, core):
     return applied
 
 def volumetric_update(schema, current, update, top_schema, top_state, path, core):
-    updated_counts = conditional_apply(schema, current, update, 'counts', core)
-    updated_volume = conditional_apply(schema, current, update, 'volume', core)
-    updated_concentrations = {}
+    if not "concentration" in update:
+        updated_counts = conditional_apply(schema, current, update, 'counts', core)
+        updated_volume = conditional_apply(schema, current, update, 'volume', core)
+        updated_concentrations = {}
 
-    for key, counts in updated_counts.items():
-        updated_concentrations[key] = counts / updated_volume
+        for key, counts in updated_counts.items():
+            updated_concentrations[key] = counts / updated_volume
+
+    else:
+        if "volume" in update:
+            raise ValueError("Cannot apply volume and concentration updates at the same time")
+        if "counts" in update:
+            raise ValueError("Cannot apply count and concentration updates at the same time")
+
+        updated_concentrations = conditional_apply(schema, current, update, 'concentrations', core)
+        updated_volume = conditional_apply(schema, current, update, 'volume', core)
+        updated_counts = {}
+        for key, concentration in updated_concentrations.items():
+            updated_counts[key] =  updated_volume * concentration
 
     applied = {
         'counts': updated_counts,
