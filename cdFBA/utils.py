@@ -400,7 +400,7 @@ def get_initial_counts(model_dict, biomass=0.5, initial_value=20, exchanges=None
     Parameters:
         model_dict: dict, dictionary with cdfba process names as keys and model name/path as values
         biomass : float, initial biomass for all species
-        initial_value : float, initial counts of all species
+        initial_value : float, initial counts of all species in mmols
         exchanges: lst, list of exchange reaction ids
     Returns:
         conditions : dict, initial conditions dictionary
@@ -444,6 +444,7 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
         "counts": initial_counts,
         "concentrations": initial_concentration
     }
+
 
 #environmental process/step related functions
 def environment_spec():
