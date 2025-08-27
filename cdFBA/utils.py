@@ -528,7 +528,7 @@ def get_injector_spec(config=None, interval=1.0):
         "outputs": {
             "shared_environment": [SHARED_ENVIRONMENT],
         },
-        interval: interval,
+        "interval": interval,
     }
 
 #=======
