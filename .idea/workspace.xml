@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="volumetric type updates">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="fixed injector specs and update function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,15 +166,7 @@
       <workItem from="1753983984634" duration="9130000" />
       <workItem from="1755792730080" duration="3323000" />
       <workItem from="1755871774279" duration="11703000" />
-      <workItem from="1756302127806" duration="5197000" />
-    </task>
-    <task id="LOCAL-00010" summary="fixed util function to get substrate names">
-      <option name="closed" value="true" />
-      <created>1738077177341</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1738077177341</updated>
+      <workItem from="1756302127806" duration="5950000" />
     </task>
     <task id="LOCAL-00011" summary="fixed util function to get substrate names">
       <option name="closed" value="true" />
@@ -561,7 +552,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756303356924</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="fixed injector specs and update function">
+      <option name="closed" value="true" />
+      <created>1756840623321</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1756840623321</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -579,7 +578,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed dfba process and added setfloat type" />
     <MESSAGE value="added bounds and fixed type for bounds to allow acetate production" />
     <MESSAGE value="fixed issue with multiple species, and moved to using names of dfba instances instead of biomass function for shared environment" />
     <MESSAGE value="introduced volume and concentration calculaion for `shared environment`" />
@@ -604,7 +602,8 @@
     <MESSAGE value="environmentmonitor updates" />
     <MESSAGE value="emitter updates" />
     <MESSAGE value="volumetric type updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="volumetric type updates" />
+    <MESSAGE value="fixed injector specs and update function" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed injector specs and update function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -659,11 +658,6 @@
           <line>901</line>
           <option name="timeStamp" value="119" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>108</line>
-          <option name="timeStamp" value="121" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>file://$PROJECT_DIR$/Notebooks/vivarium-demo.ipynb</url>
           <line>109</line>
@@ -690,8 +684,8 @@
     <SUITE FILE_PATH="coverage/cdFBA$debug_noteboook.coverage" NAME="debug_noteboook Coverage Results" MODIFIED="1738769941297" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Notebooks" />
     <SUITE FILE_PATH="coverage/cdFBA$utils.coverage" NAME="utils Coverage Results" MODIFIED="1753983995459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA" />
     <SUITE FILE_PATH="coverage/cdFBA$dfba.coverage" NAME="dfba Coverage Results" MODIFIED="1743526050114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1755874534827" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
-    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1755800317762" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$dfbalauncher.coverage" NAME="dfbalauncher Coverage Results" MODIFIED="1756840224964" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
+    <SUITE FILE_PATH="coverage/cdFBA$.coverage" NAME=" Coverage Results" MODIFIED="1756840321888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/cdFBA/processes" />
     <SUITE FILE_PATH="coverage/cdFBA$composite.coverage" NAME="composite Coverage Results" MODIFIED="1738599233475" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../process-bigraph/process_bigraph" />
   </component>
 </project>
