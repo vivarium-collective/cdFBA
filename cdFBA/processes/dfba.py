@@ -274,7 +274,7 @@ class Injector(Process):
         t = inputs["global_time"]
         update = {}
         for substrate in self.config["injection_params"]:
-            if (abs((t + 1) % interval) < tol) and (t != 0.0):
+            if (abs((t + 1) % self.config["interval"]) < tol) and (t != 0.0):
                 update[substrate] = self.config["injection_params"][substrate]["amount"]
         return {
             "shared_environment": {"counts": update}
