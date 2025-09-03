@@ -275,7 +275,7 @@ class Injector(Process):
         update = {}
         for substrate in self.config["injection_params"]:
             _interval = self.config["injection_params"][substrate]["interval"]
-            modulo = abs((t + 1) % _interval)
+            modulo = abs((t) % _interval)
             if ((abs(modulo) < tol) or (abs(modulo - _interval) < tol)) and (t != 0.0):
                 update[substrate] = self.config["injection_params"][substrate]["amount"]
         return {
