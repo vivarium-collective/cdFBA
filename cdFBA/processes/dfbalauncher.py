@@ -11,7 +11,8 @@ from matplotlib import pyplot as plt
 
 class EnvironmentMonitor(Step):
     """
-    Monitors parameters in the shared environment and sends
+    Monitors parameters in the shared environment and performs add and remove operations to
+    add or remove bacterial species based on pre-defined thresholds.
     """
     config_schema = {}
 
