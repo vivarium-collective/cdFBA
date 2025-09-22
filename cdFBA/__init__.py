@@ -1,13 +1,16 @@
 from cdFBA.processes import register_processes
 
 def apply_non_negative(schema, current, update, core):
+    """makes sure that update value is positive or 0"""
     new_value = current + update
     return max(0, new_value)
 
 def set_update(schema, current, update, top_schema, top_state, path, core):
+    """sets value instead of adding it"""
     return update
 
 def conditional_apply(schema, current, update, key, core):
+    """only applies update if specific key is found in the update"""
     if key in update:
         applied = core.apply(
             schema[key],
@@ -19,6 +22,7 @@ def conditional_apply(schema, current, update, key, core):
     return applied
 
 def volumetric_update(schema, current, update, top_schema, top_state, path, core):
+    """applies update to a volumetric type"""
     if not "concentration" in update:
         updated_counts = conditional_apply(schema, current, update, 'counts', core)
         updated_volume = conditional_apply(schema, current, update, 'volume', core)

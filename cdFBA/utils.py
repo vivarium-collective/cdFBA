@@ -157,12 +157,16 @@ def get_reaction_map(model_file="textbook", exchanges=None):
         model = model_file
     if exchanges is None:
         exchanges = get_exchanges(model)
-    substrates = get_substrates(model, exchanges)
-    ids = exchanges
-    reaction_name_map = {}
-    for i in range(len(substrates)):
-        reaction_name_map[substrates[i]] = ids[i]
-    return reaction_name_map
+    reaction_map = {
+        list(getattr(model.reactions, i).metabolites.keys())[0].name: i
+        for i in exchanges if hasattr(model.reactions, i)
+    }
+    # substrates = get_substrates(model, exchanges)
+    # ids = exchanges
+    # reaction_name_map = {}
+    # for i in range(len(substrates)):
+    #     reaction_name_map[substrates[i]] = ids[i]
+    return reaction_map
     
 def get_kinetics(model_file="textbook", exchanges=None):
     """Returns default kinetic parameters dictionary. Values are tuples of the form (km, vmax)
@@ -548,7 +552,6 @@ def run_single_dfba_spec(model_file="textbook"):
         name="E.coli Core",
         kinetics=kinetics,
         reaction_map=reaction_map,
-        biomass_identifier=biomass_identifier,
         bounds=bounds,
     )
     spec = get_single_dfba_spec(
@@ -594,6 +597,6 @@ def run_cdfba_spec():
     )
 
 if __name__ == "__main__":
-    # run_single_dfba_spec(model_file="textbook")
+    run_single_dfba_spec(model_file="textbook")
     # run_initial_counts(model_file="textbook")
-    run_cdfba_spec()
+    # run_cdfba_spec()
