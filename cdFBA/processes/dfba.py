@@ -1,7 +1,8 @@
 import random
 import pprint
-import math
 import pytest
+from math import isclose, sin
+from itertools import cycle
 
 from process_bigraph import Process, Step, Composite, ProcessTypes
 from process_bigraph.emitter import gather_emitter_results, emitter_from_wires
@@ -230,7 +231,7 @@ class WaveFunction(Process):
             B = self.config["substrate_params"][substrate]["base_concentration"]
             phi = self.config["substrate_params"][substrate]["phase_shift"]
 
-            current_count = (A*math.sin(w*t+phi) + B) * inputs["shared_environment"]["volume"]
+            current_count = (A*sin(w*t+phi) + B) * inputs["shared_environment"]["volume"]
             if current_count > 0:
                 update[substrate] = (current_count - shared_environment[substrate])
             else:
@@ -250,7 +251,7 @@ class Injector(Process):
     # injection_params = {
     #     "substrate_name" : {
     #         "amount": "float",
-    #         "interval": "float",
+    #         "interval": "float"/"list[float]",
     #     }
     # }
 
@@ -273,11 +274,19 @@ class Injector(Process):
         shared_environment = inputs["shared_environment"]["counts"]
         t = inputs["global_time"]
         update = {}
+
         for substrate in self.config["injection_params"]:
-            _interval = self.config["injection_params"][substrate]["interval"]
-            modulo = abs((t) % _interval)
-            if ((abs(modulo) < tol) or (abs(modulo - _interval) < tol)) and (t != 0.0):
-                update[substrate] = self.config["injection_params"][substrate]["amount"]
+            intervals = self.config["injection_params"][substrate]["interval"]
+            if isinstance(intervals, (float,int)):
+                intervals = [intervals]
+
+            total = 0.0
+            for step in cycle(intervals):
+                total += step
+                if total > t+tol:
+                    break
+                if isclose(t, total, abs_tol=tol) and t != 0.0:
+                    update[substrate] = self.config["injection_params"][substrate]["amount"]
         return {
             "shared_environment": {"counts": update}
         }
