@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="Updated injector to take a list of floats as interval to enable cyclical injections with varied intervals">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="updated setup.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cdFBA.egg-info/requires.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA.egg-info/requires.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,15 +169,7 @@
       <workItem from="1753983984634" duration="9130000" />
       <workItem from="1755792730080" duration="3323000" />
       <workItem from="1755871774279" duration="11703000" />
-      <workItem from="1756302127806" duration="42828000" />
-    </task>
-    <task id="LOCAL-00017" summary="Moved utility function out of dfba file">
-      <option name="closed" value="true" />
-      <created>1739214815161</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1739214815161</updated>
+      <workItem from="1756302127806" duration="44456000" />
     </task>
     <task id="LOCAL-00018" summary="Moved utility function out of dfba file">
       <option name="closed" value="true" />
@@ -562,7 +555,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759508235835</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="updated setup.py">
+      <option name="closed" value="true" />
+      <created>1759513030069</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1759513030069</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -580,7 +581,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="introduced volume and concentration calculaion for `shared environment`" />
     <MESSAGE value="added volumetric type to handle new shared environment structure" />
     <MESSAGE value="fixed util function to get substrate names" />
     <MESSAGE value="Moved utility function out of dfba file" />
@@ -605,7 +605,8 @@
     <MESSAGE value="fixed injector specs and update function" />
     <MESSAGE value="fixed reaction map util function" />
     <MESSAGE value="Updated injector to take a list of floats as interval to enable cyclical injections with varied intervals" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated injector to take a list of floats as interval to enable cyclical injections with varied intervals" />
+    <MESSAGE value="updated setup.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated setup.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

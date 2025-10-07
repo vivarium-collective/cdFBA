@@ -1,6 +1,6 @@
 vivarium-interface
-process_bigraph==0.0.33
-bigraph-schema==0.0.54
+process_bigraph
+bigraph-schema
 cobra
 matplotlib
 ipdb
