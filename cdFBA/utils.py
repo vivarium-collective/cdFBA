@@ -57,7 +57,7 @@ def set_counts(spec, counts):
         Parameters:
             spec : dict, cdFBA specification dictionary
             counts : dict, dictionary with substrate names as keys and counts as values
-        """
+    """
     for substrate, count in counts.items():
         #make sure substrates are present in the cdfba model
         if substrate not in spec[SHARED_ENVIRONMENT]["concentrations"].keys():
@@ -222,6 +222,7 @@ def dfba_config(
         reaction_map=None,
         bounds=None,
         changes=None,
+        medium=None,
 ):
     """Construct a configuration dictionary for a single cobra model
     Parameters:
@@ -261,6 +262,8 @@ def dfba_config(
             "bounds": {},
             "kinetics": {},
         }
+    if medium is None:
+        medium = {}
     return {
         "model_file": model_file,
         "name": name,
@@ -268,6 +271,7 @@ def dfba_config(
         "reaction_map": reaction_map,
         "bounds": bounds,
         "changes": changes,
+        "medium": medium
     }
 
 def get_single_dfba_spec(

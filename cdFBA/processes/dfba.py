@@ -34,14 +34,18 @@ class dFBA(Process):
         "kinetics": "any",
         "reaction_map": "any",
         "bounds": "maybe[map[bounds]]",
-        "changes": "dfba_changes"
+        "changes": "dfba_changes",
+        "medium": "maybe[map]"
     }
-    #TODO -- Add "changes" to the config that allows us to change the model
+    #TODO -- add ability to change objective reaction
     def __init__(self, config, core):
         super().__init__(config, core)
 
         self.model = model_from_file(self.config["model_file"])
         self.biomass_identifier = get_objective_reaction(self.model)
+
+        if len(self.config["medium"]) > 0:
+            self.model.medium = self.config["medium"]
 
         if self.config["bounds"] is not None:
             if len(self.config["bounds"]) != 0:
@@ -145,7 +149,6 @@ class UpdateEnvironment(Step):
                     break
                 else:
                     update[substrate_id] += species_updates[species][substrate_id]
-
 
         return {
             "counts": update
@@ -443,5 +446,5 @@ if __name__ == "__main__":
     core.register_process("Injector", Injector)
 
     test_environment(core)
-    test_static_concentration(core)
-    test_injector(core)
+    # test_static_concentration(core)
+    # test_injector(core)
