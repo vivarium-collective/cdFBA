@@ -5,18 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="updated setup.py">
-      <change afterPath="$PROJECT_DIR$/cdFBA/data_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cdFBA.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cdFBA.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/Chemostat Demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Chemostat Demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/spatial.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/spatial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,15 +194,7 @@
       <workItem from="1766001149735" duration="204000" />
       <workItem from="1767813455367" duration="990000" />
       <workItem from="1771362576536" duration="15977000" />
-      <workItem from="1771521551632" duration="20850000" />
-    </task>
-    <task id="LOCAL-00022" summary="utils functions">
-      <option name="closed" value="true" />
-      <created>1739479856461</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1739479856461</updated>
+      <workItem from="1771521551632" duration="22031000" />
     </task>
     <task id="LOCAL-00023" summary="utils functions">
       <option name="closed" value="true" />
@@ -593,7 +580,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763394609017</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="updated setup.py">
+      <option name="closed" value="true" />
+      <created>1771973157509</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1771973157509</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
