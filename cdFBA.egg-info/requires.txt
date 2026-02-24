@@ -1,6 +1,7 @@
 vivarium-interface
 process_bigraph
 bigraph-schema
+bigraph-viz
 cobra
 matplotlib
 ipdb

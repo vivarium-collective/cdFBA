@@ -2,6 +2,7 @@ LICENSE
 README.md
 setup.py
 cdFBA/__init__.py
+cdFBA/data_types.py
 cdFBA/utils.py
 cdFBA.egg-info/PKG-INFO
 cdFBA.egg-info/SOURCES.txt

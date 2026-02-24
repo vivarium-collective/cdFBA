@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: cdFBA
-Version: 0.0.5
+Version: 0.0.6
 Home-page: https://github.com/vivarium-collective/cdFBA
 Author: Tasnif Rahman
 Author-email: trahman@uchc.edu
@@ -22,6 +22,7 @@ License-File: LICENSE
 Requires-Dist: vivarium-interface
 Requires-Dist: process_bigraph
 Requires-Dist: bigraph-schema
+Requires-Dist: bigraph-viz
 Requires-Dist: cobra
 Requires-Dist: matplotlib
 Requires-Dist: ipdb
@@ -40,7 +41,7 @@ Dynamic: requires-python
 # cdFBA
 Community Dynamic Flux Balance Analysis using process-bigraph.
 
-Release version 0.0.1 is available from PyPI. Requires python>=3.9
+Release version 0.0.6 is available from PyPI. Requires python>=3.9
 
 To install use:
 
