@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="updated setup.py">
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="fixed up demo notebooks and updated setup.py for release">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diauxic Shift.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/Diurnal Cycle.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/demo.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/demo.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notebooks/exometabolome.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,7 +36,7 @@
     </excluded-from-favorite>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="vivarium_conversion" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -81,33 +75,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Python tests.Python tests in dfba.py.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.cdFBA-peristalsis.executor&quot;: &quot;Run&quot;,
-    &quot;Python.composite.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.debug_noteboook.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.dfba.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.dfbalauncher.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.spatial.executor&quot;: &quot;Run&quot;,
-    &quot;Python.utils.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;vivarium__conversion&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Python tests.Python tests in dfba.py.executor": "Debug",
+    "Python.cdFBA-peristalsis.executor": "Run",
+    "Python.composite.executor": "Debug",
+    "Python.debug_noteboook.executor": "Debug",
+    "Python.dfba.executor": "Debug",
+    "Python.dfbalauncher.executor": "Debug",
+    "Python.spatial.executor": "Run",
+    "Python.utils.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "ai.playground.ignore.import.keys.banner.in.settings": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="dfbalauncher" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="cdFBA" />
@@ -135,6 +129,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.dfbalauncher" />
         <item itemvalue="Python.dfbalauncher" />
         <item itemvalue="Python.dfbalauncher" />
       </list>
@@ -194,23 +189,7 @@
       <workItem from="1766001149735" duration="204000" />
       <workItem from="1767813455367" duration="990000" />
       <workItem from="1771362576536" duration="15977000" />
-      <workItem from="1771521551632" duration="22031000" />
-    </task>
-    <task id="LOCAL-00023" summary="utils functions">
-      <option name="closed" value="true" />
-      <created>1739480676105</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1739480676105</updated>
-    </task>
-    <task id="LOCAL-00024" summary="utils functions">
-      <option name="closed" value="true" />
-      <created>1739563351588</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1739563351588</updated>
+      <workItem from="1771521551632" duration="22724000" />
     </task>
     <task id="LOCAL-00025" summary="fixed demo, added docstrings">
       <option name="closed" value="true" />
@@ -588,7 +567,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771973157509</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="fixed up demo notebooks and updated setup.py for release">
+      <option name="closed" value="true" />
+      <created>1771974559385</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1771974559385</updated>
+    </task>
+    <task id="LOCAL-00073" summary="fixed up demo notebooks and updated setup.py for release">
+      <option name="closed" value="true" />
+      <created>1771974670890</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1771974670890</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -606,7 +601,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added volumetric type to handle new shared environment structure" />
     <MESSAGE value="fixed util function to get substrate names" />
     <MESSAGE value="Moved utility function out of dfba file" />
     <MESSAGE value="utils docstrings, new demo file" />
@@ -631,11 +625,17 @@
     <MESSAGE value="fixed reaction map util function" />
     <MESSAGE value="Updated injector to take a list of floats as interval to enable cyclical injections with varied intervals" />
     <MESSAGE value="updated setup.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated setup.py" />
+    <MESSAGE value="fixed up demo notebooks and updated setup.py for release" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed up demo notebooks and updated setup.py for release" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>932</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
           <line>1242</line>
@@ -648,28 +648,48 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/composite.py</url>
-          <line>1249</line>
+          <line>709</line>
           <option name="timeStamp" value="99" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/process_bigraph/process_types.py</url>
-          <line>147</line>
+          <line>146</line>
           <option name="timeStamp" value="103" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/edge.py</url>
-          <line>68</line>
+          <line>21</line>
           <option name="timeStamp" value="104" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="126" />
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_functions.py</url>
+          <line>2194</line>
+          <option name="timeStamp" value="111" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>56</line>
+          <option name="timeStamp" value="115" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>59</line>
+          <option name="timeStamp" value="117" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file:///opt/anaconda3/envs/fbapractice/lib/python3.9/site-packages/bigraph_schema/type_system.py</url>
+          <line>901</line>
+          <option name="timeStamp" value="119" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cdFBA/data_types.py</url>
-          <line>58</line>
-          <option name="timeStamp" value="134" />
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
+          <line>153</line>
+          <option name="timeStamp" value="121" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
+          <line>344</line>
+          <option name="timeStamp" value="122" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>file://$PROJECT_DIR$/Notebooks/vivarium-demo.ipynb</url>
