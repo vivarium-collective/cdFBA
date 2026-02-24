@@ -1,7 +1,7 @@
 # cdFBA
 Community Dynamic Flux Balance Analysis using process-bigraph.
 
-Release version 0.0.6 is available from PyPI. Requires python>=3.9
+Release version 0.0.7 is available from PyPI. Requires python>=3.9
 
 To install use:
 

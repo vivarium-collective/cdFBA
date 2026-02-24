@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="fixed up demo notebooks and updated setup.py for release">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="fixed up demo notebooks and updated setup.py for release" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -189,7 +187,7 @@
       <workItem from="1766001149735" duration="204000" />
       <workItem from="1767813455367" duration="990000" />
       <workItem from="1771362576536" duration="15977000" />
-      <workItem from="1771521551632" duration="22724000" />
+      <workItem from="1771521551632" duration="23126000" />
     </task>
     <task id="LOCAL-00025" summary="fixed demo, added docstrings">
       <option name="closed" value="true" />
