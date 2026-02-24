@@ -4,7 +4,7 @@ import pytest
 from math import isclose, sin
 from itertools import cycle
 
-from process_bigraph import Process, Step, Composite, ProcessTypes
+from process_bigraph import Process, Step, Composite, allocate_core
 from process_bigraph.emitter import gather_emitter_results, emitter_from_wires
 
 from cdFBA.utils import SHARED_ENVIRONMENT
@@ -27,12 +27,12 @@ class dFBA(Process):
     """
     config_schema = {
         "model_file": {
-            "_type": "any",
+            "_type": "string",
             "_default": "iAF1260",
         },
         "name": "string",
-        "kinetics": "any",
-        "reaction_map": "any",
+        "kinetics": "map",
+        "reaction_map": "map",
         "bounds": "maybe[map[bounds]]",
         "changes": "dfba_changes",
         "medium": "maybe[map]"
@@ -50,9 +50,9 @@ class dFBA(Process):
         if self.config["bounds"] is not None:
             if len(self.config["bounds"]) != 0:
                 for reaction_id, bounds in self.config["bounds"].items():
-                    if bounds["lower"] is not None:
+                    if "lower" in bounds and bounds["lower"] is not None:
                         self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
-                    if bounds["upper"] is not None:
+                    if "upper" in bounds and bounds["upper"] is not None:
                         self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
 
         if self.config["changes"] is not None:
@@ -64,9 +64,9 @@ class dFBA(Process):
                     self.model.reactions.get_by_id(reaction).knock_out()
             if len(self.config["changes"]["bounds"]) > 0:
                 for reaction_id, bounds in self.config["changes"]["bounds"].items():
-                    if bounds["lower"] is not None:
+                    if "lower" in bounds and bounds["lower"] is not None:
                         self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
-                    if bounds["upper"] is not None:
+                    if "upper" in bounds and bounds["upper"] is not None:
                         self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
             if len(self.config["changes"]["kinetics"]) > 0:
                 self.config["kinetics"].update(self.config["changes"]["kinetics"])
@@ -74,12 +74,12 @@ class dFBA(Process):
     def inputs(self):
         return {
             "shared_environment": "volumetric", #initial conditions for time-step
-            "current_update": "map[map[set_float]]",
+            "current_update": "map[map[overwrite[float]]]",
         }
 
     def outputs(self):
         return {
-             "dfba_update": "map[set_float]"
+             "dfba_update": "map[overwrite[float]]"
         }
 
     def update(self, inputs, interval):
@@ -122,12 +122,12 @@ class UpdateEnvironment(Step):
     def inputs(self):
         return {
             "shared_environment": "volumetric",
-            "species_updates": "map[map[set_float]]",
+            "species_updates": "map[map[overwrite[float]]]",
         }
 
     def outputs(self):
         return {
-            "counts": "map[float]",
+            "shared_environment": "volumetric",
         }
 
     def update(self, inputs):
@@ -151,7 +151,9 @@ class UpdateEnvironment(Step):
                     update[substrate_id] += species_updates[species][substrate_id]
 
         return {
-            "counts": update
+            "shared_environment": {
+                "counts": update
+            }
         }
 
 class StaticConcentration(Process):
@@ -172,7 +174,7 @@ class StaticConcentration(Process):
 
     def outputs(self):
         return {
-            "shared_environment": "map[float]"
+            "shared_environment": "volumetric",
         }
 
     def update(self, inputs, interval):
@@ -184,7 +186,9 @@ class StaticConcentration(Process):
             update[substrate] = (values * inputs["shared_environment"]["volume"]) - shared_environment[substrate]
 
         return {
-            "shared_environment": {"counts": update}
+            "shared_environment": {
+                "counts": update
+            }
         }
 
 class WaveFunction(Process):
@@ -221,7 +225,7 @@ class WaveFunction(Process):
 
     def outputs(self):
         return {
-            "shared_environment": "map[float]"
+            "shared_environment": "volumetric",
         }
 
     def update(self, inputs, interval):
@@ -241,7 +245,9 @@ class WaveFunction(Process):
                 update[substrate] = 0
 
         return {
-            "shared_environment": {"counts": update}
+            "shared_environment": {
+                "counts": update
+            }
         }
 
 class Injector(Process):
@@ -269,7 +275,7 @@ class Injector(Process):
 
     def outputs(self):
         return {
-            "shared_environment": "map[float]"
+            "shared_environment": "volumetric",
         }
 
     def update(self, inputs, interval):
@@ -291,7 +297,9 @@ class Injector(Process):
                 if isclose(t, total, abs_tol=tol) and t != 0.0:
                     update[substrate] = self.config["injection_params"][substrate]["amount"]
         return {
-            "shared_environment": {"counts": update}
+            "shared_environment": {
+                "counts": update
+            }
         }
 
 #=======
@@ -346,17 +354,17 @@ def get_test_spec():
 
 @pytest.fixture
 def core():
-    from cdFBA import register_types
+    from cdFBA.data_types import register_types
     # create the core object
-    core = ProcessTypes()
+    core = allocate_core()
     # register data types
     core = register_types(core)
     # register all processes and steps
-    core.register_process("dFBA", dFBA)
-    core.register_process("UpdateEnvironment", UpdateEnvironment)
-    core.register_process("StaticConcentration", StaticConcentration)
-    core.register_process("WaveFunction", WaveFunction)
-    core.register_process("Injector", Injector)
+    core.register_link("dFBA", dFBA)
+    core.register_link("UpdateEnvironment", UpdateEnvironment)
+    core.register_link("StaticConcentration", StaticConcentration)
+    core.register_link("WaveFunction", WaveFunction)
+    core.register_link("Injector", Injector)
 
     return core
 
@@ -376,8 +384,8 @@ def test_environment(core):
     results = gather_emitter_results(sim)[("emitter",)]
 
     assert len(results) == 21
-    assert results[2]["shared_environment"]["counts"]["D-Glucose"] > results[4]["shared_environment"]["counts"]["D-Glucose"]
-    assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
+    assert results[2]["shared_environment"]["concentrations"]["D-Glucose"] > results[4]["shared_environment"]["concentrations"]["D-Glucose"]
+    assert results[4]["shared_environment"]["concentrations"]["E.coli"] > results[2]["shared_environment"]["concentrations"]["E.coli"]
 
 def test_static_concentration(core):
     spec = get_test_spec()
@@ -400,9 +408,9 @@ def test_static_concentration(core):
     results = gather_emitter_results(sim)[("emitter",)]
 
     assert len(results) == 11
-    assert results[2]["shared_environment"]["counts"]["D-Glucose"] == results[4]["shared_environment"]["counts"][
+    assert results[2]["shared_environment"]["concentrations"]["D-Glucose"] == results[4]["shared_environment"]["concentrations"][
         "D-Glucose"]
-    assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
+    assert results[4]["shared_environment"]["concentrations"]["E.coli"] > results[2]["shared_environment"]["concentrations"]["E.coli"]
 
 def test_injector(core):
     spec = get_test_spec()
@@ -428,23 +436,23 @@ def test_injector(core):
     results = gather_emitter_results(sim)[("emitter",)]
 
     assert len(results) == 21
-    assert results[4]["shared_environment"]["counts"]["E.coli"] > results[2]["shared_environment"]["counts"]["E.coli"]
-    assert results[10]["shared_environment"]["counts"]["D-Glucose"]== results[20]["shared_environment"]["counts"]["D-Glucose"]
+    assert results[4]["shared_environment"]["concentrations"]["E.coli"] > results[2]["shared_environment"]["concentrations"]["E.coli"]
+    assert results[10]["shared_environment"]["concentrations"]["D-Glucose"]== results[20]["shared_environment"]["concentrations"]["D-Glucose"]
 
 if __name__ == "__main__":
-    from cdFBA import register_types
+    from cdFBA.data_types import register_types
 
     # create the core object
-    core = ProcessTypes()
+    core = allocate_core()
     # register data types
     core = register_types(core)
     # register all processes and steps
-    core.register_process("dFBA", dFBA)
-    core.register_process("UpdateEnvironment", UpdateEnvironment)
-    core.register_process("StaticConcentration", StaticConcentration)
-    core.register_process("WaveFunction", WaveFunction)
-    core.register_process("Injector", Injector)
+    core.register_link("dFBA", dFBA)
+    core.register_link("UpdateEnvironment", UpdateEnvironment)
+    core.register_link("StaticConcentration", StaticConcentration)
+    core.register_link("WaveFunction", WaveFunction)
+    core.register_link("Injector", Injector)
 
     test_environment(core)
-    # test_static_concentration(core)
-    # test_injector(core)
+    test_static_concentration(core)
+    test_injector(core)

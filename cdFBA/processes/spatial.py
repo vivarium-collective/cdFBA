@@ -1,7 +1,7 @@
 from pprint import pprint
 import numpy as np
 
-from process_bigraph import ProcessTypes, Process, Step, Composite
+from process_bigraph import allocate_core, Process, Step, Composite
 from process_bigraph.emitter import gather_emitter_results
 
 from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, THRESHOLDS, DFBA_RESULTS, FIELDS

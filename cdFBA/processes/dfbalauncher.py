@@ -1,6 +1,6 @@
 import pprint
 
-from process_bigraph import ProcessTypes, Process, Step, Composite
+from process_bigraph import  Process, Step, Composite, allocate_core
 from process_bigraph.emitter import gather_emitter_results, emitter_from_wires
 
 from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, THRESHOLDS, DFBA_RESULTS
@@ -23,15 +23,15 @@ class EnvironmentMonitor(Step):
         return {
             "thresholds": "map[threshold]",
             "shared_environment": "volumetric",
-            "species": "any", #connect to SPECIES_STORE store with all dFBAs
-            "dfba_results": "any",
+            "species": "map", #connect to SPECIES_STORE store with all dFBAs
+            "dfba_results": "map",
         }
 
     def outputs(self):
         return {
             "new_species": "map",
             "counts": "map[float]",
-            "dfba_results": "any",
+            "dfba_results": "map",
         }
 
     def update(self, inputs):
@@ -98,7 +98,7 @@ class EnvironmentMonitor(Step):
 def get_env_monitor_spec(interval):
     """Returns a specification dictionary for the environment monitor"""
     return {
-        "_type": "process",
+        "_type": "step",
         "address": "local:EnvironmentMonitor",
         "config": {},
         "inputs": {
@@ -223,15 +223,15 @@ def run_env_monitor(core):
     pprint.pprint(sim.state)
 
 if __name__ == "__main__":
-    from cdFBA import register_types
+    from cdFBA.data_types import register_types
 
     # create the core object
-    core = ProcessTypes()
+    core = allocate_core()
     # register data types
     core = register_types(core)
     # register all processes and steps
-    core.register_process('dFBA', dFBA)
-    core.register_process('UpdateEnvironment', UpdateEnvironment)
-    core.register_process('EnvironmentMonitor', EnvironmentMonitor)
+    core.register_link('dFBA', dFBA)
+    core.register_link('UpdateEnvironment', UpdateEnvironment)
+    core.register_link('EnvironmentMonitor', EnvironmentMonitor)
 
     run_env_monitor(core)
