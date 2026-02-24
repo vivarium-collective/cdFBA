@@ -51,7 +51,7 @@ setup(
         "vivarium-interface",
         "process_bigraph",
         "bigraph-schema",
-        "bigraph-viz"
+        "bigraph-viz",
         "cobra",
         "matplotlib",
         "ipdb",
