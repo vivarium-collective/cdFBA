@@ -458,7 +458,7 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
 def environment_spec():
     """Construct spec dictionary for UpdateEnvironment step"""
     return {
-        "_type": "process",
+        "_type": "step",
         "address": "local:UpdateEnvironment",
         "config": {},
         "inputs": {
@@ -466,7 +466,7 @@ def environment_spec():
             "shared_environment": [SHARED_ENVIRONMENT]
         },
         "outputs": {
-            "counts": [SHARED_ENVIRONMENT, "counts"],
+            "shared_environment": [SHARED_ENVIRONMENT],
         }
     }
 
