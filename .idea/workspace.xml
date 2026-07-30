@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA.egg-info/PKG-INFO" afterDir="false" />
-    </list>
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="testing suite added" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,7 +34,7 @@
     </excluded-from-favorite>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="vivarium_conversion" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -93,7 +90,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;workbench&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -191,22 +188,7 @@
       <workItem from="1767813455367" duration="990000" />
       <workItem from="1771362576536" duration="15977000" />
       <workItem from="1771521551632" duration="23851000" />
-    </task>
-    <task id="LOCAL-00025" summary="fixed demo, added docstrings">
-      <option name="closed" value="true" />
-      <created>1739892510827</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1739892510827</updated>
-    </task>
-    <task id="LOCAL-00026" summary="cleanup">
-      <option name="closed" value="true" />
-      <created>1739896503255</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1739896503255</updated>
+      <workItem from="1785426636853" duration="2013000" />
     </task>
     <task id="LOCAL-00027" summary="cleanup">
       <option name="closed" value="true" />
@@ -584,7 +566,23 @@
       <option name="project" value="LOCAL" />
       <updated>1771974670890</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="testing suite added">
+      <option name="closed" value="true" />
+      <created>1785426703944</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1785426703944</updated>
+    </task>
+    <task id="LOCAL-00075" summary="testing suite added">
+      <option name="closed" value="true" />
+      <created>1785427736346</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1785427736346</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -602,7 +600,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed util function to get substrate names" />
     <MESSAGE value="Moved utility function out of dfba file" />
     <MESSAGE value="utils docstrings, new demo file" />
     <MESSAGE value="utils functions" />
@@ -627,7 +624,8 @@
     <MESSAGE value="Updated injector to take a list of floats as interval to enable cyclical injections with varied intervals" />
     <MESSAGE value="updated setup.py" />
     <MESSAGE value="fixed up demo notebooks and updated setup.py for release" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed up demo notebooks and updated setup.py for release" />
+    <MESSAGE value="testing suite added" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing suite added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -639,7 +637,7 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/../process-bigraph/process_bigraph/composite.py</url>
-          <line>1242</line>
+          <line>854</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -684,12 +682,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>153</line>
+          <line>144</line>
           <option name="timeStamp" value="121" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cdFBA/processes/dfba.py</url>
-          <line>344</line>
+          <line>292</line>
           <option name="timeStamp" value="122" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">

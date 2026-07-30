@@ -1,17 +1,10 @@
 import random
-import pprint
-import pytest
 from math import isclose, sin
 from itertools import cycle
 
-from process_bigraph import Process, Step, Composite, allocate_core
-from process_bigraph.emitter import gather_emitter_results, emitter_from_wires
+from process_bigraph import Process, Step
 
-from cdFBA.utils import SHARED_ENVIRONMENT
-from cdFBA.utils import model_from_file, get_injector_spec, get_wave_spec, get_static_spec, set_concentration
-from cdFBA.utils import  make_cdfba_composite, set_kinetics, get_objective_reaction
-
-from matplotlib import pyplot as plt
+from cdFBA.utils import model_from_file, get_objective_reaction
 
 
 class dFBA(Process):
@@ -44,32 +37,29 @@ class dFBA(Process):
         self.model = model_from_file(self.config["model_file"])
         self.biomass_identifier = get_objective_reaction(self.model)
 
-        if len(self.config["medium"]) > 0:
-            self.model.medium = self.config["medium"]
+        # `maybe` config fields that are unset are absent from config entirely,
+        # so read every optional field defensively.
+        medium = self.config.get("medium") or {}
+        if len(medium) > 0:
+            self.model.medium = medium
 
-        if self.config["bounds"] is not None:
-            if len(self.config["bounds"]) != 0:
-                for reaction_id, bounds in self.config["bounds"].items():
-                    if "lower" in bounds and bounds["lower"] is not None:
-                        self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
-                    if "upper" in bounds and bounds["upper"] is not None:
-                        self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
+        self._apply_bounds(self.config.get("bounds") or {})
 
-        if self.config["changes"] is not None:
-            if len(self.config["changes"]["gene_knockout"]) > 0:
-                for gene in self.config["changes"]["gene_knockout"]:
-                    self.model.genes.get_by_id(gene).knock_out()
-            if len(self.config["changes"]["reaction_knockout"]) > 0:
-                for reaction in self.config["changes"]["reaction_knockout"]:
-                    self.model.reactions.get_by_id(reaction).knock_out()
-            if len(self.config["changes"]["bounds"]) > 0:
-                for reaction_id, bounds in self.config["changes"]["bounds"].items():
-                    if "lower" in bounds and bounds["lower"] is not None:
-                        self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
-                    if "upper" in bounds and bounds["upper"] is not None:
-                        self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
-            if len(self.config["changes"]["kinetics"]) > 0:
-                self.config["kinetics"].update(self.config["changes"]["kinetics"])
+        changes = self.config.get("changes") or {}
+        for gene in changes.get("gene_knockout") or []:
+            self.model.genes.get_by_id(gene).knock_out()
+        for reaction in changes.get("reaction_knockout") or []:
+            self.model.reactions.get_by_id(reaction).knock_out()
+        self._apply_bounds(changes.get("bounds") or {})
+        self.config["kinetics"].update(changes.get("kinetics") or {})
+
+    def _apply_bounds(self, bounds_map):
+        """Apply a {reaction_id: {"lower": .., "upper": ..}} map to the model."""
+        for reaction_id, bounds in bounds_map.items():
+            if bounds.get("lower") is not None:
+                self.model.reactions.get_by_id(reaction_id).lower_bound = bounds["lower"]
+            if bounds.get("upper") is not None:
+                self.model.reactions.get_by_id(reaction_id).upper_bound = bounds["upper"]
 
     def inputs(self):
         return {
@@ -138,17 +128,18 @@ class UpdateEnvironment(Step):
         species_list = [species for species in species_updates]
         random.shuffle(species_list)
 
-        update = shared_environment.copy()
-        for substrate in shared_environment.keys():
-            update[substrate] = 0
+        update = {substrate: 0 for substrate in shared_environment}
 
+        # species draw in random order, first-come-first-served: each one is
+        # clamped against what is actually left after the preceding species,
+        # so a substrate is depleted to exactly zero and never goes negative.
         for species in species_list:
-            for substrate_id in species_updates[species]:
-                if (shared_environment[substrate_id] + species_updates[species][substrate_id]) < 0:
+            for substrate_id, delta in species_updates[species].items():
+                remaining = shared_environment[substrate_id] + update[substrate_id]
+                if remaining + delta < 0:
                     update[substrate_id] = -shared_environment[substrate_id]
-                    break
                 else:
-                    update[substrate_id] += species_updates[species][substrate_id]
+                    update[substrate_id] += delta
 
         return {
             "shared_environment": {
@@ -301,158 +292,3 @@ class Injector(Process):
                 "counts": update
             }
         }
-
-#=======
-# TESTS
-#=======
-
-def get_test_spec():
-    # BiGG model ids or the path name to the associated model file
-    model_dict = {
-        "E.coli": "iAF1260",
-        "S.flexneri": "iSFxv_1172"
-    }
-    # list exchange reactions
-    exchanges = ["EX_glc__D_e", "EX_ac_e"]
-    # set environment volume
-    volume = 2
-    # define a single dFBA model
-    spec = make_cdfba_composite(model_dict, medium_type=None, exchanges=exchanges, volume=volume, interval=1.0)
-
-    # Set reaction bounds
-    spec["Species"]["E.coli"]["config"]["bounds"] = {
-        "EX_o2_e": {"lower": -2, "upper": None},
-        "ATPM": {"lower": 1, "upper": 1}
-    }
-    spec["Species"]["S.flexneri"]["config"]["bounds"] = {
-        "EX_o2_e": {"lower": -2, "upper": None},
-        "ATPM": {"lower": 1, "upper": 1}
-    }
-
-    # set external substrate concentrations
-    concentrations = {
-        "Acetate": 0,
-        "D-Glucose": 40
-    }
-    set_concentration(spec, concentrations)
-
-    # set kinetics
-    kinetics = {
-        "D-Glucose": (0.02, 15),
-        "Acetate": (0.5, 7)
-    }
-    for species in model_dict.keys():
-        set_kinetics(species, spec, kinetics)
-
-    # set emitter specs
-    spec["emitter"] = emitter_from_wires({
-        "global_time": ["global_time"],
-        "shared_environment": [SHARED_ENVIRONMENT],
-    })
-
-    return spec
-
-@pytest.fixture
-def core():
-    from cdFBA.data_types import register_types
-    # create the core object
-    core = allocate_core()
-    # register data types
-    core = register_types(core)
-    # register all processes and steps
-    core.register_link("dFBA", dFBA)
-    core.register_link("UpdateEnvironment", UpdateEnvironment)
-    core.register_link("StaticConcentration", StaticConcentration)
-    core.register_link("WaveFunction", WaveFunction)
-    core.register_link("Injector", Injector)
-
-    return core
-
-def test_environment(core):
-    """This tests that the environment runs"""
-    spec = get_test_spec()
-    # put it in a composite
-    sim = Composite({
-        "state": spec,
-        # "emitter": {"mode": "all"}
-    },
-        core=core
-    )
-
-    # run the simulation
-    sim.run(20)
-    results = gather_emitter_results(sim)[("emitter",)]
-
-    assert len(results) == 21
-    assert results[2]["shared_environment"]["concentrations"]["D-Glucose"] > results[4]["shared_environment"]["concentrations"]["D-Glucose"]
-    assert results[4]["shared_environment"]["concentrations"]["E.coli"] > results[2]["shared_environment"]["concentrations"]["E.coli"]
-
-def test_static_concentration(core):
-    spec = get_test_spec()
-    StaticConcentration_config = {
-        "substrate_concentrations": {
-            "D-Glucose": 40
-        }
-    }
-    spec['StaticConcentration'] = get_static_spec(StaticConcentration_config, interval=1.0)
-    # put it in a composite
-    sim = Composite({
-        "state": spec,
-        # "emitter": {"mode": "all"}
-    },
-        core=core
-    )
-
-    # run the simulation
-    sim.run(10)
-    results = gather_emitter_results(sim)[("emitter",)]
-
-    assert len(results) == 11
-    assert results[2]["shared_environment"]["concentrations"]["D-Glucose"] == results[4]["shared_environment"]["concentrations"][
-        "D-Glucose"]
-    assert results[4]["shared_environment"]["concentrations"]["E.coli"] > results[2]["shared_environment"]["concentrations"]["E.coli"]
-
-def test_injector(core):
-    spec = get_test_spec()
-    injector_config = {
-        "injection_params": {
-            "D-Glucose": {
-                "amount": 80,
-                "interval": 5,
-            }
-        }
-    }
-    spec['Injector'] = get_injector_spec(injector_config, interval=1.0)
-    # put it in a composite
-    sim = Composite({
-        "state": spec,
-        # "emitter": {"mode": "all"}
-    },
-        core=core
-    )
-
-    # run the simulation
-    sim.run(20)
-    results = gather_emitter_results(sim)[("emitter",)]
-
-    assert len(results) == 21
-    assert results[4]["shared_environment"]["concentrations"]["E.coli"] > results[2]["shared_environment"]["concentrations"]["E.coli"]
-    assert results[10]["shared_environment"]["concentrations"]["D-Glucose"]== results[20]["shared_environment"]["concentrations"]["D-Glucose"]
-
-if __name__ == "__main__":
-    from cdFBA.data_types import register_types
-
-    # create the core object
-    core = allocate_core()
-    # register data types
-    core = register_types(core)
-    # register all processes and steps
-    core.register_link("dFBA", dFBA)
-    core.register_link("UpdateEnvironment", UpdateEnvironment)
-    core.register_link("StaticConcentration", StaticConcentration)
-    core.register_link("WaveFunction", WaveFunction)
-    core.register_link("Injector", Injector)
-
-    test_environment(core)
-    test_static_concentration(core)
-    test_injector(core)

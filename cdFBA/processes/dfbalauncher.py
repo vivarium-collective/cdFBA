@@ -47,10 +47,12 @@ class EnvironmentMonitor(Step):
 
         for threshold in inputs["thresholds"].values():
             substrate = threshold["substrate"]
-            if ((isinstance(threshold["range"]["upper"], (float, int))
-                and inputs["shared_environment"]["concentrations"][substrate] > threshold["range"]["upper"])
-                    or (isinstance(threshold["range"]["lower"], (float, int))
-                        and inputs["shared_environment"]["concentrations"][substrate] < threshold["range"]["lower"])):
+            # unset `maybe` bounds are absent from the store, not present as None
+            upper = threshold["range"].get("upper")
+            lower = threshold["range"].get("lower")
+            concentration = inputs["shared_environment"]["concentrations"][substrate]
+            if ((isinstance(upper, (float, int)) and concentration > upper)
+                    or (isinstance(lower, (float, int)) and concentration < lower)):
                 name = threshold["name"]
                 parent = threshold["parent"]
                 mass = threshold["mass"]

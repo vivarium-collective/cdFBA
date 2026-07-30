@@ -20,8 +20,8 @@ Requires-Python: >=3.9
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: vivarium-interface
-Requires-Dist: process_bigraph
-Requires-Dist: bigraph-schema
+Requires-Dist: process_bigraph>=1.5.0
+Requires-Dist: bigraph-schema>=1.4.3
 Requires-Dist: bigraph-viz
 Requires-Dist: cobra
 Requires-Dist: matplotlib

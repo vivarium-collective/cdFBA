@@ -1,6 +1,6 @@
 vivarium-interface
-process_bigraph
-bigraph-schema
+process_bigraph>=1.5.0
+bigraph-schema>=1.4.3
 bigraph-viz
 cobra
 matplotlib

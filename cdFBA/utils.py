@@ -26,6 +26,8 @@ def model_from_file(model_file="textbook"):
         model: cobra model
     """
     #check for model type and load model
+    if not isinstance(model_file, str):
+        raise ValueError(f"Invalid model file: expected a str, got {type(model_file).__name__}")
     if ".xml" in model_file:
         model = read_sbml_model(model_file)
     elif ".json" in model_file:
@@ -34,11 +36,8 @@ def model_from_file(model_file="textbook"):
         model = load_yaml_model(model_file)
     elif ".mat" in model_file:
         model = load_matlab_model(model_file)
-    elif isinstance(model_file, str):
-        model = load_model(model_file)
     else:
-        # error handling
-        raise ValueError("Invalid model file")
+        model = load_model(model_file)
     return model
 
 def get_model_dict(model_dict):
@@ -251,9 +250,10 @@ def dfba_config(
             "ATPM": {"lower": 1, "upper": 1}
         }
     if kinetics is None:
+        # keys must match the substrate names used in reaction_map
         kinetics = {
-            "glucose": (0.02, 15),
-            "acetate": (0.5, 7)
+            "D-Glucose": (0.02, 15),
+            "Acetate": (0.5, 7)
         }
     if changes is None:
         changes = {
@@ -439,8 +439,8 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
         if species_list is None:
             raise ValueError("Error: Please provide initial_counts or species_list")
         initial_counts = {
-            "glucose": 80,
-            "acetate": 0,
+            "D-Glucose": 80,
+            "Acetate": 0,
         }
         for species in species_list:
             initial_counts[species] = 0.5

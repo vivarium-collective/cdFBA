@@ -18,12 +18,32 @@ jobs:
         python-version: 3.x
 
     - name: Install dependencies
+      # bigraph-schema is installed from git rather than PyPI: cdFBA depends on
+      # fixes that are on `main` but not in the latest release. Installing it
+      # *before* `pip install -e .` means pip sees the requirement as already
+      # satisfied and leaves the git build in place.
       run: |
         python -m pip install --upgrade pip
         pip install pytest pytest-cov
+        pip install "bigraph-schema @ git+https://github.com/vivarium-collective/bigraph-schema@main"
         pip install -e .
 
-    - name: Run pytest
+    - name: Verify bigraph-schema came from git
+      # If a version bump ever makes pip prefer the PyPI release, the suite
+      # fails in a way that looks nothing like the cause (every test that uses
+      # the `core` fixture errors at setup). Fail loudly and specifically here.
       run: |
-        pip install pytest
-        pytest --cov=cDFBA --cov-report=term
+        python - <<'EOF'
+        import importlib.metadata as md
+        origin = md.distribution("bigraph-schema").read_text("direct_url.json")
+        if origin is None or "git" not in origin:
+            raise SystemExit(
+                f"expected a git install of bigraph-schema, got: {origin!r}")
+        print(origin)
+        EOF
+
+    - name: Run pytest
+      # `bigg` tests download models from the BiGG database, so they are left
+      # out of CI to keep runs off the network
+      run: |
+        pytest -m "not bigg" --cov=cdFBA --cov-report=term

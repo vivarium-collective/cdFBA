@@ -13,3 +13,10 @@ cdFBA/processes/__init__.py
 cdFBA/processes/dfba.py
 cdFBA/processes/dfbalauncher.py
 cdFBA/processes/spatial.py
+tests/test_data_types.py
+tests/test_dfba.py
+tests/test_dfbalauncher.py
+tests/test_environment_processes.py
+tests/test_integration.py
+tests/test_spatial.py
+tests/test_utils.py
