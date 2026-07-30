@@ -24,6 +24,7 @@ jobs:
         pip install -e .
 
     - name: Run pytest
+      # `bigg` tests download models from the BiGG database, so they are left
+      # out of CI to keep runs off the network
       run: |
-        pip install pytest
-        pytest --cov=cDFBA --cov-report=term
+        pytest -m "not bigg" --cov=cdFBA --cov-report=term

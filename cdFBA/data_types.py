@@ -36,7 +36,7 @@ def conditional_apply(schema, current, update, key, path):
 
 def volumetric_update(schema, current, update, path):
     """applies update to a volumetric type"""
-    if not "concentration" in update:
+    if not "concentrations" in update:
         updated_counts, merges_counts = conditional_apply(schema, current, update, 'counts', path)
         updated_volume, merges_volume = conditional_apply(schema, current, update, 'volume', path)
         updated_concentrations = {}

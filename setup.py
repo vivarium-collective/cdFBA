@@ -49,8 +49,10 @@ setup(
     python_requires=">=3.9",
     install_requires=[
         "vivarium-interface",
-        "process_bigraph",
-        "bigraph-schema",
+        # 1.5.0 / 1.4.3 are the versions this package is tested against; earlier
+        # releases predate the schema behaviour the processes rely on
+        "process_bigraph>=1.5.0",
+        "bigraph-schema>=1.4.3",
         "bigraph-viz",
         "cobra",
         "matplotlib",
