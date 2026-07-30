@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="workspace">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/pytest.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pytest.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/data_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/data_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfba.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfba.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/processes/dfbalauncher.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cdFBA/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/cdFBA/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pytest.ini" beforeDir="false" afterPath="$PROJECT_DIR$/pytest.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="testing suite added">
+      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_data_types.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_dfba.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_dfbalauncher.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_environment_processes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_integration.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_spatial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,14 +198,7 @@
       <workItem from="1767813455367" duration="990000" />
       <workItem from="1771362576536" duration="15977000" />
       <workItem from="1771521551632" duration="23851000" />
-    </task>
-    <task id="LOCAL-00025" summary="fixed demo, added docstrings">
-      <option name="closed" value="true" />
-      <created>1739892510827</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1739892510827</updated>
+      <workItem from="1785426636853" duration="1086000" />
     </task>
     <task id="LOCAL-00026" summary="cleanup">
       <option name="closed" value="true" />
@@ -589,7 +584,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771974670890</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="testing suite added">
+      <option name="closed" value="true" />
+      <created>1785426703944</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1785426703944</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -607,7 +610,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed util function to get substrate names" />
     <MESSAGE value="Moved utility function out of dfba file" />
     <MESSAGE value="utils docstrings, new demo file" />
     <MESSAGE value="utils functions" />
@@ -632,7 +634,8 @@
     <MESSAGE value="Updated injector to take a list of floats as interval to enable cyclical injections with varied intervals" />
     <MESSAGE value="updated setup.py" />
     <MESSAGE value="fixed up demo notebooks and updated setup.py for release" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed up demo notebooks and updated setup.py for release" />
+    <MESSAGE value="testing suite added" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing suite added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
