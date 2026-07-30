@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="testing suite added">
-      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_data_types.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_dfba.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_dfbalauncher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_environment_processes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_integration.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_spatial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_utils.py" afterDir="false" />
-    </list>
+    <list default="true" id="e85d4e7f-aea4-446d-b547-dd2b4392b065" name="Changes" comment="testing suite added" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -198,15 +188,7 @@
       <workItem from="1767813455367" duration="990000" />
       <workItem from="1771362576536" duration="15977000" />
       <workItem from="1771521551632" duration="23851000" />
-      <workItem from="1785426636853" duration="1086000" />
-    </task>
-    <task id="LOCAL-00026" summary="cleanup">
-      <option name="closed" value="true" />
-      <created>1739896503255</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1739896503255</updated>
+      <workItem from="1785426636853" duration="2013000" />
     </task>
     <task id="LOCAL-00027" summary="cleanup">
       <option name="closed" value="true" />
@@ -592,7 +574,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785426703944</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="testing suite added">
+      <option name="closed" value="true" />
+      <created>1785427736346</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1785427736346</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
