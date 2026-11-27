@@ -55,6 +55,9 @@ setup(
         "bigraph-schema>=1.4.3",
         "bigraph-viz",
         "cobra",
+        # The canonical COBRApy FBA process: cdFBA's dFBA reuses viva-cobra's
+        # fba_deltas/mm_uptake_rates for the solve instead of calling cobra itself.
+        "viva-cobra @ git+https://github.com/vivarium-collective/viva-cobra.git@main",
         "matplotlib",
         "ipdb",
         "pytest"
