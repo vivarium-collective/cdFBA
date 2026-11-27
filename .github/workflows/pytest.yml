@@ -17,6 +17,11 @@ jobs:
       with:
         python-version: 3.x
 
+    - name: Install GLPK
+      # COBRApy's solver binding swiglpk has no wheel for the latest Python, so it
+      # builds from source and needs glpk.h. Install the GLPK headers first.
+      run: sudo apt-get update && sudo apt-get install -y libglpk-dev glpk-utils
+
     - name: Install dependencies
       # bigraph-schema is installed from git rather than PyPI: cdFBA depends on
       # fixes that are on `main` but not in the latest release. Installing it
