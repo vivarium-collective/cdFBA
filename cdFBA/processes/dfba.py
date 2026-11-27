@@ -84,11 +84,15 @@ class dFBA(Process):
         reaction_map = self.config["reaction_map"]          # {substrate: exchange reaction id}
         resources = list(reaction_map)
         env = inputs["shared_environment"]
-        substrates = {s: env["concentrations"][s] for s in resources}
+        # Michaelis-Menten saturates on *concentration*; the FBA solve's supply-cap and the
+        # substrate deltas it returns are in *count* units (what dfba_update carries into the
+        # shared environment), so the pool it caps against must be the counts, not concentrations.
+        concentrations = {s: env["concentrations"][s] for s in resources}
+        counts = {s: env["counts"][s] for s in resources}
         biomass = env["counts"][name]
 
-        uptakes = mm_uptake_rates(substrates, self.config["kinetics"], resources)
-        deltas = fba_deltas(self.model, reaction_map, uptakes, substrates, biomass, interval)
+        uptakes = mm_uptake_rates(concentrations, self.config["kinetics"], resources)
+        deltas = fba_deltas(self.model, reaction_map, uptakes, counts, biomass, interval)
 
         # viva-cobra returns {"substrates": {resource: Δ}, "biomass": Δ}; cdFBA's dfba_update
         # carries the per-species biomass delta under the species name alongside the substrates.
