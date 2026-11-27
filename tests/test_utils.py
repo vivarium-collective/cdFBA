@@ -1,7 +1,7 @@
 """Tests for the model-introspection and spec-building helpers in cdFBA.utils."""
 import pytest
 
-from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, DFBA_RESULTS
+from cdFBA.utils import SHARED_ENVIRONMENT, SPECIES_STORE, DFBA_RESULTS, CONCENTRATION_TARGETS
 from cdFBA.utils import (
     model_from_file, get_model_dict, get_exchanges, get_substrates,
     get_reaction_map, get_kinetics, get_bounds, get_objective_reaction,
@@ -227,18 +227,22 @@ def test_environment_spec_wiring():
     assert step["outputs"]["shared_environment"] == [SHARED_ENVIRONMENT]
 
 
-@pytest.mark.parametrize("builder,address", [
-    (get_static_spec, "local:StaticConcentration"),
-    (get_wave_spec, "local:WaveFunction"),
-    (get_injector_spec, "local:Injector"),
+# StaticConcentration and WaveFunction are pure target-declarer Processes: they output
+# into the CONCENTRATION_TARGETS store and never touch the shared environment. Injector
+# stays a Process that writes the shared environment directly (additive injection). All
+# three keep their interval and a global_time input.
+@pytest.mark.parametrize("builder,address,output_port,output_store", [
+    (get_static_spec, "local:StaticConcentration", "concentration_targets", CONCENTRATION_TARGETS),
+    (get_wave_spec, "local:WaveFunction", "concentration_targets", CONCENTRATION_TARGETS),
+    (get_injector_spec, "local:Injector", "shared_environment", SHARED_ENVIRONMENT),
 ])
-def test_environmental_specs_wire_time_and_environment(builder, address):
+def test_environmental_specs_wire_time_and_environment(builder, address, output_port, output_store):
     spec = builder({"anything": {}}, interval=0.25)
     assert spec["address"] == address
+    assert spec["_type"] == "process"
     assert spec["interval"] == 0.25
     assert spec["inputs"]["global_time"] == ["global_time"]
-    assert spec["inputs"]["shared_environment"] == [SHARED_ENVIRONMENT]
-    assert spec["outputs"]["shared_environment"] == [SHARED_ENVIRONMENT]
+    assert spec["outputs"][output_port] == [output_store]
 
 
 @pytest.mark.parametrize("builder", [get_static_spec, get_wave_spec, get_injector_spec])
