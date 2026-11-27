@@ -130,12 +130,15 @@ def test_static_concentration_is_a_noop_when_already_at_target(core):
 
 @pytest.mark.xfail(
     reason=(
-        "process-bigraph 1.11.2 regression (passes on pbg <=1.9.1): a Process now reads the "
-        "start-of-interval snapshot instead of the post-Step state, so StaticConcentration's "
-        "reset delta (target - current) sums with the dFBA consumption delta instead of landing "
-        "on post-consumption counts, and the held concentration drifts. Tracked for a pbg-level "
-        "fix (restore the Step-apply-then-Process-read ordering); remove this marker once pbg is "
-        "fixed, at which point the test xpasses."
+        "Pre-existing cdFBA composite bug, not a reuse or pbg regression. Traced tick-by-tick: "
+        "UpdateEnvironment + StaticConcentration behave byte-identically on pbg 1.9.1 and 1.11.2 "
+        "(the state drifts 80 -> 72.5 -> 68.6 in BOTH) -- the chemostat never actually holds, "
+        "because StaticConcentration's reset gets re-consumed within the tick. It only *looked* "
+        "held on pbg <=1.9.1 because the RAMEmitter (a step) captured a mid-tick transient right "
+        "after the reset; a pbg 1.10/1.11 emitter-capture-timing change now records the true "
+        "settled (drifting) state, which is more correct. Real fix is a cdFBA composite change: "
+        "make the setter processes (StaticConcentration/WaveFunction) the final effective write "
+        "each tick so the hold genuinely lands. Remove this marker when that fix lands."
     ),
     strict=False,
 )
