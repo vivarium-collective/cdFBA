@@ -4,6 +4,9 @@ from itertools import cycle
 
 from process_bigraph import Process, Step
 
+from viva_cobra import mm_uptake_rates
+from viva_cobra.processes.fba import fba_deltas
+
 from cdFBA.utils import model_from_file, get_objective_reaction
 
 
@@ -73,34 +76,28 @@ class dFBA(Process):
         }
 
     def update(self, inputs, interval):
-        current_state = {key:inputs["shared_environment"]["counts"][key] for key, value in self.config["reaction_map"].items()}
-        current_state[self.config["name"]] = inputs["shared_environment"]["counts"][self.config["name"]]
-        state_update = current_state.copy()
+        # Reuse viva-cobra's FBA process instead of solving COBRApy here: Michaelis-Menten
+        # uptake, then viva-cobra's `fba_deltas` (the same LP solve, additionally supply-capped
+        # so no pool goes negative, and starvation-safe). The community coupling — the shared
+        # environment and the per-species `dfba_update` — stays this workspace's glue.
+        name = self.config["name"]
+        reaction_map = self.config["reaction_map"]          # {substrate: exchange reaction id}
+        resources = list(reaction_map)
+        env = inputs["shared_environment"]
+        # Michaelis-Menten saturates on *concentration*; the FBA solve's supply-cap and the
+        # substrate deltas it returns are in *count* units (what dfba_update carries into the
+        # shared environment), so the pool it caps against must be the counts, not concentrations.
+        concentrations = {s: env["concentrations"][s] for s in resources}
+        counts = {s: env["counts"][s] for s in resources}
+        biomass = env["counts"][name]
 
-        for substrate_id, reaction_id in self.config["reaction_map"].items():
-            Km, Vmax = self.config["kinetics"][substrate_id]
-            substrate_concentration = inputs["shared_environment"]["concentrations"][substrate_id]
+        uptakes = mm_uptake_rates(concentrations, self.config["kinetics"], resources)
+        deltas = fba_deltas(self.model, reaction_map, uptakes, counts, biomass, interval)
 
-            # calculate Michaelis-Menten flux
-            flux = Vmax * substrate_concentration / (Km + substrate_concentration)
-
-            # use the flux to constrain fba
-            self.model.reactions.get_by_id(reaction_id).lower_bound = -flux
-
-        # solve fba under these constraints
-        solution = self.model.optimize()
-
-        # gather the results
-        ## update biomass
-        biomass_growth_rate = solution.fluxes[self.biomass_identifier]
-        current_biomass = current_state[self.config["name"]]
-        state_update[self.config["name"]] = biomass_growth_rate * current_biomass * interval
-
-        ## update substrates
-        for substrate_id, reaction_id in self.config["reaction_map"].items():
-            flux = solution.fluxes[reaction_id]
-            state_update[substrate_id] = (flux * current_biomass * interval)
-
+        # viva-cobra returns {"substrates": {resource: Δ}, "biomass": Δ}; cdFBA's dfba_update
+        # carries the per-species biomass delta under the species name alongside the substrates.
+        state_update = dict(deltas["substrates"])
+        state_update[name] = deltas["biomass"]
         return {"dfba_update": state_update}
 
 class UpdateEnvironment(Step):
