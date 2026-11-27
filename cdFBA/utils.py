@@ -16,6 +16,9 @@ SPECIES_STORE = "Species"
 DFBA_RESULTS = "dFBA Results"
 THRESHOLDS = "Thresholds"
 FIELDS = "Fields"
+# Held-concentration targets declared by setter processes (StaticConcentration /
+# WaveFunction) and enforced by UpdateEnvironment, the sole writer of the environment.
+CONCENTRATION_TARGETS = "Concentration Targets"
 
 #basic functions
 def model_from_file(model_file="textbook"):
@@ -329,7 +332,7 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
     #load models
     models_dict = get_model_dict(model_dict)
     #initialize spec
-    spec = {DFBA_RESULTS: {}}
+    spec = {DFBA_RESULTS: {}, CONCENTRATION_TARGETS: {}}
     #ensure only one of medium_type or exchanges is provided
     if medium_type is None:
         if exchanges is None:
@@ -346,6 +349,10 @@ def make_cdfba_composite(model_dict, medium_type=None, exchanges=None, volume=1,
     initial_counts = get_initial_counts(models_dict, exchanges=env_exchanges)
     initial_env = initial_environment(volume=volume, initial_counts=initial_counts, species_list=models_dict.keys())
     spec[SHARED_ENVIRONMENT] = initial_env
+    #pre-populate the held-concentration targets store (0 = not held) so setter
+    #processes (StaticConcentration/WaveFunction) overwrite existing keys, and
+    #UpdateEnvironment -- which only enforces targets > 0 -- can read it.
+    spec[CONCENTRATION_TARGETS] = {substrate: 0.0 for substrate in initial_counts}
     #generate all dFBA processes
     spec[SPECIES_STORE] = {}
     for model_name, model_file in models_dict.items():
@@ -456,14 +463,20 @@ def initial_environment(volume=1, initial_counts=None, species_list=None):
 
 #environmental process/step related functions
 def environment_spec():
-    """Construct spec dictionary for UpdateEnvironment step"""
+    """Construct spec dictionary for UpdateEnvironment step.
+
+    UpdateEnvironment is the sole writer of the shared environment: it applies the
+    dFBA consumption and then enforces any held-concentration targets declared into
+    the CONCENTRATION_TARGETS store by StaticConcentration / WaveFunction.
+    """
     return {
         "_type": "step",
         "address": "local:UpdateEnvironment",
         "config": {},
         "inputs": {
             "species_updates": [DFBA_RESULTS],
-            "shared_environment": [SHARED_ENVIRONMENT]
+            "shared_environment": [SHARED_ENVIRONMENT],
+            "concentration_targets": [CONCENTRATION_TARGETS],
         },
         "outputs": {
             "shared_environment": [SHARED_ENVIRONMENT],
@@ -471,11 +484,11 @@ def environment_spec():
     }
 
 def get_static_spec(config=None, interval=1.0):
-    """Constructs a configuration dictionary for the StaticConcentration process.
-    Parameters:
-        config: dict, StaticConcentration configuration dictionary
-    Returns:
-        dict, spec for StaticConcentration process
+    """Constructs a spec for the StaticConcentration process.
+
+    A pure target-declarer: it writes constant concentration targets into the
+    CONCENTRATION_TARGETS store (enforced by UpdateEnvironment) and never touches the
+    shared environment, so it stays out of any write-write cycle on the environment.
     """
     if config is None:
         raise ValueError("Error: Please provide config")
@@ -484,21 +497,19 @@ def get_static_spec(config=None, interval=1.0):
         "address": "local:StaticConcentration",
         "config": config,
         "inputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
             "global_time": ["global_time"],
         },
         "outputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
+            "concentration_targets": [CONCENTRATION_TARGETS],
         },
         "interval": interval,
     }
 
 def get_wave_spec(config=None, interval=1.0):
-    """Constructs a configuration dictionary for the WaveFunction process.
-    Parameters:
-        config: dict, WaveFunction configuration dictionary
-    Returns
-        dict, spec for WaveFunction process
+    """Constructs a spec for the WaveFunction process.
+
+    A pure target-declarer like StaticConcentration, but its concentration target
+    varies with ``global_time``; it writes into the CONCENTRATION_TARGETS store.
     """
     if config is None:
         raise ValueError("Error: Please provide config")
@@ -507,11 +518,10 @@ def get_wave_spec(config=None, interval=1.0):
         "address": "local:WaveFunction",
         "config": config,
         "inputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
             "global_time": ["global_time"],
         },
         "outputs": {
-            "shared_environment": [SHARED_ENVIRONMENT],
+            "concentration_targets": [CONCENTRATION_TARGETS],
         },
         "interval": interval,
     }

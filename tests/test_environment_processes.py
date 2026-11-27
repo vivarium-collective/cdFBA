@@ -25,8 +25,33 @@ def update_step(core):
 
 
 def test_update_environment_ports(update_step):
-    assert set(update_step.inputs()) == {"shared_environment", "species_updates"}
+    assert set(update_step.inputs()) == {
+        "shared_environment", "species_updates", "concentration_targets"}
     assert set(update_step.outputs()) == {"shared_environment"}
+
+
+def test_update_environment_enforces_held_target_over_consumption(update_step):
+    # A held substrate (target > 0) is forced to target * volume AFTER consumption,
+    # so the consumption is overridden (the chemostat replenishes it). Here count 80
+    # at volume 2 is conc 40; consuming 30 then holding at conc 40 nets a zero delta.
+    shared = env({"D-Glucose": 80.0}, volume=2.0)
+    result = update_step.update({
+        "shared_environment": shared,
+        "species_updates": {"A": {"D-Glucose": -30.0}},
+        "concentration_targets": {"D-Glucose": 40.0},
+    })
+    assert counts_update(result)["D-Glucose"] == pytest.approx(0.0)
+
+
+def test_update_environment_ignores_zero_target_and_consumes_normally(update_step):
+    # A non-positive target means "not held": the substrate follows its consumption.
+    shared = env({"D-Glucose": 80.0}, volume=2.0)
+    result = update_step.update({
+        "shared_environment": shared,
+        "species_updates": {"A": {"D-Glucose": -30.0}},
+        "concentration_targets": {"D-Glucose": 0.0},
+    })
+    assert counts_update(result)["D-Glucose"] == pytest.approx(-30.0)
 
 
 def test_update_environment_passes_through_a_single_species(update_step):
@@ -113,19 +138,20 @@ def test_update_environment_handles_no_species(update_step):
 
 # --- StaticConcentration -----------------------------------------------------
 
-def test_static_concentration_returns_delta_to_target(core):
+def test_static_concentration_declares_its_target(core):
+    # StaticConcentration is a pure target-declarer: it writes the configured target
+    # concentration into the concentration_targets store, independent of the current
+    # environment. UpdateEnvironment turns that into a count and enforces it.
     process = StaticConcentration({"substrate_concentrations": {"D-Glucose": 40.0}}, core)
-    shared = env({"D-Glucose": 30.0}, volume=2.0)  # concentration 15.0
-    result = process.update({"shared_environment": shared, "global_time": 0.0}, 1.0)
-    # target count is 40 * 2 = 80, current count is 30, so the delta is 50
-    assert counts_update(result) == {"D-Glucose": 50.0}
+    result = process.update({"global_time": 0.0}, 1.0)
+    assert result["concentration_targets"] == {"D-Glucose": 40.0}
 
 
-def test_static_concentration_is_a_noop_when_already_at_target(core):
-    process = StaticConcentration({"substrate_concentrations": {"D-Glucose": 15.0}}, core)
-    shared = env({"D-Glucose": 30.0}, volume=2.0)
-    result = process.update({"shared_environment": shared, "global_time": 0.0}, 1.0)
-    assert counts_update(result)["D-Glucose"] == pytest.approx(0.0)
+def test_static_concentration_declares_every_configured_substrate(core):
+    process = StaticConcentration(
+        {"substrate_concentrations": {"D-Glucose": 40.0, "Acetate": 5.0}}, core)
+    result = process.update({"global_time": 3.0}, 1.0)
+    assert result["concentration_targets"] == {"D-Glucose": 40.0, "Acetate": 5.0}
 
 
 def test_static_concentration_holds_glucose_flat_in_a_composite(core):
@@ -144,35 +170,33 @@ def test_static_concentration_holds_glucose_flat_in_a_composite(core):
 # --- WaveFunction ------------------------------------------------------------
 
 def test_wave_function_tracks_the_target_wave(core):
+    # WaveFunction declares a time-varying target *concentration* into the targets store.
     params = {"D-Glucose": {"amplitude": 5.0, "angular_frequency": 1.0,
                             "base_concentration": 10.0, "phase_shift": 0.0}}
     process = WaveFunction({"substrate_params": params}, core)
-    shared = env({"D-Glucose": 20.0}, volume=2.0)  # current count 20
-
     t = pi / 2  # sin = 1, so target concentration is 15
-    result = process.update({"shared_environment": shared, "global_time": t}, 1.0)
-    assert counts_update(result)["D-Glucose"] == pytest.approx(15.0 * 2 - 20.0)
+    result = process.update({"global_time": t}, 1.0)
+    assert result["concentration_targets"]["D-Glucose"] == pytest.approx(15.0)
 
 
 def test_wave_function_at_zero_phase_targets_base_concentration(core):
     params = {"D-Glucose": {"amplitude": 5.0, "angular_frequency": 1.0,
                             "base_concentration": 10.0, "phase_shift": 0.0}}
     process = WaveFunction({"substrate_params": params}, core)
-    shared = env({"D-Glucose": 20.0}, volume=2.0)
-    result = process.update({"shared_environment": shared, "global_time": 0.0}, 1.0)
-    # target is 10 * 2 = 20, which is exactly the current count
-    assert counts_update(result)["D-Glucose"] == pytest.approx(0.0)
+    result = process.update({"global_time": 0.0}, 1.0)
+    # sin(0) = 0, so the target concentration is the base concentration, 10
+    assert result["concentration_targets"]["D-Glucose"] == pytest.approx(10.0)
 
 
 def test_wave_function_does_not_drive_negative_targets(core):
-    """When the wave dips to or below zero the process makes no change."""
+    """When the wave dips to or below zero the declared target is 0 (not held),
+    so UpdateEnvironment leaves the substrate to its consumption dynamics."""
     params = {"D-Glucose": {"amplitude": 10.0, "angular_frequency": 1.0,
                             "base_concentration": 1.0, "phase_shift": 0.0}}
     process = WaveFunction({"substrate_params": params}, core)
-    shared = env({"D-Glucose": 20.0}, volume=2.0)
     t = 3 * pi / 2  # sin = -1, target concentration is 1 - 10 = -9
-    result = process.update({"shared_environment": shared, "global_time": t}, 1.0)
-    assert counts_update(result)["D-Glucose"] == 0
+    result = process.update({"global_time": t}, 1.0)
+    assert result["concentration_targets"]["D-Glucose"] == 0
 
 
 def test_wave_function_oscillates_in_a_composite(core):
